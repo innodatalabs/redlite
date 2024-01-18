@@ -1,0 +1,72 @@
+[project]
+name = "redlite"
+dynamic = ["version"]
+authors = [
+    {name = "Mike Kroutikov", email = "mkroutikov@innodata.com"},
+    {name = "David Nadeau", email = "dnadeau@innodata.com"},
+]
+description = "LLM testing on steroids"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["large langualge models", "evaluation", "datasets"]
+license = {text = "MIT License"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "randomname~=0.2.1",
+]
+
+[project.urls]
+Homepage      = "https://github.com/innodatalabs/redlite"
+Documentation = "https://redlite.readthedocs.org"
+Repository    = "https://github.com/innodatalabs/redlite.git"
+Issues        = "https://github.com/innodatalabs/redlite/issues"
+Changelog     = "https://github.com/innodatalabs/redlite/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+hf = ["datasets"]
+server = ["aiohttp", "aiohttp-cors"]
+dev = ["pytest", "portray", "black", "flake8", "mypy", "pytest-asyncio", "pytest-aiohttp"]
+all = ["redlite[hf]"]
+
+[project.scripts]
+redlite = "redlite.__main__:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = {attr = "redlite.__version__"}
+
+[tool.setuptools]
+packages = ["redlite", "redlite.server", "redlite.metric", "redlite.hf"]
+
+[tool.setuptools.package-data]
+"redlite.server" = ["resources/build/*", "resources/build/_app/*", "resources/build/_app/immutable/*/*"]
+
+[tool.portray]
+modules = ["redlite"]
+repo_name = "redlite"
+repo_url = "https://redlite.org"
+labels = {'api' = 'API', 'abc' = 'abc'}
+
+[tool.portray.mkdocs]
+site_name = "redlite"
+extra = {homepage = "https://example.com"}
+
+[tool.portray.mkdocs.theme]
+# favicon = "art/logo_small.png"
+# logo = "art/logo_small.png"
+name = "material"
+palette = {primary = "deep purple", accent = "pink"}
+
+[tool.portray.pdocs]
+exclude_source = false

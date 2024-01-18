@@ -1,0 +1,10 @@
+/.venv
+/build
+/stats.jsonl
+__pycache__
+*.whl
+*.jsonl
+*.yaml
+/*.egg-info
+/wheels/
+/site/
