@@ -1,4 +1,4 @@
-from ..abc import NamedDataset, DatasetItem, Message, MissingDependencyError
+from ..core import NamedDataset, DatasetItem, Message, MissingDependencyError
 
 try:
     from datasets import load_dataset
@@ -19,7 +19,7 @@ class HFDataset(NamedDataset):
             completion = x["completion"]
             id_ = x["id"]
 
-            yield DatasetItem(
+            yield dict(
                 id=id_,
                 messages=[Message.user(prompt)],
                 expected=completion,

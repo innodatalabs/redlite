@@ -1,5 +1,5 @@
 import functools
-from ..abc import NamedMetric
+from ..core import NamedMetric
 from .compute_bleu import compute_bleu
 
 
@@ -12,6 +12,6 @@ class BleuMetric(NamedMetric):
 
 
 def _bleu(expected: str, actual: str, max_order=4, smooth=False) -> float:
-    return compute_bleu([[expected.split()]], [actual.split()], max_order=max_order, smooth=smooth)[
-        0
-    ]
+    return compute_bleu(
+        [[expected.split()]], [actual.split()], max_order=max_order, smooth=smooth
+    )[0]

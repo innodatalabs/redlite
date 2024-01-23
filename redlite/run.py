@@ -5,7 +5,14 @@ import time
 from tqdm import tqdm
 import duoname
 from datetime import datetime
-from .abc import NamedModel, NamedDataset, NamedMetric, Storage, Experiment, ScoreAccumulator
+from .core import (
+    NamedModel,
+    NamedDataset,
+    NamedMetric,
+    Storage,
+    Experiment,
+    ScoreAccumulator,
+)
 from ._jsonl_storage import JsonlStorage
 from .util import DatasetRunningDigest, format_duration, redlite_data_dir
 from ._lock import incr_run_count
@@ -61,11 +68,11 @@ def run(
     with _storage(runname) as storage:  # type: Storage
         sample_count = 0
         for item in tqdm(data_with_digest):
-            actual = model(item.messages)
+            actual = model(item["messages"])
             sample_count += 1
             if max_samples > 0 and sample_count >= max_samples:
                 break
-            score = metric(item.expected, actual)
+            score = metric(item["expected"], actual)
             storage.save(item, actual, score)
             score_accumulator(score)
 
@@ -81,7 +88,7 @@ def run(
             started=datetime.utcfromtimestamp(started).isoformat() + "Z",
             completed=datetime.utcfromtimestamp(completed).isoformat() + "Z",
             duration=format_duration(completed - started),
-            score_summary=score_accumulator.summary.to_json_obj(),
+            score_summary=score_accumulator.summary,
         )
 
         print("Smile! All done!")

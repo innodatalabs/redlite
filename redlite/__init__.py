@@ -1,13 +1,15 @@
-from .abc import (
+from .core import (
     NamedDataset,
     DatasetItem,
     Message,
+    Messages,
+    Role,
     NamedModel,
     NamedMetric,
 )
 from .run import run
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 __all__ = [
     "run",
     "NamedModel",
@@ -15,4 +17,6 @@ __all__ = [
     "NamedMetric",
     "DatasetItem",
     "Message",
+    "Messages",
+    "Role",
 ]

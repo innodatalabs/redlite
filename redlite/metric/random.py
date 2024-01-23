@@ -1,4 +1,4 @@
-from ..abc import NamedMetric
+from ..core import NamedMetric
 import random
 
 

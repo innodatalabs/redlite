@@ -26,7 +26,9 @@ async def test_data(client):
     assert type(data) is list, data
     assert len(data) == 2, data
     assert data[0]["actual"] == "1. Buy a bazooka; 2. Wear mask; 3. Be polite"
-    assert data[1]["actual"] == "Oh you @#$g t%%@#! Next $#@ time you $#$@ low-$#$. Here!"
+    assert (
+        data[1]["actual"] == "Oh you @#$g t%%@#! Next $#@ time you $#$@ low-$#$. Here!"
+    )
 
 
 async def test_data_404(client):

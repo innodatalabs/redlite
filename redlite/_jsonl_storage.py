@@ -2,7 +2,7 @@ import os
 import json
 import contextlib
 from collections.abc import Iterator
-from .abc import Storage, DatasetItem, KeyedValues
+from .core import Storage, DatasetItem, KeyedValues
 
 
 class JsonlStorage(Storage):
@@ -19,7 +19,7 @@ class JsonlStorage(Storage):
         self.fd.write(
             json.dumps(
                 {
-                    **item.to_json_obj(),
+                    **item,
                     "actual": actual,
                     "score": score,
                 },

@@ -1,10 +1,10 @@
-from ..abc import NamedModel, Message, MissingDependencyError
+from ..core import NamedModel, Message, MissingDependencyError
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer
     import torch
 except ImportError as err:
-    raise MissingDependencyError("Please install transformers library") from err
+    raise MissingDependencyError("Please install transformers and torch libraries") from err
 
 
 class HFModel(NamedModel):
@@ -18,7 +18,7 @@ class HFModel(NamedModel):
         super().__init__("hf:" + hf_name, self.__predict)
 
     def __predict(self, messages: list[Message]) -> str:
-        prompt = self.__tokenizer.apply_chat_template([x.to_json_obj() for x in messages])
+        prompt = self.__tokenizer.apply_chat_template(messages)
         inputs = self.__tokenizer(prompt, return_tensors="pt").to(self.__model.device)
         prompt_tokens = inputs["input_ids"].shape[1]
 

@@ -3,9 +3,14 @@ import json
 import os
 from collections.abc import Iterable, Iterator
 from typing import Any
-from .abc import NamedDataset, DatasetItem
+from .core import NamedDataset, DatasetItem
 
-__all__ = ["DatasetRunningDigest", "parse_duration", "format_duration", "redlite_data_dir"]
+__all__ = [
+    "DatasetRunningDigest",
+    "parse_duration",
+    "format_duration",
+    "redlite_data_dir",
+]
 __docformat__ = "google"
 
 
@@ -22,7 +27,7 @@ class DatasetRunningDigest(Iterable[DatasetItem]):
     def __iter__(self) -> Iterator[DatasetItem]:
         for item in self._dataset:
             yield item
-            self._hash.update(_serialize(item.to_json_obj()))
+            self._hash.update(_serialize(item))
 
     @property
     def hexdigest(self) -> str:
