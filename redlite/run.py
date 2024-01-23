@@ -3,7 +3,7 @@ import logging
 import os
 import time
 from tqdm import tqdm
-import randomname
+import duoname
 from datetime import datetime
 from .abc import NamedModel, NamedDataset, NamedMetric, Storage, Experiment, ScoreAccumulator
 from ._jsonl_storage import JsonlStorage
@@ -101,4 +101,4 @@ def _storage(runname: str) -> Iterator[Storage]:
 
 
 def _generate_name():
-    return randomname.get_name()
+    return duoname.duoname()

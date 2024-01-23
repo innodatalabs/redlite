@@ -20,7 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "randomname~=0.2.1",
+    "duoname~=0.0.2",
 ]
 
 [project.urls]

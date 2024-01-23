@@ -47,7 +47,7 @@ Make commands:
 
 ## TODO
 
-- [ ] deps cleanup (randomname!)
+- [x] deps cleanup (randomname!)
 - [ ] review/improve module structure
 - [ ] automate CI/CD
 - [ ] write docs
