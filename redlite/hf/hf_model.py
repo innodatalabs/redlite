@@ -8,11 +8,11 @@ except ImportError as err:
 
 
 class HFModel(NamedModel):
-    def __init__(self, hf_name: str, device: str | None = None):
+    def __init__(self, hf_name: str, device: str | None = None, token=None):
         self.name = "hf:" + hf_name
         if device is None:
             device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        self.__model = AutoModelForCausalLM.from_pretrained(hf_name).to(device).eval()
+        self.__model = AutoModelForCausalLM.from_pretrained(hf_name, token=token).to(device).eval()
         self.__tokenizer = AutoTokenizer.from_pretrained(hf_name, use_fast=False)
 
         super().__init__("hf:" + hf_name, self.__predict)
