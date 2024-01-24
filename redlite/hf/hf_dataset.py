@@ -24,3 +24,9 @@ class HFDataset(NamedDataset):
                 messages=[user_message(prompt)],
                 expected=completion,
             )
+
+    @classmethod
+    def load(cls, name: str, split="test") -> "NamedDataset":
+        if not name.startswith("hf:"):
+            raise ValueError(f"This method can only load from HF dataset hub, but requested {name}")
+        return cls(name[3:], split)

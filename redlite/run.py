@@ -11,10 +11,9 @@ from .core import (
     NamedMetric,
     Storage,
     Experiment,
-    ScoreAccumulator,
 )
 from ._jsonl_storage import JsonlStorage
-from .util import DatasetRunningDigest, format_duration, redlite_data_dir
+from .util import DatasetRunningDigest, format_duration, redlite_data_dir, ScoreAccumulator
 from ._lock import incr_run_count
 from typing import Iterator
 

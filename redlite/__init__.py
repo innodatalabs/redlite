@@ -8,10 +8,12 @@ from .core import (
     NamedMetric,
 )
 from .run import run
+from .dataset import load_dataset
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 __all__ = [
     "run",
+    "load_dataset",
     "NamedModel",
     "NamedDataset",
     "NamedMetric",

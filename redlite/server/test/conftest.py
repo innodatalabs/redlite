@@ -109,19 +109,11 @@ that wants to get back at his sibling for stepping on his toe, What would you sa
 }
 
 
+def get_test_app():
+    reader = MockReader(_RUNS)
+    return get_app(reader)
+
+
 @pytest.fixture
 def client(event_loop, aiohttp_client):
-    reader = MockReader(_RUNS)
-    return event_loop.run_until_complete(aiohttp_client(get_app(reader)))
-
-
-if __name__ == "__main__":
-    import os
-
-    port = int(os.environ.get("PORT", "8000"))
-
-    base = os.path.expanduser("~/.cache/redlite")
-
-    app = get_app(MockReader(_RUNS))
-
-    web.run_app(app, port=port)
+    return event_loop.run_until_complete(aiohttp_client(get_test_app()))
