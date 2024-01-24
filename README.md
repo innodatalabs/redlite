@@ -11,19 +11,15 @@ An opinionated toolset for testing Language Models for safety.
 ## Python API
 
 ```python
-from redlite import run, NamedModel, Message
-from redlite.hf import HFDataset
-from redlite.metric import BleuMetric
+import os
+from redlite import run, load_dataset
+from redlite.openai import OpenAIModel
+from redlite.metric import PrefixMetric
 
 
-def parrot(messages: list[Message]) -> str:
-    return messages[-1].content
-
-
-model = NamedModel("parrot", parrot)
-
-dataset = HFDataset("innodatalabs/rt-cogensumm")
-metric = BleuMetric()
+model = OpenAIModel(api_key=os.environ["OPENAI_API_KEY"])
+dataset = load_dataset("hf:innodatalabs/rt-gaia")
+metric = PrefixMetric(ignore_case=True, ignore_punct=True, strip=True)
 
 run(model=model, dataset=dataset, metric=metric)
 ```
