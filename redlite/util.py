@@ -2,7 +2,6 @@ import hashlib
 import json
 import os
 from collections.abc import Iterable, Iterator
-from typing import Any
 from .core import NamedDataset, DatasetItem
 
 __all__ = [
@@ -14,7 +13,7 @@ __all__ = [
 __docformat__ = "google"
 
 
-def _serialize(obj: dict[str, Any]) -> bytes:
+def _serialize(obj: dict | DatasetItem) -> bytes:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")
 
 

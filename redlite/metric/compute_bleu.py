@@ -92,14 +92,10 @@ def compute_bleu(reference_corpus, translation_corpus, max_order=4, smooth=False
     precisions = [0] * max_order
     for i in range(0, max_order):
         if smooth:
-            precisions[i] = (matches_by_order[i] + 1.0) / (
-                possible_matches_by_order[i] + 1.0
-            )
+            precisions[i] = (matches_by_order[i] + 1.0) / (possible_matches_by_order[i] + 1.0)
         else:
             if possible_matches_by_order[i] > 0:
-                precisions[i] = (
-                    float(matches_by_order[i]) / possible_matches_by_order[i]
-                )
+                precisions[i] = float(matches_by_order[i]) / possible_matches_by_order[i]
             else:
                 precisions[i] = 0.0
 
@@ -113,6 +109,8 @@ def compute_bleu(reference_corpus, translation_corpus, max_order=4, smooth=False
 
     if ratio > 1.0:
         bp = 1.0
+    elif ratio == 0.0:
+        bp = 0.0
     else:
         bp = math.exp(1 - 1.0 / ratio)
 

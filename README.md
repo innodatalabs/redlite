@@ -59,3 +59,4 @@ Make commands:
 - [ ] more robust backend API (future-proof)
 - [ ] better error handling for missing deps
 - [ ] document which deps we need when
+- [ ] export to CSV

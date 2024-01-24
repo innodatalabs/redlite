@@ -1,4 +1,4 @@
-from ..core import NamedDataset, DatasetItem, Message, MissingDependencyError
+from ..core import NamedDataset, user_message, MissingDependencyError
 
 try:
     from datasets import load_dataset
@@ -21,6 +21,6 @@ class HFDataset(NamedDataset):
 
             yield dict(
                 id=id_,
-                messages=[Message.user(prompt)],
+                messages=[user_message(prompt)],
                 expected=completion,
             )

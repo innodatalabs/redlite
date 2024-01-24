@@ -2,7 +2,10 @@ import dataclasses
 import abc
 from collections.abc import Callable, Iterable
 from typing import Any, TypedDict, Literal
-from enum import Enum
+import logging
+
+
+log = logging.getLogger("redlite")
 
 
 Role = Literal["system", "user", "assistant"]
@@ -17,14 +20,20 @@ Messages = list[Message]
 Batch = list[Messages]
 """Messages can be batched for faster evaluation (i.e. on a GPU)"""
 
-DatasetItem = TypedDict(
-    "DatasetItem", {"id": str, "messages": Messages, "expected": str}
-)
+DatasetItem = TypedDict("DatasetItem", {"id": str, "messages": Messages, "expected": str})
 """Unique id, sessages, and the expected completion"""
 
-Message.system = lambda content: {"role": "system", "content": content}
-Message.user = lambda content: {"role": "user", "content": content}
-Message.assistant = lambda content: {"role": "assistant", "content": content}
+
+def system_message(content: str) -> Message:
+    return {"role": "system", "content": content}
+
+
+def user_message(content: str) -> Message:
+    return {"role": "user", "content": content}
+
+
+def assistant_message(content: str) -> Message:
+    return {"role": "assistant", "content": content}
 
 
 class NamedDataset(Iterable[DatasetItem]):
@@ -45,12 +54,12 @@ class NamedMetric:
 class NamedModel:
     name: str
 
-    def __init__(self, name: str, engine: Callable[[list[Messages]], list[str]]):
+    def __init__(self, name: str, engine: Callable[[Messages], str]):
         self.name = name
         self.engine = engine
 
-    def __call__(self, batch: list[Messages]) -> list[str]:
-        return self.engine(batch)
+    def __call__(self, conversation: Messages) -> str:
+        return self.engine(conversation)
 
 
 class Storage(abc.ABC):
@@ -79,7 +88,7 @@ class MissingDependencyError(RuntimeError):
 
 KeyedValues = dict[str, Any]
 
-ScoreSummary = TypedDict('ScoreSummary', {'count': int, 'mean': float, 'min': float, 'max': float})
+ScoreSummary = TypedDict("ScoreSummary", {"count": int, "mean": float, "min": float, "max": float})
 
 
 class ScoreAccumulator:

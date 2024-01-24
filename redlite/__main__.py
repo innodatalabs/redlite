@@ -5,9 +5,7 @@ def main():
     subparsers = parser.add_subparsers(required=True, dest="cmd")
 
     parser_server = subparsers.add_parser("server", help="starts UI server")
-    parser_server.add_argument(
-        "--port", "-p", type=int, default=8000, help="Server port"
-    )
+    parser_server.add_argument("--port", "-p", type=int, default=8000, help="Server port")
 
     args = parser.parse_args()
     if args.cmd == "server":

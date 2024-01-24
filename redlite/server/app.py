@@ -87,6 +87,16 @@ async def index(request):
     return web.FileResponse(res("build", "index.html"))
 
 
+@web.middleware
+async def handle_404(request, handler):
+    try:
+        return await handler(request)
+    except web.HTTPException as ex:
+        if ex.status == 404:
+            return await index(request)
+        raise
+
+
 def get_app(reader: RunReader):
     app = web.Application()
     service = Service(reader)
@@ -97,6 +107,7 @@ def get_app(reader: RunReader):
             web.get("/api/runs/{name}/data", service.data),
             web.get("/", index),
             web.static("/", res("build")),
+            web.get("", index),
         ]
     )
 
@@ -110,6 +121,8 @@ def get_app(reader: RunReader):
     )
     for route in list(app.router.routes()):
         cors.add(route)
+
+    app.middlewares.append(handle_404)
 
     return app
 

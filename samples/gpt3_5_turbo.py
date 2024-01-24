@@ -1,11 +1,11 @@
 import os
 from redlite import run
 from redlite.hf import HFDataset
-from redlite.hf.hf_model import HFModel
+from redlite.openai import OpenAIModel
 from redlite.metric import PrefixMetric
 
 
-model = HFModel("mistralai/Mistral-7B-Instruct-v0.2", token=os.environ["HF_TOKEN"])
+model = OpenAIModel(api_key=os.environ["OPENAI_API_KEY"])
 
 dataset = HFDataset("innodatalabs/rt-gaia")
 metric = PrefixMetric(ignore_case=True, ignore_punct=True, strip=True)
