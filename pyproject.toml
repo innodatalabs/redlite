@@ -34,8 +34,9 @@ Changelog     = "https://github.com/innodatalabs/redlite/blob/master/CHANGELOG.m
 [project.optional-dependencies]
 hf = ["datasets"]
 server = ["aiohttp", "aiohttp-cors"]
+openai = ["openai"]
+all = ["redlite[hf,server,openai]"]
 dev = ["pytest", "portray", "black", "flake8", "mypy", "pytest-asyncio", "pytest-aiohttp"]
-all = ["redlite[hf]"]
 
 [project.scripts]
 redlite = "redlite.__main__:main"
