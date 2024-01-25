@@ -1,7 +1,7 @@
 import hashlib
 import json
 import os
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sized
 from .core import NamedDataset, DatasetItem, ScoreSummary
 
 __all__ = [
@@ -17,7 +17,7 @@ def _serialize(obj: dict | DatasetItem) -> bytes:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")
 
 
-class DatasetRunningDigest(Iterable[DatasetItem]):
+class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
     def __init__(self, dataset: NamedDataset, **kw):
         self._hash = hashlib.sha256(usedforsecurity=False)
         self._hash.update(_serialize(kw))
@@ -27,6 +27,9 @@ class DatasetRunningDigest(Iterable[DatasetItem]):
         for item in self._dataset:
             yield item
             self._hash.update(_serialize(item))
+
+    def __len__(self):
+        return len(self._dataset)
 
     @property
     def hexdigest(self) -> str:

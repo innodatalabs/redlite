@@ -1,6 +1,6 @@
 import dataclasses
 import abc
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sized
 from typing import Any, TypedDict, Literal
 import logging
 
@@ -36,8 +36,9 @@ def assistant_message(content: str) -> Message:
     return {"role": "assistant", "content": content}
 
 
-class NamedDataset(Iterable[DatasetItem]):
+class NamedDataset(Sized, Iterable[DatasetItem]):
     name: str
+    labels: dict[str, str]
 
 
 class NamedMetric:
