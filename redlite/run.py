@@ -80,6 +80,7 @@ def run(
         storage.save_meta(
             name=storage.name,
             dataset=dataset.name,
+            dataset_labels=dataset.labels,
             data_digest=data_with_digest.hexdigest,
             metric=metric.name,
             model=model.name,

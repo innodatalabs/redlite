@@ -7,7 +7,7 @@ test-server:
 	python -m pytest redlite/server/test
 
 .PHONY: lint
-lint:
+lint: test
 	flake8 --max-line-length 100 redlite/
 	black -l 100 --check redlite/
 	mypy --ignore-missing-imports redlite/

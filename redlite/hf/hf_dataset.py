@@ -12,7 +12,7 @@ except ImportError as err:
 class HFDataset(NamedDataset):
     def __init__(self, hf_name: str, split="test"):
         super().__init__()
-        self.name = "hf:" + hf_name + "@" + split
+        self.name = "hf:" + hf_name
         self._dataset = load_dataset(hf_name, trust_remote_code=True)
         self._card = DatasetCard.load(hf_name)
         self.labels = getattr(self._card.data, "labels", {})
