@@ -51,7 +51,7 @@ Make commands:
 - [ ] better test server
 - [ ] tests
 - [ ] Integrations (HF, OpenAI, Anthropic, vLLM)
-- [ ] Fix data format in HF datasets (innodatalabs/rt-* ones) to match standard
+- [x] Fix data format in HF datasets (innodatalabs/rt-* ones) to match standard
 - [ ] more robust backend API (future-proof)
 - [ ] better error handling for missing deps
 - [ ] document which deps we need when
