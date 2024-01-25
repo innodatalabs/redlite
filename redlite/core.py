@@ -1,7 +1,7 @@
 import dataclasses
 import abc
 from collections.abc import Callable, Iterable, Sized
-from typing import Any, TypedDict, Literal
+from typing import TypedDict, Literal
 import logging
 
 
@@ -23,6 +23,9 @@ Batch = list[Messages]
 DatasetItem = TypedDict("DatasetItem", {"id": str, "messages": Messages, "expected": str})
 """Unique id, sessages, and the expected completion"""
 
+Split = Literal["test", "train"]
+"""Type for the dataset split"""
+
 
 def system_message(content: str) -> Message:
     return {"role": "system", "content": content}
@@ -39,6 +42,7 @@ def assistant_message(content: str) -> Message:
 class NamedDataset(Sized, Iterable[DatasetItem]):
     name: str
     labels: dict[str, str]
+    split: Split
 
 
 class NamedMetric:
@@ -86,7 +90,5 @@ class Experiment:
 class MissingDependencyError(RuntimeError):
     """Raised when a missing optional dependency is detected"""
 
-
-KeyedValues = dict[str, Any]
 
 ScoreSummary = TypedDict("ScoreSummary", {"count": int, "mean": float, "min": float, "max": float})

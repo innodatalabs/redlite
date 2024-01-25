@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from ..core import NamedDataset, DatasetItem, user_message, MissingDependencyError
+from ..core import NamedDataset, DatasetItem, Split, MissingDependencyError
 
 
 try:
@@ -10,31 +10,31 @@ except ImportError as err:
 
 
 class HFDataset(NamedDataset):
-    def __init__(self, hf_name: str, split="test"):
+    def __init__(self, hf_name: str, split: Split = "test"):
         super().__init__()
         self.name = "hf:" + hf_name
         self._dataset = load_dataset(hf_name, trust_remote_code=True)
         self._card = DatasetCard.load(hf_name)
         self.labels = getattr(self._card.data, "labels", {})
-        self._split = split
+        self.split = split
 
     def __iter__(self) -> Iterator[DatasetItem]:
-        for x in self._dataset[self._split]:
-            prompt = x["prompt"]
-            completion = x["completion"]
+        for x in self._dataset[self.split]:
+            messages = x["messages"]
+            expected = x["expected"]
             id_ = x["id"]
 
             yield dict(
                 id=id_,
-                messages=[user_message(prompt)],
-                expected=completion,
+                messages=messages,
+                expected=expected,
             )
 
     def __len__(self):
-        return self._dataset[self._split].info.splits[self._split].num_examples
+        return self._dataset[self.split].info.splits[self.split].num_examples
 
     @classmethod
-    def load(cls, name: str, split="test") -> "NamedDataset":
+    def load(cls, name: str, split: Split = "test") -> "NamedDataset":
         if not name.startswith("hf:"):
             raise ValueError(f"This method can only load from HF dataset hub, but requested {name}")
         return cls(name[3:], split)

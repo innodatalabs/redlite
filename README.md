@@ -37,7 +37,7 @@ Make commands:
 * test
 * test-server
 * lint
-* wheen
+* wheel
 * docs
 
 ## TODO

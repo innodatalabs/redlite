@@ -2,7 +2,7 @@ import os
 import json
 import contextlib
 from collections.abc import Iterator
-from .core import Storage, DatasetItem, KeyedValues
+from .core import Storage, DatasetItem
 
 
 class JsonlStorage(Storage):
@@ -11,7 +11,7 @@ class JsonlStorage(Storage):
         self.folder = folder
         self.fd = fd
 
-    def save_meta(self, **kaw: KeyedValues) -> None:
+    def save_meta(self, **kaw: dict) -> None:
         with open(f"{self.folder}/meta.json", "w", encoding="utf-8") as f:
             json.dump(kaw, f, ensure_ascii=False, indent=2)
 

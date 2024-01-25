@@ -59,7 +59,7 @@ def run(
     run_count = incr_run_count()
     runname = f"{name}-{run_count}"
 
-    print(f"Red Light run {runname}:")
+    print(f"RedLite run {runname}:")
     print(f"\tmodel  : {model.name}")
     print(f"\tdataset: {dataset.name}")
     print(f"\tmetric : {metric.name}")
