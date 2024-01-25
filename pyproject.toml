@@ -21,6 +21,7 @@ classifiers = [
 ]
 dependencies = [
     "duoname~=0.0.2",
+    "tqdm",
 ]
 
 [project.urls]
@@ -47,7 +48,14 @@ build-backend = "setuptools.build_meta"
 version = {attr = "redlite.__version__"}
 
 [tool.setuptools]
-packages = ["redlite", "redlite.server", "redlite.metric", "redlite.hf"]
+packages = [
+    "redlite",
+    "redlite.server",
+    "redlite.metric",
+    "redlite.hf",
+    "redlite.inno",
+    "redlite.openai",
+]
 
 [tool.setuptools.package-data]
 "redlite.server" = ["resources/build/*", "resources/build/_app/*", "resources/build/_app/immutable/*/*"]
