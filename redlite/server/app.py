@@ -1,10 +1,8 @@
-import json
-import os
-from collections.abc import Iterator
 from aiohttp import web
 import aiohttp_cors
 from redlite.server import res
 from redlite.util import redlite_data_dir
+from ..util import read_data, read_meta, read_runs
 
 
 class RunReader:
@@ -40,49 +38,6 @@ class Service:
         return web.json_response(meta)
 
 
-def read_runs(base: str) -> Iterator[dict]:
-    for name in os.listdir(base):
-        meta_name = os.path.join(base, name, "meta.json")
-        if not os.path.isfile(meta_name):
-            continue
-
-        with open(meta_name, encoding="utf-8") as f:
-            meta = json.load(f)
-
-        data_name = os.path.join(base, name, "data.jsonl")
-        if not os.path.isfile(data_name):
-            continue
-
-        yield meta
-
-
-def read_data(base: str, name) -> Iterator[dict]:
-    meta_name = os.path.join(base, name, "meta.json")
-    if not os.path.isfile(meta_name):
-        return
-
-    data_name = os.path.join(base, name, "data.jsonl")
-    if not os.path.isfile(data_name):
-        return
-
-    with open(data_name, "r", encoding="utf-8") as f:
-        for line in f:
-            yield json.loads(line)
-
-
-def read_meta(base: str, name) -> dict:
-    meta_name = os.path.join(base, name, "meta.json")
-    if not os.path.isfile(meta_name):
-        raise FileNotFoundError()
-
-    data_name = os.path.join(base, name, "data.jsonl")
-    if not os.path.isfile(data_name):
-        raise FileNotFoundError()
-
-    with open(meta_name, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 async def index(request):
     return web.FileResponse(res("build", "index.html"))
 
@@ -113,11 +68,7 @@ def get_app(reader: RunReader):
 
     cors = aiohttp_cors.setup(
         app,
-        defaults={
-            "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True, expose_headers="*", allow_headers="*"
-            )
-        },
+        defaults={"*": aiohttp_cors.ResourceOptions(allow_credentials=True, expose_headers="*", allow_headers="*")},
     )
     for route in list(app.router.routes()):
         cors.add(route)

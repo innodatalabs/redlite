@@ -35,7 +35,8 @@ Changelog     = "https://github.com/innodatalabs/redlite/blob/master/CHANGELOG.m
 hf = ["datasets"]
 server = ["aiohttp", "aiohttp-cors"]
 openai = ["openai"]
-all = ["redlite[hf,server,openai]"]
+zeno = ["zeno_client"]
+all = ["redlite[hf,server,openai,zeno]"]
 dev = ["pytest", "portray", "black", "flake8", "mypy", "pytest-asyncio", "pytest-aiohttp"]
 
 [project.scripts]
@@ -56,6 +57,7 @@ packages = [
     "redlite.hf",
     "redlite.inno",
     "redlite.openai",
+    "redlite.zeno",
 ]
 
 [tool.setuptools.package-data]

@@ -1,6 +1,7 @@
 import contextlib
 import os
 import json
+from .util import redlite_data_dir
 from collections.abc import Iterator
 
 __all__ = ["incr_run_count"]
@@ -10,14 +11,17 @@ __all__ = ["incr_run_count"]
 def file_lock(fname: str) -> Iterator[None]:
     lockfile = fname + ".lock"
     try:
-        os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
-        yield
+        fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+        try:
+            yield
+        finally:
+            os.close(fd)
     finally:
         os.unlink(lockfile)
 
 
 def incr_run_count() -> int:
-    fname = os.path.expanduser("~/.cache/redlite/count.json")
+    fname = os.path.join(redlite_data_dir(), "count.json")
     os.makedirs(os.path.dirname(fname), exist_ok=True)
     with file_lock(fname):
         if not os.path.isfile(fname):

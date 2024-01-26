@@ -39,6 +39,7 @@ Make commands:
 * lint
 * wheel
 * docs
+* black
 
 ## TODO
 

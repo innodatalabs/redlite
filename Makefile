@@ -8,9 +8,13 @@ test-server:
 
 .PHONY: lint
 lint: test
-	flake8 --max-line-length 100 redlite/
-	black -l 100 --check redlite/
+	flake8 --max-line-length 120 redlite/
+	black -l 120 --check redlite/
 	mypy --ignore-missing-imports redlite/
+
+.PHONY: black
+black:
+	black -l 120 redlite/
 
 .PHONY: docs
 docs:

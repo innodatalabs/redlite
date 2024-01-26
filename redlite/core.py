@@ -50,10 +50,10 @@ class NamedMetric:
 
     def __init__(self, name: str, engine: Callable[[str, str], float]):
         self.name = name
-        self.engine = engine
+        self._engine = engine
 
     def __call__(self, expected: str, actual: str) -> float:
-        return self.engine(expected, actual)
+        return self._engine(expected, actual)
 
 
 class NamedModel:
@@ -61,10 +61,10 @@ class NamedModel:
 
     def __init__(self, name: str, engine: Callable[[Messages], str]):
         self.name = name
-        self.engine = engine
+        self._engine = engine
 
     def __call__(self, conversation: Messages) -> str:
-        return self.engine(conversation)
+        return self._engine(conversation)
 
 
 class Storage(abc.ABC):

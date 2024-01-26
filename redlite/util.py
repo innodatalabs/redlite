@@ -102,3 +102,46 @@ class ScoreAccumulator:
             min=self._min,
             max=self._max,
         )
+
+
+def read_runs(base: str) -> Iterator[dict]:
+    for name in os.listdir(base):
+        meta_name = os.path.join(base, name, "meta.json")
+        if not os.path.isfile(meta_name):
+            continue
+
+        with open(meta_name, encoding="utf-8") as f:
+            meta = json.load(f)
+
+        data_name = os.path.join(base, name, "data.jsonl")
+        if not os.path.isfile(data_name):
+            continue
+
+        yield meta
+
+
+def read_data(base: str, name: str) -> Iterator[dict]:
+    meta_name = os.path.join(base, name, "meta.json")
+    if not os.path.isfile(meta_name):
+        return
+
+    data_name = os.path.join(base, name, "data.jsonl")
+    if not os.path.isfile(data_name):
+        return
+
+    with open(data_name, "r", encoding="utf-8") as f:
+        for line in f:
+            yield json.loads(line)
+
+
+def read_meta(base: str, name: str) -> dict:
+    meta_name = os.path.join(base, name, "meta.json")
+    if not os.path.isfile(meta_name):
+        raise FileNotFoundError()
+
+    data_name = os.path.join(base, name, "data.jsonl")
+    if not os.path.isfile(data_name):
+        raise FileNotFoundError()
+
+    with open(meta_name, "r", encoding="utf-8") as f:
+        return json.load(f)
