@@ -57,3 +57,4 @@ Make commands:
 - [ ] better error handling for missing deps
 - [ ] document which deps we need when
 - [ ] export to CSV
+- [x] Upload to Zeno
