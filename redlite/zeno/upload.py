@@ -11,10 +11,14 @@ except ImportError as err:
     raise MissingDependencyError("Please install zeno_client library") from err
 
 
+__docformat__ = "google"
+
+
 Task = collections.namedtuple("Task", ["dataset", "data_digest", "metric"])
 
 
 def read_tasks(root: str):
+    """Reads all runs and builds task-level aggregation."""
     by_task = collections.defaultdict(list)
 
     def run_task(run):
@@ -39,6 +43,7 @@ def read_tasks(root: str):
 
 
 def upload(api_key: str | None = None) -> None:
+    """Uploads all runs to Zeno."""
     base_dir = redlite_data_dir()
     tasks = dict(read_tasks(base_dir))
     if len(tasks) == 0:

@@ -41,13 +41,8 @@ def run(
             numeric suffix to ensure global uniqueness.
             If not provided, a unique name will be auto-generated.
 
-    Returns: tuple
-
-    Usage:
-
-    ```python
-    TODO
-    ```
+    Returns:
+        Experiment: A tuple containing actual (generated) run name and file name of the run.
     """
     started = time.time()
 

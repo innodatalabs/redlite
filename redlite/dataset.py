@@ -1,18 +1,19 @@
 from .core import NamedDataset
 from typing import Literal, Callable
 
+__docformat__ = "google"
+
 
 def load_dataset(name: str, split: Literal["test", "train"] = "test") -> NamedDataset:
     """Loads dataset. Downloads it to the local machine if necessary.
 
     Args:
+        name (str): Dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
+            or "inno:" (Innodata datasets hub)
+        split (str): Split name ("test" or "train")
 
-    - name (str) - dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
-        or "inno:" (Innodata datasets hub)
-
-    - split (str) - split name
-
-    Returns: Dataset
+    Returns:
+        NamedDataset: Dataset object.
     """
     dataset_loader = _get_dataset_loader(name)
     return dataset_loader(name, split)

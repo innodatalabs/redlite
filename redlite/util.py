@@ -18,6 +18,8 @@ def _serialize(obj: dict | DatasetItem) -> bytes:
 
 
 class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
+    """Helper object to compute data digest."""
+
     def __init__(self, dataset: NamedDataset, **kw):
         self._hash = hashlib.sha256(usedforsecurity=False)
         self._hash.update(_serialize(kw))
@@ -37,7 +39,15 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
 
 
 def format_duration(seconds: float) -> str:
-    """Formats duration to a compact human-readable string, e.g. "1d 4h 27m 14.5s" """
+    """Formats duration to a compact human-readable string, e.g. "1d 4h 27m 14.5s".
+
+    Args:
+        seconds (float): Time duration in seconds.
+
+    Returns:
+        str: The same duration as a human-readable value, for example "1d 4h 27m 14.5s".
+    """
+
     out = []
     minutes = seconds // 60
     seconds -= minutes * 60
@@ -56,7 +66,14 @@ def format_duration(seconds: float) -> str:
 
 
 def parse_duration(duration: str) -> float:
-    """Parses human-readable duration into float number, representing seconds"""
+    """Parses human-readable duration into float number, representing seconds.
+
+    Args:
+        duration (str): String representing duration, for example: "1h 24m 33s".
+
+    Returns:
+        float: The same duration in seconds.
+    """
     seconds = 0.0
     minutes = 0
     hours = 0
@@ -76,11 +93,17 @@ def parse_duration(duration: str) -> float:
 
 
 def redlite_data_dir() -> str:
-    """Returns the location of RedLite data directory"""
+    """Returns the location of RedLite data directory.
+
+    Returns:
+        str: Location of the RedLite data.
+    """
     return os.environ.get("REDLITE_DATA_DIR", os.path.expanduser("~/.cache/redlite"))
 
 
 class ScoreAccumulator:
+    """Helper object that computes metric statistics"""
+
     def __init__(self):
         self._min = 100000  # FIXME?
         self._max = 0.0
@@ -88,6 +111,11 @@ class ScoreAccumulator:
         self._count = 0
 
     def __call__(self, score: float) -> None:
+        """Adds another score to the statistics.
+
+        Args:
+            score (float): Score data point.
+        """
         self._acc += score
         self._min = min(self._min, score)
         self._max = max(self._max, score)
@@ -95,6 +123,11 @@ class ScoreAccumulator:
 
     @property
     def summary(self) -> ScoreSummary:
+        """Computes and returns statistics.
+
+        Returns:
+            Dictionary containing `count`, `mean`, `min`, and `max` values.
+        """
         mean = 0.0 if self._count == 0 else self._acc / self._count
         return dict(
             count=self._count,
@@ -105,6 +138,14 @@ class ScoreAccumulator:
 
 
 def read_runs(base: str) -> Iterator[dict]:
+    """Iterator that reads all runs' metadata.
+
+    Args:
+        base (str): Directory where runs are stored.
+
+    Returns:
+        Iterator[dict]: Metadata for each discovered run.
+    """
     for name in os.listdir(base):
         meta_name = os.path.join(base, name, "meta.json")
         if not os.path.isfile(meta_name):
@@ -121,6 +162,15 @@ def read_runs(base: str) -> Iterator[dict]:
 
 
 def read_data(base: str, name: str) -> Iterator[dict]:
+    """Iterator that reads run data.
+
+    Args:
+        base (str): Directory where runs are stored.
+        name (str): Name of the run.
+
+    Returns:
+        Iterator[dict]: Dataset items.
+    """
     meta_name = os.path.join(base, name, "meta.json")
     if not os.path.isfile(meta_name):
         return
@@ -135,6 +185,15 @@ def read_data(base: str, name: str) -> Iterator[dict]:
 
 
 def read_meta(base: str, name: str) -> dict:
+    """Reads run metadata.
+
+    Args:
+        base (str): Directory where runs are stored.
+        name (str): Name of the run.
+
+    Returns:
+        doct: Dictionary containing run metadata.
+    """
     meta_name = os.path.join(base, name, "meta.json")
     if not os.path.isfile(meta_name):
         raise FileNotFoundError()

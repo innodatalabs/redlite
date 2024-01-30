@@ -5,6 +5,8 @@ try:
 except ImportError as err:
     raise MissingDependencyError("Please install openai library") from err
 
+__docformat__ = "google"
+
 
 class OpenAIModel(NamedModel):
     def __init__(self, model="gpt-3.5-turbo", api_key=None, max_retries=2):

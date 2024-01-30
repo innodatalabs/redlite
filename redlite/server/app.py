@@ -4,6 +4,8 @@ from redlite.server import res
 from redlite.util import redlite_data_dir
 from ..util import read_data, read_meta, read_runs
 
+__docformat__ = "google"
+
 
 class RunReader:
     def __init__(self, base: str):

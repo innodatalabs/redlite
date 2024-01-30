@@ -26,6 +26,8 @@ Code taken from https://github.com/tensorflow/nmt/blob/master/nmt/scripts/bleu.p
 import collections  # noqa
 import math  # noqa
 
+__docformat__ = "google"
+
 
 def _get_ngrams(segment, max_order):
     """Extracts all n-grams upto a given maximum order from an input segment.

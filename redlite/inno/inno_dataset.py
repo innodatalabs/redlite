@@ -1,5 +1,7 @@
 from ..core import NamedDataset
 
+__docformat__ = "google"
+
 
 def load_dataset(name: str) -> NamedDataset:
     if not name.startswith("inno:"):
