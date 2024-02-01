@@ -13,7 +13,7 @@ from .core import (
     Experiment,
 )
 from ._jsonl_storage import JsonlStorage
-from .util import DatasetRunningDigest, format_duration, redlite_data_dir, ScoreAccumulator
+from .util import DatasetRunningDigest, redlite_data_dir, ScoreAccumulator
 from ._lock import incr_run_count
 from typing import Iterator
 
@@ -82,7 +82,7 @@ def run(
             max_samples=max_samples,
             started=datetime.utcfromtimestamp(started).isoformat() + "Z",
             completed=datetime.utcfromtimestamp(completed).isoformat() + "Z",
-            duration=format_duration(completed - started),
+            duration=completed - started,
             score_summary=score_accumulator.summary,
         )
 

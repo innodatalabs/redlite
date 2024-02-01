@@ -78,18 +78,18 @@ def parse_duration(duration: str) -> float:
         float: The same duration in seconds.
     """
     seconds = 0.0
-    minutes = 0
-    hours = 0
-    days = 0
+    minutes = 0.0
+    hours = 0.0
+    days = 0.0
     for x in reversed(duration.split()):
         if x[-1] == "s":
             seconds = float(x[:-1])
         elif x[-1] == "m":
-            minutes = int(x[:-1])
+            minutes = float(x[:-1])
         elif x[-1] == "h":
-            hours = int(x[:-1])
+            hours = float(x[:-1])
         elif x[-1] == "d":
-            days = int(x[:-1])
+            days = float(x[:-1])
         else:
             raise ValueError(f"Invalid duration string: [{duration}]")
     return seconds + minutes * 60 + hours * 60 * 60 + days * 24 * 60 * 60
@@ -164,7 +164,7 @@ def read_runs(base: str) -> Iterator[dict]:
         if not os.path.isfile(data_name):
             continue
 
-        yield meta
+        yield _fixup_meta(meta)
 
 
 def read_data(base: str, name: str) -> Iterator[dict]:
@@ -209,4 +209,11 @@ def read_meta(base: str, name: str) -> dict:
         raise FileNotFoundError()
 
     with open(meta_name, "r", encoding="utf-8") as f:
-        return json.load(f)
+        return _fixup_meta(json.load(f))
+
+
+def _fixup_meta(meta):
+    """Legacy code henerated formatted duration. Now we leave it as seconds (float)"""
+    if type(meta["duration"]) is str:
+        meta["duration"] = parse_duration(meta["duration"])
+    return meta
