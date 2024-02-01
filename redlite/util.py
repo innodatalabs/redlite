@@ -28,7 +28,9 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
     def __iter__(self) -> Iterator[DatasetItem]:
         for item in self._dataset:
             yield item
-            self._hash.update(_serialize(item))
+            self._hash.update(
+                _serialize({"id": item["id"], "messages": item["messages"], "expected": item["expected"]})
+            )
 
     def __len__(self):
         return len(self._dataset)
@@ -146,6 +148,9 @@ def read_runs(base: str) -> Iterator[dict]:
     Returns:
         Iterator[dict]: Metadata for each discovered run.
     """
+    if not os.path.isdir(base):
+        return
+
     for name in os.listdir(base):
         meta_name = os.path.join(base, name, "meta.json")
         if not os.path.isfile(meta_name):
