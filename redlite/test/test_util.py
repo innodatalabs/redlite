@@ -10,3 +10,11 @@ def test_parse_duration():
 
 def test_format_duration():
     assert format_duration(60 * 60 * 24) == "1d 0h 0m 0s"
+
+
+def test_format_duration_float():
+    assert format_duration(60 * 60 * 24.0) == "1d 0h 0m 0.0s"
+
+
+def test_parse_duration_float():
+    assert parse_duration("1d 0h 0m 0.0s") == 60 * 60 * 24.0

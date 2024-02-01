@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import math
 from collections.abc import Iterable, Iterator, Sized
 from .core import NamedDataset, DatasetItem, ScoreSummary
 
@@ -51,7 +52,7 @@ def format_duration(seconds: float) -> str:
     """
 
     out = []
-    minutes = seconds // 60
+    minutes = math.floor(seconds // 60)
     seconds -= minutes * 60
     out.append(f"{round(seconds, 2)}s")
     if minutes > 0:
