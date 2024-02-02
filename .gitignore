@@ -4,7 +4,7 @@
 __pycache__
 *.whl
 *.jsonl
-*.yaml
+/*.yaml
 /*.egg-info
 /wheels/
 /site/
