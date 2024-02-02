@@ -42,7 +42,7 @@ jobs:
       - run: make docs
 
       - name: Change permissions
-        run: chmod -R goa=rwx ./site
+        run: chmod -R goa=rx ./site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
