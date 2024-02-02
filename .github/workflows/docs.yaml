@@ -41,6 +41,9 @@ jobs:
 
       - run: make docs
 
+      - name: Change permissions
+        run: chmod -R goa=rwx ./site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
