@@ -20,7 +20,7 @@ black:
 docs:
 	@echo "building documentation ..."
 	portray as_html --overwrite
-	URL="site/index.html"; xdg-open $$URL || sensible-browser $$URL || x-www-browser $$URL || gnome-open $$URL || open $$URL
+	# URL="site/index.html"; xdg-open $$URL || sensible-browser $$URL || x-www-browser $$URL || gnome-open $$URL || open $$URL
 
 .PHONE: wheel
 wheel:
