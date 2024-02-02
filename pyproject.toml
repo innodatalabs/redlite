@@ -26,10 +26,9 @@ dependencies = [
 
 [project.urls]
 Homepage      = "https://github.com/innodatalabs/redlite"
-Documentation = "https://redlite.readthedocs.org"
+Documentation = "https://innodatalabs.github.io.redlite"
 Repository    = "https://github.com/innodatalabs/redlite.git"
 Issues        = "https://github.com/innodatalabs/redlite/issues"
-Changelog     = "https://github.com/innodatalabs/redlite/blob/master/CHANGELOG.md"
 
 [project.optional-dependencies]
 hf = ["datasets"]
