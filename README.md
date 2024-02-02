@@ -14,7 +14,7 @@ An opinionated toolset for testing Conversational Language Models.
     pip install redlite[all]
     ```
 
-2. Generate several runs (using Python scripting, see [examples](samples/), and below)
+2. Generate several runs (using Python scripting, see [examples](https://github.com/innodatalabs/redlite/tree/master/samples), and below)
 
 3. Review and compare runs
 
