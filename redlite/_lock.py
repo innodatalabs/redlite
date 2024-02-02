@@ -1,7 +1,7 @@
 import contextlib
 import os
 import json
-from .util import redlite_data_dir
+from ._util import redlite_data_dir
 from collections.abc import Iterator
 
 __all__ = ["incr_run_count"]

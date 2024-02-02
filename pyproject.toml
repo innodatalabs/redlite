@@ -63,21 +63,23 @@ packages = [
 [tool.setuptools.package-data]
 "redlite.server" = ["resources/build/*", "resources/build/_app/*", "resources/build/_app/immutable/*/*"]
 
-[tool.portray]
-modules = ["redlite"]
-repo_name = "redlite"
-repo_url = "https://redlite.org"
-labels = {'api' = 'API', 'abc' = 'abc'}
-
 [tool.portray.mkdocs]
-site_name = "redlite"
-extra = {homepage = "https://example.com"}
+repo_name = "GitHub: innodatalabs/redlite"
+repo_url = "https://github.com/innodatalabs/redlite"
+edit_uri = "edit/master/"
+# extra = {homepage = "https://example.com"}
+markdown_extensions = [
+    "pymdownx.inlinehilite",
+    "pymdownx.snippets",
+    "pymdownx.superfences",
+]
 
 [tool.portray.mkdocs.theme]
-# favicon = "art/logo_small.png"
-# logo = "art/logo_small.png"
+favicon = "art/redlite.svg"
+logo = "art/redlite.svg"
 name = "material"
-palette = {primary = "deep purple", accent = "pink"}
+# palette = {primary = "deep purple", accent = "pink"}
 
 [tool.portray.pdocs]
-exclude_source = false
+exclude_source = true
+

@@ -1,4 +1,4 @@
-from redlite.util import format_duration, parse_duration
+from redlite._util import format_duration, parse_duration
 
 
 def test_parse_duration():

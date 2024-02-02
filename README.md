@@ -1,12 +1,22 @@
 # RedLite
 
-An opinionated toolset for testing Language Models for safety.
+An opinionated toolset for testing Conversational Language Models.
 
-## User experience
+## Usage
 
-1. `pip install redlite[all]`
-2. Generate several runs (using Python scripting, see below)
-3. `redlite server --port <PORT>`
+1. Install required dependencies
+
+    ```bash
+    pip install redlite[all]
+    ```
+
+2. Generate several runs (using Python scripting, see [examples](samples/), and below)
+
+3. Review and compare runs
+
+    ```bash
+    redlite server --port <PORT>
+    ```
 
 ## Python API
 
@@ -23,6 +33,14 @@ metric = PrefixMetric(ignore_case=True, ignore_punct=True, strip=True)
 
 run(model=model, dataset=dataset, metric=metric)
 ```
+
+## Goals
+
+* simple, easy-to-learn API
+* lightweight
+* only necessary dependencies
+* framework-agnostic (PyTorch, Tensorflow, Keras, Flax, Jax)
+* basic analytic tools included
 
 ## Develop
 
@@ -48,7 +66,7 @@ Make commands:
 - [ ] automate CI/CD
 - [ ] write docs
 - [ ] publish docs automatically (CI/CD)
-- [ ] web UI styling
+- [x] web UI styling
 - [ ] better test server
 - [ ] tests
 - [ ] Integrations (HF, OpenAI, Anthropic, vLLM)

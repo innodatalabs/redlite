@@ -1,3 +1,3 @@
-from .openai import OpenAIModel
+from ._openai import OpenAIModel
 
 __all__ = ["OpenAIModel"]

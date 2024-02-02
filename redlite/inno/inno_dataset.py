@@ -1,6 +1,4 @@
-from ..core import NamedDataset
-
-__docformat__ = "google"
+from .._core import NamedDataset
 
 
 def load_dataset(name: str) -> NamedDataset:

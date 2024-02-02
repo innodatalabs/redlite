@@ -3,7 +3,7 @@ import json
 import os
 import math
 from collections.abc import Iterable, Iterator, Sized
-from .core import NamedDataset, DatasetItem, ScoreSummary
+from ._core import NamedDataset, DatasetItem, ScoreSummary
 
 __all__ = [
     "DatasetRunningDigest",
@@ -11,7 +11,6 @@ __all__ = [
     "format_duration",
     "redlite_data_dir",
 ]
-__docformat__ = "google"
 
 
 def _serialize(obj: dict | DatasetItem) -> bytes:
@@ -44,11 +43,9 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
 def format_duration(seconds: float) -> str:
     """Formats duration to a compact human-readable string, e.g. "1d 4h 27m 14.5s".
 
-    Args:
-        seconds (float): Time duration in seconds.
+    - **seconds** (`float`): Time duration in seconds.
 
-    Returns:
-        str: The same duration as a human-readable value, for example "1d 4h 27m 14.5s".
+    Returns string, representing the same duration as a human-readable value, for example "1d 4h 27m 14.5s".
     """
 
     out = []
@@ -71,11 +68,9 @@ def format_duration(seconds: float) -> str:
 def parse_duration(duration: str) -> float:
     """Parses human-readable duration into float number, representing seconds.
 
-    Args:
-        duration (str): String representing duration, for example: "1h 24m 33s".
+    - **duration** (`str`): Duration string, for example: "1h 24m 33s".
 
-    Returns:
-        float: The same duration in seconds.
+    Returns `float` value representing the same duration in seconds.
     """
     seconds = 0.0
     minutes = 0.0
@@ -98,8 +93,7 @@ def parse_duration(duration: str) -> float:
 def redlite_data_dir() -> str:
     """Returns the location of RedLite data directory.
 
-    Returns:
-        str: Location of the RedLite data.
+    Returns location of the RedLite data directory.
     """
     return os.environ.get("REDLITE_DATA_DIR", os.path.expanduser("~/.cache/redlite"))
 
@@ -116,8 +110,7 @@ class ScoreAccumulator:
     def __call__(self, score: float) -> None:
         """Adds another score to the statistics.
 
-        Args:
-            score (float): Score data point.
+        - **score** (`float`): Score data point.
         """
         self._acc += score
         self._min = min(self._min, score)
@@ -128,8 +121,7 @@ class ScoreAccumulator:
     def summary(self) -> ScoreSummary:
         """Computes and returns statistics.
 
-        Returns:
-            Dictionary containing `count`, `mean`, `min`, and `max` values.
+        Returns plain dict containing `count`, `mean`, `min`, and `max` values.
         """
         mean = 0.0 if self._count == 0 else self._acc / self._count
         return dict(
@@ -143,11 +135,9 @@ class ScoreAccumulator:
 def read_runs(base: str) -> Iterator[dict]:
     """Iterator that reads all runs' metadata.
 
-    Args:
-        base (str): Directory where runs are stored.
+    - **base** (`str`): Directory where runs are stored.
 
-    Returns:
-        Iterator[dict]: Metadata for each discovered run.
+    Returns `Iterator[dict]` yielding metadata dict for each discovered run.
     """
     if not os.path.isdir(base):
         return
@@ -170,12 +160,10 @@ def read_runs(base: str) -> Iterator[dict]:
 def read_data(base: str, name: str) -> Iterator[dict]:
     """Iterator that reads run data.
 
-    Args:
-        base (str): Directory where runs are stored.
-        name (str): Name of the run.
+    - **base** (`str`): Directory where runs are stored.
+    - **name** (`str`): Name of the run.
 
-    Returns:
-        Iterator[dict]: Dataset items.
+    Returns `Iterator[dict]` yielding dataset records.
     """
     meta_name = os.path.join(base, name, "meta.json")
     if not os.path.isfile(meta_name):
@@ -193,12 +181,10 @@ def read_data(base: str, name: str) -> Iterator[dict]:
 def read_meta(base: str, name: str) -> dict:
     """Reads run metadata.
 
-    Args:
-        base (str): Directory where runs are stored.
-        name (str): Name of the run.
+    - **base (`str`): Directory where runs are stored.
+    - **name (`str`): Name of the run.
 
-    Returns:
-        doct: Dictionary containing run metadata.
+    Returns a dictionary containing run metadata.
     """
     meta_name = os.path.join(base, name, "meta.json")
     if not os.path.isfile(meta_name):
@@ -213,7 +199,7 @@ def read_meta(base: str, name: str) -> dict:
 
 
 def _fixup_meta(meta):
-    """Legacy code henerated formatted duration. Now we leave it as seconds (float)"""
+    """Legacy code generated formatted duration. Now we leave it as seconds (float)"""
     if type(meta["duration"]) is str:
         meta["duration"] = parse_duration(meta["duration"])
     return meta

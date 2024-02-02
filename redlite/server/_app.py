@@ -1,23 +1,44 @@
 from aiohttp import web
 import aiohttp_cors
 from redlite.server import res
-from redlite.util import redlite_data_dir
-from ..util import read_data, read_meta, read_runs
-
-__docformat__ = "google"
+from redlite._util import redlite_data_dir
+from .._util import read_data, read_meta, read_runs
 
 
 class RunReader:
+    """Defines how web service reads runs. Can be mocked for testing."""
+
     def __init__(self, base: str):
         self.base = base
 
     async def runs(self) -> list[dict]:
+        """Reads all runs
+
+        Returns:
+            list: A list of runs found
+        """
         return list(read_runs(self.base))
 
     async def data(self, name: str) -> list[dict]:
+        """Reads data of the run.
+
+        Args:
+            name (str): Name of the run.
+
+        Returns:
+            list: A list of all datapoints for this run.
+        """
         return list(read_data(self.base, name))
 
     async def meta(self, name: str) -> dict:
+        """Reads metadata of the run.
+
+        Args:
+            name (str): Name of the run.
+
+        Returns:
+            dict: A dictionary containing run metadata.
+        """
         return read_meta(self.base, name)
 
 
@@ -40,7 +61,7 @@ class Service:
         return web.json_response(meta)
 
 
-async def index(request):
+async def index(_):
     return web.FileResponse(res("build", "index.html"))
 
 

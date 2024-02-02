@@ -1,11 +1,10 @@
 import contextlib
-import logging
 import os
 import time
 from tqdm import tqdm
 import duoname
 from datetime import datetime
-from .core import (
+from ._core import (
     NamedModel,
     NamedDataset,
     NamedMetric,
@@ -13,14 +12,13 @@ from .core import (
     Experiment,
 )
 from ._jsonl_storage import JsonlStorage
-from .util import DatasetRunningDigest, redlite_data_dir, ScoreAccumulator
+from ._util import DatasetRunningDigest, redlite_data_dir, ScoreAccumulator
 from ._lock import incr_run_count
 from typing import Iterator
+from ._core import log
+
 
 __all__ = ["run"]
-__docformat__ = "google"
-
-logger = logging.getLogger("redlite")
 
 
 def run(
@@ -33,16 +31,25 @@ def run(
 ) -> Experiment:
     """Runs experiment, using the given `model`, `dataset`, and `metric`.
 
-    Args:
-        model (NamedModel): A model to run.
-        dataset (NamedDataset): Dataset.
-        metric (NamedMetric): Metric.
-        name (str, optional): The name of the run. It will automatically get a
+    - **model** (`NamedModel`): Model.
+    - **dataset** (`NamedDataset`): Dataset.
+    - **metric** (`NamedMetric`): Metric.
+    - **name** (`str`, optional): The name of the run. It will automatically get a
             numeric suffix to ensure global uniqueness.
             If not provided, a unique name will be auto-generated.
+    - **max_samples** (`int`, optional): Allows one to limit the number of samples
+            in the run. Value of zero (the default) means "run the whole dataset".
 
-    Returns:
-        Experiment: A tuple containing actual (generated) run name and file name of the run.
+    Returns the name of the actual (generated) run name.
+
+    Sample usage:
+    ```python
+    model = MyModel(...)
+    dataset = MyDataset(...)
+    metric = MyMetric(...)
+
+    run(model=model, dataset=dataset, metric=metric)
+    ```
     """
     started = time.time()
 
@@ -97,7 +104,7 @@ def _storage(runname: str) -> Iterator[Storage]:
         raise RuntimeError(f"Unexpectedly, directory {base} exists!")
     os.makedirs(base, exist_ok=True)
 
-    logger.info(f"Started run {runname}")
+    log.info(f"Started run {runname}")
     with JsonlStorage.open(runname, base) as s:
         yield s
 

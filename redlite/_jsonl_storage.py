@@ -2,7 +2,7 @@ import os
 import json
 import contextlib
 from collections.abc import Iterator
-from .core import Storage, DatasetItem
+from ._core import Storage, DatasetItem
 
 
 class JsonlStorage(Storage):

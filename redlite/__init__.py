@@ -1,16 +1,15 @@
-from .core import (
+from ._core import (
     NamedDataset,
     DatasetItem,
     Message,
-    Messages,
-    Role,
     NamedModel,
     NamedMetric,
+    MissingDependencyError,
 )
-from .run import run
-from .dataset import load_dataset
+from ._run import run
+from ._dataset import load_dataset
 
-__version__ = "0.0.21"
+__version__ = "0.0.22"
 __all__ = [
     "run",
     "load_dataset",
@@ -19,6 +18,5 @@ __all__ = [
     "NamedMetric",
     "DatasetItem",
     "Message",
-    "Messages",
-    "Role",
+    "MissingDependencyError",
 ]

@@ -1,5 +1,5 @@
 import pytest
-from redlite.server.app import get_app, RunReader
+from redlite.server._app import get_app, RunReader
 from aiohttp import web
 
 

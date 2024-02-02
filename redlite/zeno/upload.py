@@ -1,5 +1,5 @@
-from ..util import redlite_data_dir, read_runs, read_data
-from ..core import MissingDependencyError
+from .._util import redlite_data_dir, read_runs, read_data
+from .._core import MissingDependencyError
 import collections
 import os
 
@@ -9,9 +9,6 @@ try:
     import pandas as pd
 except ImportError as err:
     raise MissingDependencyError("Please install zeno_client library") from err
-
-
-__docformat__ = "google"
 
 
 Task = collections.namedtuple("Task", ["dataset", "data_digest", "metric"])

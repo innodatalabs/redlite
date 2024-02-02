@@ -1,7 +1,5 @@
-from ..core import NamedMetric
+from .. import NamedMetric
 import re
-
-__docformat__ = "google"
 
 
 _PUNCT = ".,:;()[]{}!?<>$%"
@@ -9,7 +7,9 @@ _RE_PUNCT = re.compile("[" + re.escape(_PUNCT) + "]")
 
 
 def match(expected: str, actual: str, ignore_case=True, ignore_punct=False, strip=False) -> float:
-    """Computes score by comparing expected string to the prefix of the actual string."""
+    """
+    Computes score by comparing expected string to the prefix of the actual string.
+    """
     if ignore_case:
         expected = expected.lower()
         actual = actual.lower()
@@ -34,20 +34,16 @@ class PrefixMetric(NamedMetric):
     For example, the expected response could be "Correct", but model answers
     "Correct, because blah blah blah...". To give model full marks for longer and
     verbose answer, use this metric.
+
+    - **ignore_case** (`bool`) - when set to `True` will ignore text case. Deafult is `False`.
+    - **ignore_punct** (`bool`) - when set to `True` punctuation symbols and various parenthesis
+            will be ignored. Default is `False`.
+
+    - **strip** (`bool`) - when set to `True`, strips leading and trailing white space.
+            Default is `False`.
     """
 
     def __init__(self, ignore_case=False, ignore_punct=False, strip=False):
-        """
-
-        Args:
-
-        - ignore_case (bool) - whn set to `True` will ignore text case
-
-        - ignore_punct (bool) - when set to `True` punctuation symbols and various parenthesis
-                will be ignored
-
-        - strip (bool) - when set to `True`, strips leading and trailing white space
-        """
         name = "prefix"
         if ignore_case:
             name = name + "-ignore-case"

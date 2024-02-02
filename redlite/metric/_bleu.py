@@ -1,12 +1,15 @@
 import functools
-from ..core import NamedMetric
-from .compute_bleu import compute_bleu
-
-__docformat__ = "google"
+from .. import NamedMetric
+from ._compute_bleu import compute_bleu
 
 
 class BleuMetric(NamedMetric):
-    """Sentence-level BLEU score"""
+    """
+    Sentence-level BLEU score.
+
+    - **max_order** (`int`): N-gram order use to compute BLEU. Default is `4`.
+    - **smooth** (`bool`): When set to `True`, will use smooth BLEU.
+    """
 
     def __init__(self, max_order=4, smooth=False):
         engine = functools.partial(_bleu, max_order=max_order, smooth=smooth)

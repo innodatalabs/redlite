@@ -1,4 +1,4 @@
-from ..core import NamedModel, Message, MissingDependencyError, log
+from .._core import NamedModel, Message, MissingDependencyError, log
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
@@ -8,6 +8,18 @@ except ImportError as err:
 
 
 class HFModel(NamedModel):
+    """
+    Model loaded from HuggingFace hub.
+
+    - **hf_name** (`str`): name of the model on HuggingFace hub.
+    - **device** (`str | None`): which device to use for inference. If left
+            unset, will use CUDA if present, else CPU.
+    - **token** (`str | None`): HuggingFace authorization token. May be needed
+            for some models (e.g. Mistral).
+    - **max_length** (`int`): Largest number of tokens that model can handle.
+            If prompt is too big, model will output an empty string.
+    """
+
     def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192):
         self.name = "hf:" + hf_name
         if device is None:
@@ -43,8 +55,8 @@ class HFModel(NamedModel):
         prompt_tokens = inputs["input_ids"].shape[1]
         if prompt_tokens >= self.max_length:
             log.warn(
-                f"Prompt of size {prompt_tokens} does not fit into \
-model max_length of {self.max_length}. Returning empty string!"
+                f"Prompt of size {prompt_tokens} does not fit into "
+                + "model max_length of {self.max_length}. Returning empty string!"
             )
             return ""
 

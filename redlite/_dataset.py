@@ -1,20 +1,30 @@
-from .core import NamedDataset, DatasetItem
+from ._core import NamedDataset, DatasetItem
 from typing import Literal, Callable
 from collections.abc import Iterator
 
-__docformat__ = "google"
+__all__: list[str] = []
 
 
 def load_dataset(name: str, split: Literal["test", "train"] = "test") -> NamedDataset:
     """Loads dataset. Downloads it to the local machine if necessary.
 
-    Args:
-        name (str): Dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
+    - **name** (`str`): Dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
             or "inno:" (Innodata datasets hub)
-        split (str): Split name ("test" or "train")
+    - **split** (`str`): Split name (`"test"` or `"train"`)
 
-    Returns:
-        NamedDataset: Dataset object.
+    Returns: `NamedDataset` object.
+
+    Sample usage:
+    ```python
+
+    dataset = load_dataset("hf:innodatalabs/rt-frank")
+
+    print(dataset.name)
+    print(dataset.split)
+
+    for record in dataset:
+        ...
+    ```
     """
     dataset_loader = _get_dataset_loader(name)
     dataset = dataset_loader(name, split)
@@ -22,14 +32,28 @@ def load_dataset(name: str, split: Literal["test", "train"] = "test") -> NamedDa
 
 
 class ValidatingDataset(NamedDataset):
-    """Wraps dataset and validates it."""
+    """
+    Wraps dataset and validates it.
+
+    This includes validating that dataset object has required attributes
+    (`name`, `split`, `labels`), and validating every record as dataset
+    is iterated.
+
+    - **dataset** (`NamedDAtaset`): A dataset to wrap.
+
+    Sample usage:
+    ```python
+
+    my_untrusted_dataset = ...
+
+    my_trusted_dataset = ValidaringDataset(my_untrusted_dataset)
+
+    for record in my_trusted_dataset:
+        ...
+    ```
+    """
 
     def __init__(self, dataset: NamedDataset):
-        """Creates instance from a dataset.
-
-        Args:
-            dataset (NamedDataset): A dataset to validate.
-        """
         self._dataset = dataset
         self.name = dataset.name
         self.split = dataset.split
@@ -80,6 +104,7 @@ class ValidatingDataset(NamedDataset):
 
 
 def _get_dataset_loader(name: str) -> Callable[[str, Literal["test", "train"]], NamedDataset]:
+    """Hook for other dataset hubs. Presently only HuggingFace Hub is implemented."""
     if name.startswith("hf:"):
         from .hf.hf_dataset import HFDataset
 

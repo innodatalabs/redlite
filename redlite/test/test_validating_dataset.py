@@ -1,4 +1,4 @@
-from redlite.dataset import ValidatingDataset
+from redlite._dataset import ValidatingDataset
 import pytest
 
 

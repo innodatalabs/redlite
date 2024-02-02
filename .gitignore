@@ -9,3 +9,6 @@ __pycache__
 /wheels/
 /site/
 /*.tgz
+/.pytest_cache
+/.mypy_cache
+

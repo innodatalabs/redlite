@@ -1,5 +1,6 @@
 from collections.abc import Iterator
-from ..core import NamedDataset, DatasetItem, Split, MissingDependencyError
+from typing import Literal
+from .._core import NamedDataset, DatasetItem, MissingDependencyError
 
 
 try:
@@ -10,7 +11,16 @@ except ImportError as err:
 
 
 class HFDataset(NamedDataset):
-    def __init__(self, hf_name: str, split: Split = "test"):
+    """
+    Dataset hosted on HuggingFace hub.
+
+    - **hf_name** (`str`): HuggingFace name of the dataset.
+            For example, `"innodatalabs/rt-factcc"`.
+    - **split** (`str`): Which split to load.
+
+    """
+
+    def __init__(self, hf_name: str, split: Literal["test", "train"] = "test"):
         super().__init__()
         self.name = "hf:" + hf_name
         self._dataset = load_dataset(hf_name, trust_remote_code=True)
@@ -34,7 +44,7 @@ class HFDataset(NamedDataset):
         return self._dataset[self.split].info.splits[self.split].num_examples
 
     @classmethod
-    def load(cls, name: str, split: Split = "test") -> "NamedDataset":
+    def load(cls, name: str, split: Literal["test", "train"] = "test") -> "NamedDataset":
         if not name.startswith("hf:"):
             raise ValueError(f"This method can only load from HF dataset hub, but requested {name}")
         return cls(name[3:], split)

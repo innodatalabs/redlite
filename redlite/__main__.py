@@ -12,7 +12,7 @@ def main():
 
     args = parser.parse_args()
     if args.cmd == "server":
-        from .server.app import main as server_main
+        from .server._app import main as server_main
 
         print("*** HTTP UI server")
         server_main(args.port)
