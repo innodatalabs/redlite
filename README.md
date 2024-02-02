@@ -1,6 +1,10 @@
 # RedLite
 
+[![PyPI version](https://badge.fury.io/py/redlite.svg)](https://badge.fury.io/py/redlite)
+
 An opinionated toolset for testing Conversational Language Models.
+
+[Docs](https://innodatalabs.github.io/redlite/)
 
 ## Usage
 
