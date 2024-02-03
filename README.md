@@ -66,10 +66,10 @@ Make commands:
 ## TODO
 
 - [x] deps cleanup (randomname!)
-- [ ] review/improve module structure
+- [x] review/improve module structure
 - [ ] automate CI/CD
 - [ ] write docs
-- [ ] publish docs automatically (CI/CD)
+- [x] publish docs automatically (CI/CD)
 - [x] web UI styling
 - [ ] better test server
 - [ ] tests
