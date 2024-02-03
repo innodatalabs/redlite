@@ -7,7 +7,7 @@ class BleuMetric(NamedMetric):
     """
     Sentence-level BLEU score.
 
-    - **max_order** (`int`): N-gram order use to compute BLEU. Default is `4`.
+    - **max_order** (`int`): N-gram order used to compute BLEU. Default is `4`.
     - **smooth** (`bool`): When set to `True`, will use smooth BLEU.
     """
 

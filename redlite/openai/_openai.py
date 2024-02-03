@@ -10,9 +10,9 @@ class OpenAIModel(NamedModel):
     """
     Model that calls OpenAI Completion API.
 
-    - **model** (str): Name of the OpenAI model. Default is `"gpt-3.5-turbo`.
-    - **api_key** (str): OpenAI API key
-    - **max_retries** (int): How many times to retry a failed request. Default is `2`.
+    - **model** (`str`): Name of the OpenAI model. Default is `"gpt-3.5-turbo"`.
+    - **api_key** (`str`): OpenAI API key
+    - **max_retries** (`int`): How many times to retry a failed request. Default is `2`.
     """
 
     def __init__(self, model="gpt-3.5-turbo", api_key=None, max_retries=2):
