@@ -1,5 +1,4 @@
-from ._bleu import BleuMetric
+from ._basic import PrefixMetric, ExactMetric
 from ._random import RandomMetric
-from ._prefix import PrefixMetric
 
-__all__ = ["BleuMetric", "RandomMetric", "PrefixMetric"]
+__all__ = ["RandomMetric", "PrefixMetric", "ExactMetric"]

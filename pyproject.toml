@@ -26,7 +26,7 @@ dependencies = [
 
 [project.urls]
 Homepage      = "https://github.com/innodatalabs/redlite"
-Documentation = "https://innodatalabs.github.io.redlite"
+Documentation = "https://innodatalabs.github.io/redlite"
 Repository    = "https://github.com/innodatalabs/redlite.git"
 Issues        = "https://github.com/innodatalabs/redlite/issues"
 
@@ -35,8 +35,19 @@ hf = ["datasets"]
 server = ["aiohttp", "aiohttp-cors"]
 openai = ["openai"]
 zeno = ["zeno_client"]
-all = ["redlite[hf,server,openai,zeno]"]
-dev = ["pytest", "portray", "black", "flake8", "mypy", "pytest-asyncio", "pytest-aiohttp"]
+rouge = ["rouge-scorer"]
+bleu = ["nltk"]
+all = ["redlite[hf,server,openai,zeno,rouge,nltk]"]
+dev = [
+    "pytest",
+    "twine",
+    "portray",
+    "black",
+    "flake8",
+    "mypy",
+    "pytest-asyncio",
+    "pytest-aiohttp"
+]
 
 [project.scripts]
 redlite = "redlite.__main__:main"
