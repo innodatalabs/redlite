@@ -10,8 +10,7 @@ except ImportError as err:
 
 class F1Metric(NamedMetric):
     """
-    Metric that checks that the actual resonse equals the expected string,
-    using F1 measure on token (word) set.
+    Metric that checks that the actual resonse equals the expected string, using F1 measure on token (word) set.
     """
 
     def __init__(self):
