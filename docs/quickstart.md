@@ -68,7 +68,7 @@ will be messed up._
 
 ### Define your metric
 
-Metric is a function that takes `expected` string and `actual` mode response and grades the response against the
+Metric is a function that takes `expected` string and `actual` response and grades the response against the
 expected one, returning a number from 0.0 (bad) to 1.0 (great).
 
 ```python
