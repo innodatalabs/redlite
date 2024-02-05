@@ -64,6 +64,8 @@ packages = [
     "redlite",
     "redlite.server",
     "redlite.metric",
+    "redlite.metric.rouge",
+    "redlite.metric.bleu",
     "redlite.hf",
     "redlite.inno",
     "redlite.openai",
