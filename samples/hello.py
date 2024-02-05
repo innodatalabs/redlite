@@ -1,5 +1,5 @@
 from redlite import run, load_dataset, NamedModel, Message
-from redlite.metric import BleuMetric
+from redlite.metric.bleu import BleuMetric
 
 
 def parrot(messages: list[Message]) -> str:
