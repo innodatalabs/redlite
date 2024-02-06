@@ -3,6 +3,7 @@ import aiohttp_cors
 from redlite.server import res
 from redlite._util import redlite_data_dir
 from .._util import read_data, read_meta, read_runs
+from .._core import Run
 
 
 class RunReader:
@@ -11,7 +12,7 @@ class RunReader:
     def __init__(self, base: str):
         self.base = base
 
-    async def runs(self) -> list[dict]:
+    async def runs(self) -> list[Run]:
         """Reads all runs
 
         Returns:
@@ -30,7 +31,7 @@ class RunReader:
         """
         return list(read_data(self.base, name))
 
-    async def meta(self, name: str) -> dict:
+    async def meta(self, name: str) -> Run:
         """Reads metadata of the run.
 
         Args:

@@ -1,0 +1,32 @@
+name: GitHub Pages
+
+on:
+  push:
+  pull_request:
+
+
+jobs:
+
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+
+      - name: Upgrade pip
+        run: |
+          python3 -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: pip install -e .[all,dev]
+
+      - run: make lint
+
+      - run: make test

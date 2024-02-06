@@ -1,4 +1,3 @@
-import dataclasses
 import abc
 from collections.abc import Callable, Iterable, Sized
 from typing import TypedDict, Literal
@@ -150,15 +149,6 @@ class Storage(abc.ABC):
         pass
 
 
-@dataclasses.dataclass
-class Experiment:
-    """
-    Represents experiment run.
-    """
-
-    name: str
-
-
 class MissingDependencyError(RuntimeError):
     """
     Raised when a missing optional dependency is detected.
@@ -174,3 +164,45 @@ class ScoreSummary(TypedDict):
     mean: float
     min: float
     max: float
+
+
+class Run(TypedDict):
+    """
+    Run metadata
+    """
+
+    run: str
+    """Name of the run"""
+
+    dataset: str
+    """Dataset name"""
+
+    split: str
+    """Dataset split"""
+
+    dataset_labels: dict[str, str]
+    """Labels"""
+
+    data_digest: str
+    """SHA digest of all records that were served in this run"""
+
+    metric: str
+    """Name of the metric"""
+
+    model: str
+    """Model name"""
+
+    max_samples: int
+    """Samples limit"""
+
+    started: str
+    """ISO UTC timestamp when run was started"""
+
+    completed: str
+    """ISO UTC timestamp when run was completed"""
+
+    duration: float
+    """Run duration in seconds"""
+
+    score_summary: ScoreSummary
+    """Score aggregate"""

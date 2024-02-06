@@ -9,10 +9,10 @@ from ._core import (
     NamedDataset,
     NamedMetric,
     Storage,
-    Experiment,
+    Run,
 )
 from ._jsonl_storage import JsonlStorage
-from ._util import DatasetRunningDigest, redlite_data_dir, ScoreAccumulator
+from ._util import DatasetRunningDigest, redlite_data_dir, format_score_summary, ScoreAccumulator
 from ._lock import incr_run_count
 from typing import Iterator
 from ._core import log
@@ -28,7 +28,7 @@ def run(
     metric: NamedMetric,
     name: str | None = None,
     max_samples=0,
-) -> Experiment:
+) -> Run:
     """Runs experiment, using the given `model`, `dataset`, and `metric`.
 
     - **model** (`NamedModel`): Model.
@@ -53,7 +53,7 @@ def run(
     """
     started = time.time()
 
-    data_with_digest = DatasetRunningDigest(dataset)
+    data_with_digest = DatasetRunningDigest(dataset, max_samples=max_samples)
     score_accumulator = ScoreAccumulator()
 
     if name is None:
@@ -67,21 +67,18 @@ def run(
     print(f"\tmetric : {metric.name}")
 
     with _storage(runname) as storage:  # type: Storage
-        sample_count = 0
         for item in tqdm(data_with_digest):
             actual = model(item["messages"])
-            sample_count += 1
-            if max_samples > 0 and sample_count >= max_samples:
-                break
             score = metric(item["expected"], actual)
             storage.save(item, actual, score)
             score_accumulator(score)
 
         completed = time.time()
 
-        storage.save_meta(
-            name=storage.name,
+        run: Run = dict(
+            run=storage.name,
             dataset=dataset.name,
+            split=dataset.split,
             dataset_labels=dataset.labels,
             data_digest=data_with_digest.hexdigest,
             metric=metric.name,
@@ -93,8 +90,13 @@ def run(
             score_summary=score_accumulator.summary,
         )
 
+        storage.save_meta(**run)
+
+        print()
+        print(f"\tData digest: {run['data_digest']}")
+        print(f"\tScore summary: {format_score_summary(run['score_summary'])}")
         print("Smile! All done!")
-        return Experiment(name=storage.name)
+        return run
 
 
 @contextlib.contextmanager

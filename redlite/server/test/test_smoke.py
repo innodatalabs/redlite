@@ -4,9 +4,9 @@ async def test_runs(client):
     runs = await res.json()
 
     assert type(runs) is list, runs
-    assert len(runs) == 2, runs
+    assert len(runs) == 3, runs
     assert runs[0]["metric"] == "bleu"
-    assert runs[0]["name"] == "beautiful-soup-1"
+    assert runs[0]["run"] == "beautiful-soup-1"
 
 
 async def test_meta(client):
@@ -15,7 +15,7 @@ async def test_meta(client):
     data = await res.json()
 
     assert type(data) is dict, data
-    assert data["name"] == "beautiful-soup-1"
+    assert data["run"] == "beautiful-soup-1"
 
 
 async def test_data(client):

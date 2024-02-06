@@ -95,3 +95,9 @@ name = "material"
 [tool.portray.pdocs]
 exclude_source = true
 
+[tool.mypy]
+enable_error_code = [
+    "ignore-without-code"
+]
+show_error_codes = true
+warn_unused_ignores = true

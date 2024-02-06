@@ -3,7 +3,7 @@ import json
 import os
 import math
 from collections.abc import Iterable, Iterator, Sized
-from ._core import NamedDataset, DatasetItem, ScoreSummary
+from ._core import NamedDataset, DatasetItem, ScoreSummary, Run
 
 __all__ = [
     "DatasetRunningDigest",
@@ -20,20 +20,24 @@ def _serialize(obj: dict | DatasetItem) -> bytes:
 class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
     """Helper object to compute data digest."""
 
-    def __init__(self, dataset: NamedDataset, **kw):
+    def __init__(self, dataset: NamedDataset, max_samples=0):
         self._hash = hashlib.sha256(usedforsecurity=False)
-        self._hash.update(_serialize(kw))
         self._dataset = dataset
+        self._max_samples = max_samples
 
     def __iter__(self) -> Iterator[DatasetItem]:
+        count = 0
         for item in self._dataset:
             yield item
             self._hash.update(
                 _serialize({"id": item["id"], "messages": item["messages"], "expected": item["expected"]})
             )
+            count += 1
+            if self._max_samples > 0 and count >= self._max_samples:
+                break
 
     def __len__(self):
-        return len(self._dataset)
+        return len(self._dataset) if self._max_samples == 0 else self._max_samples
 
     @property
     def hexdigest(self) -> str:
@@ -90,6 +94,10 @@ def parse_duration(duration: str) -> float:
     return seconds + minutes * 60 + hours * 60 * 60 + days * 24 * 60 * 60
 
 
+def format_score_summary(summary: ScoreSummary) -> str:
+    return f"{round(summary['mean'], 3)} (#{summary['count']}, {round(summary['min'], 3)}-{round(summary['max'], 3)})"
+
+
 def redlite_data_dir() -> str:
     """Returns the location of RedLite data directory.
 
@@ -132,7 +140,7 @@ class ScoreAccumulator:
         )
 
 
-def read_runs(base: str) -> Iterator[dict]:
+def read_runs(base: str) -> Iterator[Run]:
     """Iterator that reads all runs' metadata.
 
     - **base** (`str`): Directory where runs are stored.
@@ -178,7 +186,7 @@ def read_data(base: str, name: str) -> Iterator[dict]:
             yield json.loads(line)
 
 
-def read_meta(base: str, name: str) -> dict:
+def read_meta(base: str, name: str) -> Run:
     """Reads run metadata.
 
     - **base (`str`): Directory where runs are stored.
@@ -198,8 +206,16 @@ def read_meta(base: str, name: str) -> dict:
         return _fixup_meta(json.load(f))
 
 
-def _fixup_meta(meta):
-    """Legacy code generated formatted duration. Now we leave it as seconds (float)"""
+def _fixup_meta(meta: dict) -> Run:
+    """
+    Legacy code generated formatted duration. Now we leave it as seconds (float).
+
+    Similarly, have added "split" key, and renamed "name" to "run".
+    """
     if type(meta["duration"]) is str:
         meta["duration"] = parse_duration(meta["duration"])
-    return meta
+    if "name" in meta:
+        meta["run"] = meta.pop("name")
+    if "split" not in meta:
+        meta["split"] = "test"
+    return meta  # type: ignore [return-value]

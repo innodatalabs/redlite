@@ -1,5 +1,5 @@
 .PHONY: test
-test:
+test: test-server
 	python -m pytest redlite/test
 
 .PHONY: test-server
