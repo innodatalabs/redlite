@@ -1,6 +1,9 @@
 from redlite.metric.bleu import BleuMetric, BleuCJKMetric
 import nltk
-nltk.download('punkt')
+
+
+nltk.download("punkt")
+
 
 def test_smoke():
     m = BleuMetric()
