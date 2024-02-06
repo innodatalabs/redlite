@@ -34,7 +34,7 @@ from redlite.metric.bleu import BleuMetric
 metric = BleuMetric(...)
 ```
 
-For testing CJK prompts and answers consider using `BleuCJKMetric`. The only difference is
+For benchmarking CJK languages consider using `BleuCJKMetric`. The only difference is
 in the tokenization --- CJK version will consider every character to be a separate token.
 
 ```python
@@ -45,7 +45,7 @@ metric = BleuCJKMetric(...)
 
 ## ROUGE metric
 
-A standard ROUGE. One can choose one of `rougeL`, `rouge1`, or `rouge2`
+A standard ROUGE metric. One can choose one of `rougeL`, `rouge1`, or `rouge2`.
 
 ```python
 from redlite.metric.rouge import RougeMetric
@@ -53,7 +53,7 @@ from redlite.metric.rouge import RougeMetric
 metric = RougeMetric(...)
 ```
 
-For testing CJK prompts and answers consider using `RougeCJKMetric`. The only difference is
+For benchmarking in CJK languages consider using `RougeCJKMetric`. The only difference is
 in the tokenization --- CJK version will consider every character to be a separate token.
 
 ```python

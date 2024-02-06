@@ -44,7 +44,7 @@ def parrot(conversation):
     return last_message_content
 ```
 
-Now we create a model instance like this:
+Now we can create a model instance with a simple composition:
 
 ```python
 from redlite import NamedModel
@@ -60,7 +60,7 @@ We gave it a name of `"parrot-model"`.
 
 #### Subclassing NamedModel
 
-Sometimes prediction logic needs extra state, and can not be easily cast as a function composition.
+Sometimes prediction logic needs extra state, and can not be easily implimented with function composition.
 
 In such a case we do subclassing:
 
@@ -81,7 +81,9 @@ class ParrotModel(NamedModel):
 model = ParrotModel()
 ```
 
-IMPORTANT: remember that model name uniquely identifies model instance. Therefore, parametrized models
+As you can see, it is slightly more verbose than composing from a function, but allows one a lot of flexibility.
+
+**IMPORTANT**: remember that model name uniquely identifies model instance. Therefore, parametrized models
 will construct name from the parameters. For example, lets add truncation parameter to our `ParrotModel`:
 
 ```python
@@ -109,8 +111,8 @@ the specified length.
 Note in the code above:
 
 1. Model takes parameter `truncate_to` that tells the model how large the output string can be.
-2. When computing the output string this parameter is used to truncate it.
-3. Truncation value made part of the model name. This ensures that if two models have the same name, they
+2. When computing the output string this parameter is used to do the truncation.
+3. Truncation parameter was made part of the model name. This ensures that if two models have the same name, they
    behave identically. In the sample above, `model1` and `model2` will have different names.
 
 ## Creating custom metrics
@@ -123,11 +125,11 @@ Implementation should provide:
 
 2. A function or method that takes `expected` and `actual` strings and outputs score.
 
-3. Score is a `float` value in the range `0.0` -- `1.0`. Larger score mens better performance.
+3. Score is a `float` value in the range `0.0`--`1.0`. Larger score mens better performance.
 
 ### Writing your metric code
 
-Just like with the models, there are two common ways to implement metric: compose from a
+Just like with the models, there are two common ways to implement a metric: compose from a
 function, or subclass `NamedMetric`.
 
 Lets write a metric that outputs `1.0` if `expected` and `actual` strings have the same length, and
@@ -176,7 +178,9 @@ class SameLengthMetric(NamedModel):
 model = SameLengthMetric()
 ```
 
-IMPORTANT: be careful with naming! Remember that metric name uniquely identifies its behavior. For this reason, parametrized metrics
+Subclassing is the most general and flexible way of implementing a metric.
+
+**IMPORTANT**: be careful with naming! Remember that metric name uniquely identifies its behavior. For this reason, parametrized metrics
 will construct name from the state. For example, lets add tolerance parameter to our `SameLengthMetric`:
 
 ```python
