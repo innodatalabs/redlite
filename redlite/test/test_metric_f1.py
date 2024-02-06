@@ -1,4 +1,7 @@
 from redlite.metric.f1 import F1Metric
+import nltk
+
+nltk.download('punkt')
 
 
 def test_smoke():
