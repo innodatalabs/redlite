@@ -73,7 +73,10 @@ Make commands:
 - [x] web UI styling
 - [ ] better test server
 - [ ] tests
-- [ ] Integrations (HF, OpenAI, Anthropic, vLLM)
+- [x] Integrate HF models
+- [x] Integrate OpenAI models
+- [ ] Integrate Anthropic models
+- [ ] Integrate vLLM models
 - [x] Fix data format in HF datasets (innodatalabs/rt-* ones) to match standard
 - [ ] more robust backend API (future-proof)
 - [ ] better error handling for missing deps
