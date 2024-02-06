@@ -95,6 +95,21 @@ name = "material"
 [tool.portray.pdocs]
 exclude_source = true
 
+[[tool.portray.mkdocs.nav]]
+Home = "README.md"
+
+[[tool.portray.mkdocs.nav]]
+Quickstart = "docs/quickstart.md"
+
+[[tool.portray.mkdocs.nav]]
+Models = "docs/models.md"
+
+[[tool.portray.mkdocs.nav]]
+Metrics = "docs/metrics.md"
+
+[[tool.portray.mkdocs.nav]]
+Customize = "docs/custom.md"
+
 [tool.mypy]
 enable_error_code = [
     "ignore-without-code"
