@@ -10,7 +10,7 @@ from ._core import (
 from ._run import run
 from ._dataset import load_dataset
 
-__version__ = "0.0.27"
+__version__ = "0.0.28"
 __all__ = [
     "run",
     "load_dataset",
