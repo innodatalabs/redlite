@@ -1,9 +1,9 @@
 # RedLite
 
 [![PyPI version](https://badge.fury.io/py/redlite.svg)](https://badge.fury.io/py/redlite)
+[![Documentation](https://img.shields.io/badge/documentation-latest-brightgreen)](https://innodatalabs.github.io/redlite/)
 [![Test and Lint](https://github.com/innodatalabs/redlite/actions/workflows/test.yaml/badge.svg)](https://github.com/innodatalabs/redlite)
 [![GitHub Pages](https://github.com/innodatalabs/redlite/actions/workflows/docs.yaml/badge.svg)](https://github.com/innodatalabs/redlite)
-[![Documentation](https://img.shields.io/badge/Documentation-here-brightgreen)](https://innodatalabs.github.io/redlite/)
 
 An opinionated toolset for testing Conversational Language Models.
 
