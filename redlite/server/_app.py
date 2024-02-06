@@ -62,21 +62,20 @@ class Service:
         return web.json_response(meta)
 
 
-async def index(_):
-    return web.FileResponse(res("build", "index.html"))
+def get_app(reader: RunReader, *, skin="default"):
 
+    async def index(_):
+        return web.FileResponse(res(skin, "index.html"))
 
-@web.middleware
-async def handle_404(request, handler):
-    try:
-        return await handler(request)
-    except web.HTTPException as ex:
-        if ex.status == 404:
-            return await index(request)
-        raise
+    @web.middleware
+    async def spa_middleware(request, handler):
+        try:
+            return await handler(request)
+        except web.HTTPException as ex:
+            if ex.status == 404:
+                return await index(request)
+            raise
 
-
-def get_app(reader: RunReader):
     app = web.Application()
     service = Service(reader)
     app.add_routes(
@@ -85,7 +84,7 @@ def get_app(reader: RunReader):
             web.get("/api/runs/{name}/meta", service.meta),
             web.get("/api/runs/{name}/data", service.data),
             web.get("/", index),
-            web.static("/", res("build")),
+            web.static("/", res(skin)),
             web.get("", index),
         ]
     )
@@ -97,15 +96,15 @@ def get_app(reader: RunReader):
     for route in list(app.router.routes()):
         cors.add(route)
 
-    app.middlewares.append(handle_404)
+    app.middlewares.append(spa_middleware)
 
     return app
 
 
-def main(port: int = 8000):
+def main(port: int = 8000, skin: str = "default"):
     base = redlite_data_dir()
 
-    app = get_app(RunReader(base))
+    app = get_app(RunReader(base), skin=skin)
 
     web.run_app(app, port=port)
 

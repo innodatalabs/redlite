@@ -11,7 +11,7 @@ except ImportError as err:
     raise MissingDependencyError("Please install zeno_client library") from err
 
 
-Task = collections.namedtuple("Task", ["dataset", "data_digest", "metric"])
+Task = collections.namedtuple("Task", ["dataset", "split", "data_digest", "metric"])
 
 
 def read_tasks(root: str):
@@ -19,7 +19,7 @@ def read_tasks(root: str):
     by_task = collections.defaultdict(list)
 
     def run_task(run):
-        return Task(run["dataset"], run["data_digest"], run["metric"])
+        return Task(run["dataset"], run["split"], run["data_digest"], run["metric"])
 
     for run in read_runs(root):
         by_task[run_task(run)].append(run)
@@ -39,7 +39,7 @@ def read_tasks(root: str):
         yield task, latest_runs
 
 
-def upload(api_key: str | None = None) -> None:
+def upload(*, api_key: str | None = None, zeno_project: str = "redlite") -> None:
     """Uploads all runs to Zeno."""
     base_dir = redlite_data_dir()
     tasks = dict(read_tasks(base_dir))
@@ -54,27 +54,66 @@ def upload(api_key: str | None = None) -> None:
     # Initialize a client with our API key.
     client = ZenoClient(api_key=api_key)
 
+    run_by_model = {}
+    all_models = set()
     for task, runs in tasks.items():
-        print(f"Uploading task {task}")
+        for run in runs:
+            run_by_model[task, run["model"]] = run["run"]
+            all_models.add(run["model"])
 
-        run_name = runs[0]["name"]  # all runs contain the same data,
+    project = client.create_project(
+        name=zeno_project,
+        view="chatbot",
+        metrics=[
+            ZenoMetric(name="score", type="mean", columns=["score"]),
+        ],
+    )
+
+    datasets = []
+    null_datasets = {}
+    for task_id, (task, runs) in enumerate(tasks.items()):
+        run_name = runs[0]["run"]  # all runs contain the same data,
         # does not matter which one we send out
         df = pd.DataFrame(read_data(base_dir, run_name)).drop("score", axis=1).drop("actual", axis=1)
+        df["gid"] = f"{task_id}-" + df["id"]
+        df["task_id"] = task_id
+        df["dataset"] = task.dataset
+        df["split"] = task.split
+        df["metric"] = task.metric
+        df["data_digest"] = task.data_digest
+        datasets.append(df)
 
-        project_name = f"RedLight: {task.dataset}-{task.data_digest[:6]}-{task.metric}".replace("/", "__")
-        project = client.create_project(
-            name=project_name,
-            view="chatbot",
-            metrics=[
-                ZenoMetric(name="score", type="mean", columns=["score"]),
-            ],
-        )
+        null_df = df.copy(deep=True)
+        null_df = null_df[["id", "gid"]]
+        null_df["actual"] = "**not run**"
+        null_df["score"] = "**not run**"
+        null_datasets[task] = null_df
 
-        project.upload_dataset(df, id_column="id", data_column="messages", label_column="expected")
+    df = pd.concat(datasets)
+    print("Uploading tasks")
+    project.upload_dataset(df, id_column="gid", data_column="messages", label_column="expected")
 
-        for run in runs:
-            print(f"\tUploading model: {run['model']}")
-            df_sys = pd.DataFrame(read_data(base_dir, run["name"])).drop("messages", axis=1).drop("expected", axis=1)
-            project.upload_system(df_sys, name=run["model"].replace("/", "__"), id_column="id", output_column="actual")
+    for model in sorted(all_models):
+        sys = []
+        for task_id, (task, runs) in enumerate(tasks.items()):
+            run_name = run_by_model.get((task, model))
+            if run_name is None:  # no runs for this combination of model and task
+                print(
+                    f"Warning: no runs for model {model} on task {task}. "
+                    + 'Fabricating "**not run**" response and score of 0.0'
+                )
+                sys.append(null_df[task])
+            else:
+                df_sys = pd.DataFrame(read_data(base_dir, run_name))
+                df_sys = df_sys[["id", "actual", "score"]]
+                df_sys["gid"] = f"{task_id}-" + df_sys["id"]
+                sys.append(df_sys)
 
-    print(f"\nUploaded {len(tasks)} tasks to Zeno. Go to https://hub.zenoml.com/ to view your data")
+        df_sys = pd.concat(sys)
+        print(f"Uploading model {model}")
+        project.upload_system(df_sys, name=model.replace("/", "__"), id_column="gid", output_column="actual")
+
+    print(
+        f"\nUploaded {len(tasks)} tasks and {len(all_models)} models to Zeno. "
+        + "Go to https://hub.zenoml.com/ to view your data."
+    )
