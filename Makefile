@@ -24,4 +24,5 @@ docs:
 
 .PHONE: wheel
 wheel:
+	rm -rf build/
 	pip wheel . --no-deps -w wheels/

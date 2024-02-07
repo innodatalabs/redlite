@@ -66,11 +66,10 @@ packages = [
     "redlite.metric",
     "redlite.metric.rouge",
     "redlite.metric.bleu",
-    "redlite.hf",
-    "redlite.inno",
-    "redlite.openai",
-    "redlite.zeno",
+    "redlite.metric.f1",
     "redlite.dataset",
+    "redlite.model",
+    "redlite.zeno",
 ]
 
 [tool.setuptools.package-data]
