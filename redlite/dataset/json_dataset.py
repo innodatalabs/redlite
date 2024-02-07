@@ -6,9 +6,10 @@ from .._core import NamedDataset, DatasetItem
 
 class JSONDataset(NamedDataset):
     """
-    Dataset from local JSONL file.
+    Dataset from a local JSONL file.
 
-    Each line of the dataset must be a `DatasetItem` serialized to JSON representation.
+    Each line of the dataset file must be a `DatasetItem` serialized to JSON representation.
+    File must use UTF-8 encoding. There should be no BOM-markers (some Microsoft tools produce those).
 
     - **path** (`str`): Location of JSONL file.
     - **name** (`str`): Dataset name.
