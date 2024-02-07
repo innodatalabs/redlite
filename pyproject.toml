@@ -70,10 +70,11 @@ packages = [
     "redlite.inno",
     "redlite.openai",
     "redlite.zeno",
+    "redlite.dataset",
 ]
 
 [tool.setuptools.package-data]
-"redlite.server" = ["resources/build/*", "resources/build/_app/*", "resources/build/_app/immutable/*/*"]
+"redlite.server" = ["resources/default/*", "resources/default/_app/*", "resources/default/_app/immutable/*/*"]
 
 [tool.portray.mkdocs]
 repo_name = "GitHub: innodatalabs/redlite"

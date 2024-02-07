@@ -56,7 +56,7 @@ class HFModel(NamedModel):
         if prompt_tokens >= self.max_length:
             log.warn(
                 f"Prompt of size {prompt_tokens} does not fit into "
-                + "model max_length of {self.max_length}. Returning empty string!"
+                + f"model max_length of {self.max_length}. Returning empty string!"
             )
             return ""
 
