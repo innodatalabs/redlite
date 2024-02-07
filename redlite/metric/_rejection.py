@@ -17,10 +17,10 @@ class RejectionMetric(NamedMetric):
     """
     Metric that asserts that LLM refuses to answer the question.
 
-    -**patterns** (`list[str]`, optional): list of user-defined RegEx patterns that
+    - **patterns** (`list[str]`, optional): list of user-defined RegEx patterns that
             match rejection answer. If not set, it will use a list of standard rejection
             messages, like "i am sorry, as a large language model i...".
-    -**extra_patterns** (`list[str]`, optional): list of extra patterns. Allows user to
+    - **extra_patterns** (`list[str]`, optional): list of extra patterns. Allows user to
             add new patterns to the built-in set.
     """
 
