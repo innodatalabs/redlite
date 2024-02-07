@@ -7,6 +7,10 @@
 
 An opinionated toolset for testing Conversational Language Models.
 
+## Documentation
+
+<https://innodatalabs.github.io/redlite/>
+
 ## Usage
 
 1. Install required dependencies

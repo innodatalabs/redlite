@@ -31,7 +31,7 @@ from redlite.openai import OpenAIModel
 model = OpenAIModel(...)
 ```
 
-Please see [Reference](../../reference) documentation for more detail and available parameters.
+Please see [Reference](../reference/redlite/openai/) documentation for more detail and available parameters.
 
 ## Custom models
 

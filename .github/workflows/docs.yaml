@@ -37,7 +37,7 @@ jobs:
           python3 -m pip install --upgrade pip
 
       - name: Install dependencies
-        run: pip install -e .[all,dev]
+        run: pip install -e .[all,dev] transformers torch
 
       - run: make docs
 
