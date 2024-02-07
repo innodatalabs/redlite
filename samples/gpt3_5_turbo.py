@@ -1,6 +1,6 @@
 import os
 from redlite import run, load_dataset
-from redlite.openai import OpenAIModel
+from redlite.model.openai_model import OpenAIModel
 from redlite.metric import PrefixMetric
 
 

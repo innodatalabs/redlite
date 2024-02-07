@@ -156,3 +156,26 @@ redlite server
 This command will start server on port `8000`. Open your browser and navigate to <http://localhost:8000>.
 
 You should now see the UI.
+
+## Advanced: Re-scoring existing runs
+
+If you want to apply a different metric to an existing run, use `rescore` function.
+
+Consider this scenario: you ran benchmark on your dataset. It was long and/or expensive run. The name of that
+run is, say, `"hello-gai-42"`.
+Now, you want to see how the same answers will be scored by a different metric.
+
+This can be efficiently done like this:
+
+```python
+from redlite import rescore
+
+metric = MyNewExcitingMetric()
+
+rescore(
+    run="hello-gai-42",
+    metric=metric,
+)
+```
+
+This will create a new run from the existing one, re-computing all scores.

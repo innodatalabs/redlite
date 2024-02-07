@@ -11,12 +11,12 @@ Support for other backends is on the roadmap.
 Here is how to work with HuggingFace models:
 
 ```python
-from redlite.hf.hf_model import HFModel
+from redlite.model.hf_model import HFModel
 
 model = HFModel(...)
 ```
 
-Please see [Reference](../../reference/redlite/hf/hf_model) documentation for more detail and availabel parameters.
+Please see [Reference](../../reference/redlite/model/hf_model) documentation for more detail and availabel parameters.
 
 ## OpenAI Conversational Models
 
@@ -31,7 +31,7 @@ from redlite.openai import OpenAIModel
 model = OpenAIModel(...)
 ```
 
-Please see [Reference](../../reference/redlite/openai/) documentation for more detail and available parameters.
+Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
 
 ## Custom models
 

@@ -27,12 +27,18 @@ An opinionated toolset for testing Conversational Language Models.
     redlite server --port <PORT>
     ```
 
+4. Optionally, upload to Zeno
+
+    ```bash
+    ZENO_AI_KEY=zen_XXXX redlite upload
+    ```
+
 ## Python API
 
 ```python
 import os
 from redlite import run, load_dataset
-from redlite.openai import OpenAIModel
+from redlite.model.openai_model import OpenAIModel
 from redlite.metric import PrefixMetric
 
 
@@ -67,6 +73,25 @@ Make commands:
 * wheel
 * docs
 * black
+
+## Zeno <zenoml.com> integration
+
+Benchmarks can be uploaded to Zeno interactive AI evaluation platform <hub.zenoml.com>:
+
+```bash
+redlite upload --project my-cool-project
+```
+
+All tasks will be concatenated and uploaded as a single dataset, with extra fields:
+
+* `task_id`
+* `dataset`
+* `metric`
+
+All models will be uploaded. If model was not tested on a specific task, a simulated zero-score dataframe is used instead.
+
+Use `task_id` (or `dataset` as appropriate) to create task slices. Slices can be used to
+review data or create charts.
 
 ## TODO
 

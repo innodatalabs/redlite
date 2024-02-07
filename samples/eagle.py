@@ -1,6 +1,6 @@
 import os
 from redlite import run, load_dataset
-from redlite.hf.hf_model import HFModel
+from redlite.model.hf_model import HFModel
 from redlite.metric import PrefixMetric
 
 

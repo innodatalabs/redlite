@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-def _serialize(obj: dict | DatasetItem) -> bytes:
+def _serialize(obj: dict | DatasetItem | list | str | int | float) -> bytes:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")
 
 
@@ -42,6 +42,13 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
     @property
     def hexdigest(self) -> str:
         return self._hash.hexdigest()
+
+
+def object_digest(object: list | dict | str | int | float) -> str:
+    """Computes SHA digest of any JSON-serializable object"""
+    _hash = hashlib.sha256(usedforsecurity=False)
+    _hash.update(_serialize(object))
+    return _hash.hexdigest()
 
 
 def format_duration(seconds: float) -> str:

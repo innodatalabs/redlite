@@ -1,4 +1,4 @@
-from ._core import NamedDataset, DatasetItem
+from .._core import NamedDataset, DatasetItem
 from typing import Literal, Callable
 from collections.abc import Iterator
 
@@ -106,12 +106,12 @@ class ValidatingDataset(NamedDataset):
 def _get_dataset_loader(name: str) -> Callable[[str, Literal["test", "train"]], NamedDataset]:
     """Hook for other dataset hubs. Presently only HuggingFace Hub is implemented."""
     if name.startswith("hf:"):
-        from .hf.hf_dataset import HFDataset
+        from .hf_dataset import HFDataset
 
         return HFDataset.load
 
     elif name.startswith("inno:"):
-        from inno.inno_dataset import load_dataset as ld
+        from redlite.dataset.inno_dataset import load_dataset as ld
 
         return ld
 
