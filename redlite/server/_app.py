@@ -1,5 +1,6 @@
 from aiohttp import web
 import aiohttp_cors
+from urllib.parse import unquote
 from redlite.server import res
 from redlite._util import redlite_data_dir
 from .._util import read_data, read_meta, read_runs
@@ -53,12 +54,12 @@ class Service:
 
     async def data(self, request):
         name = request.match_info["name"]
-        data = await self.reader.data(name)
+        data = await self.reader.data(unquote(name))
         return web.json_response(data)
 
     async def meta(self, request):
         name = request.match_info["name"]
-        meta = await self.reader.meta(name)
+        meta = await self.reader.meta(unquote(name))
         return web.json_response(meta)
 
 

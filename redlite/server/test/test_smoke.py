@@ -4,7 +4,7 @@ async def test_runs(client):
     runs = await res.json()
 
     assert type(runs) is list, runs
-    assert len(runs) == 3, runs
+    assert len(runs) == 4, runs
     assert runs[0]["metric"] == "bleu"
     assert runs[0]["run"] == "beautiful-soup-1"
 
