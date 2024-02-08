@@ -30,7 +30,7 @@ An opinionated toolset for testing Conversational Language Models.
 4. Optionally, upload to Zeno
 
     ```bash
-    ZENO_AI_KEY=zen_XXXX redlite upload
+    ZENO_API_KEY=zen_XXXX redlite upload
     ```
 
 ## Python API
