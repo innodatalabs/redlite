@@ -3,6 +3,8 @@ from .._core import MissingDependencyError
 import collections
 import os
 
+__all__ = ["upload"]
+
 
 try:
     from zeno_client import ZenoClient, ZenoMetric
