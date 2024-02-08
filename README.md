@@ -91,7 +91,7 @@ All tasks will be concatenated and uploaded as a single dataset, with extra fiel
 All models will be uploaded. If model was not tested on a specific task, a simulated zero-score dataframe is used instead.
 
 Use `task_id` (or `dataset` as appropriate) to create task slices. Slices can be used to
-review data or create charts.
+navigate data or create charts.
 
 ## TODO
 
