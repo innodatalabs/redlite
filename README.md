@@ -97,8 +97,8 @@ navigate data or create charts.
 
 - [x] deps cleanup (randomname!)
 - [x] review/improve module structure
-- [ ] automate CI/CD
-- [ ] write docs
+- [x] automate CI/CD
+- [x] write docs
 - [x] publish docs automatically (CI/CD)
 - [x] web UI styling
 - [ ] better test server
@@ -113,6 +113,3 @@ navigate data or create charts.
 - [ ] document which deps we need when
 - [ ] export to CSV
 - [x] Upload to Zeno
-
-
-[docs]: https://innodatalabs.github.io/redlite/
