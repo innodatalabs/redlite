@@ -226,3 +226,12 @@ def _fixup_meta(meta: dict) -> Run:
     if "split" not in meta:
         meta["split"] = "test"
     return meta  # type: ignore [return-value]
+
+
+def sha_digest(object: dict | list | int | float | str) -> str:
+    """
+    Computes SHA256 digest of a JSON-serializable object
+    """
+    sha256 = hashlib.sha256(usedforsecurity=False)
+    sha256.update(json.dumps(object, sort_keys=True, ensure_ascii=False).encode("utf-8"))
+    return sha256.hexdigest()

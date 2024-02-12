@@ -1,5 +1,5 @@
 from .._core import NamedModel, Message, MissingDependencyError, log
-from .._util import sha_hash
+from .._util import sha_digest
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
@@ -50,7 +50,7 @@ class HFModel(NamedModel):
         name = "hf:" + hf_name
         if char_template is not None:
             self.__tokenizer.chat_template = char_template
-            name += "@" + sha_hash(char_template)[:6]
+            name += "@" + sha_digest(char_template)[:6]
 
         super().__init__(name, self.__predict)
 
