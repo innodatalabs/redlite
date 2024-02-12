@@ -11,6 +11,7 @@ class StripSystemDataset(NamedDataset):
         self.__dataset = dataset
 
         self.labels = dataset.labels
+        self.split = dataset.split
         self.name = f"{dataset.name}-strip-system"
 
     def __len__(self) -> int:

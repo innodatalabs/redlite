@@ -4,10 +4,11 @@ from redlite import NamedDataset, DatasetItem
 
 
 class MockDataset(NamedDataset):
-    def __init__(self, *, name, labels={}, data):
+    def __init__(self, *, name, split="test", labels={}, data):
         self.labels = labels
         self.data = data
         self.name = name
+        self.split = split
 
     def __len__(self) -> int:
         return len(self.data)
