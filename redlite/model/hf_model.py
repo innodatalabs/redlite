@@ -21,7 +21,7 @@ class HFModel(NamedModel):
             If prompt is too big, model will output an empty string.
     """
 
-    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, char_template=None):
+    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, chat_template=None):
         if device is None:
             device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -48,9 +48,9 @@ class HFModel(NamedModel):
         self.max_length = max_length
 
         name = "hf:" + hf_name
-        if char_template is not None:
-            self.__tokenizer.chat_template = char_template
-            name += "@" + sha_digest(char_template)[:6]
+        if chat_template is not None:
+            self.__tokenizer.chat_template = chat_template
+            name += "@" + sha_digest(chat_template)[:6]
 
         super().__init__(name, self.__predict)
 
