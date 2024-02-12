@@ -19,6 +19,7 @@ class HFModel(NamedModel):
             for some models (e.g. Mistral).
     - **max_length** (`int`): Largest number of tokens that model can handle.
             If prompt is too big, model will output an empty string.
+    - **chat_template** (`str | None`): Custom chat template.
     """
 
     def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, chat_template=None):
