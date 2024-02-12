@@ -1,4 +1,5 @@
 from .._core import NamedModel, Message, MissingDependencyError, log
+from .._util import sha_hash
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
@@ -20,8 +21,7 @@ class HFModel(NamedModel):
             If prompt is too big, model will output an empty string.
     """
 
-    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192):
-        self.name = "hf:" + hf_name
+    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, char_template=None):
         if device is None:
             device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -47,7 +47,12 @@ class HFModel(NamedModel):
         )
         self.max_length = max_length
 
-        super().__init__("hf:" + hf_name, self.__predict)
+        name = "hf:" + hf_name
+        if char_template is not None:
+            self.__tokenizer.chat_template = char_template
+            name += "@" + sha_hash(char_template)[:6]
+
+        super().__init__(name, self.__predict)
 
     def __predict(self, messages: list[Message]) -> str:
         prompt = self.__tokenizer.apply_chat_template(messages, tokenize=False)
