@@ -1,4 +1,4 @@
-from redlite.metric import PrefixMetric, ExactMetric
+from redlite.metric import PrefixMetric, ExactMetric, SubstringMetric
 
 
 def test_prefix_smoke():
@@ -16,6 +16,14 @@ def test_exact_smoke():
     assert m("Good", "good") == 0.0
     assert m("Good", "Good blah") == 0.0
 
+
+def test_substring_smoke():
+    m = SubstringMetric()
+
+    assert m("Good", "Good") == 1.0
+    assert m("Good", "good") == 0.0
+    assert m("Good", "Good blah") == 1.0
+    assert m("Good", "blah Good") == 1.0
 
 def test_prefix_ignore_case():
     m = PrefixMetric(ignore_case=True)
