@@ -25,6 +25,7 @@ def test_substring_smoke():
     assert m("Good", "Good blah") == 1.0
     assert m("Good", "blah Good") == 1.0
 
+
 def test_prefix_ignore_case():
     m = PrefixMetric(ignore_case=True)
 

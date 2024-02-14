@@ -1,6 +1,7 @@
 from .. import NamedMetric
 from .util import normalize_string
 
+
 class MatchMetric(NamedMetric):
     """
     Metric that checks that the actual response matches expected string.
@@ -58,19 +59,23 @@ class SubstringMetric(MatchMetric):
     """
     Metric that checks that the actual response contains the expected string.
     """
+
     def match(self, expected: str, actual: str) -> float:
         if expected in actual:
             return 1.0
         return 0.0
 
+
 class PrefixMetric(MatchMetric):
     """
     Metric that checks that the actual response starts with the expected string.
     """
+
     def match(self, expected: str, actual: str) -> float:
         if actual.startswith(expected):
             return 1.0
         return 0.0
+
 
 class ExactMetric(MatchMetric):
     """
