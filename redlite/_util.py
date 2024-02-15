@@ -37,7 +37,7 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
                 break
 
     def __len__(self):
-        return len(self._dataset) if self._max_samples == 0 else self._max_samples
+        return len(self._dataset) if self._max_samples == 0 else min(len(self._dataset), self._max_samples)
 
     @property
     def hexdigest(self) -> str:
