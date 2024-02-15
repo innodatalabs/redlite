@@ -1,27 +1,21 @@
 # Built-in Metrics
 
-## Exact metric
+## Match metric
 
-Credits LLM answer iff it is the same as the expected one.
-
-One can optionally choose to ignore casing, strip punctuation, and normalize whitespace.
-
-```python
-from redlite.metric import ExactMetric
-
-metric = ExactMetric(...)
-```
-
-## Prefix metric
-
-Credits LLM answer iff it starts with the expected string.
+Credits LLM answer iff it matches the expected one.
 
 One can optionally choose to ignore casing, strip punctuation, and normalize whitespace.
 
-```python
-from redlite.metric import PrefixMetric
+Matching can be done using the following strategies:
 
-metric = PrefixMetric(...)
+- `exact` (default): strings must be the same (after optional normalization)
+- `prefix`: actual response should start with the expected string
+- `contains`: actual response must contain the expected string somewhere
+
+```python
+from redlite.metric import MatchMetric
+
+metric = MatchMetric(...)
 ```
 
 ## BLEU metric
