@@ -34,9 +34,12 @@ class MatchMetric(NamedMetric):
         ignore_case=False,
         ignore_punct=False,
         normalize_whitespace=False,
-        match: Literal["exact", "contains", "prefix"] = "prefix"):
+        match: Literal["exact", "contains", "prefix"] = "exact",
+    ):
         if match not in ("prefix", "contains", "exact"):
-            raise ValueError(f"Invalid value of match parameter. Expect one of ('exact', 'prefix', 'contains'), got '{match}'")
+            raise ValueError(
+                f"Invalid value of match parameter. Expect one of ('exact', 'prefix', 'contains'), got '{match}'"
+            )
         name = f"match-{match}"
         if ignore_case:
             name = name + "-ignore-case"
