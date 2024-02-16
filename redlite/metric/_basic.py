@@ -11,20 +11,23 @@ class MatchMetric(NamedMetric):
     "Correct, because blah blah blah...". To give model full marks for longer and
     verbose answer, use this metric.
 
+    This metric matches words, not strings. This means that, for example, when `strategy="prefix"`
+    and `expected="correct"` and `actual="correctness is when things work right"`, this metric
+    will score `0.0`.
+
+    Yhis metric normalizes whitespace in both `expected` and `actual`, and strips any leading or trailing
+    space there.
+
     - **ignore_case** (`bool`, optional) - when set to `True` will ignore text case. Deafult is `False`.
 
     - **ignore_punct** (`bool`, optional) - when set to `True` punctuation symbols will be ignored.
             Default is `False`.
 
-    - **normalize_white_space** (`bool`, optional) - when set to `True`, normalizes white space by
-            replacing tabs and newlines with spaces and replacing multiple spaces to one. Also
-            strips leading and trailing whitespace.
-            Default is `False`.
-    - **match** (`Literal["exact", "prefix", "contains"]`, optional) - determines how strings are matched.
+    - **strategy** (`Literal["exact", "prefix", "contains"]`, optional) - determines how strings are matched.
 
         * `"exact"`: matches if expected and actual responses are the same
-        * `"prefix"`: matches if actual response starts with the expected string
-        * `"contains"`: matches if expected string is found anywhere in the actual response
+        * `"prefix"`: matches if actual response starts with the expected words
+        * `"contains"`: matches if expected sequence of words is found found anywhere in the actual response
 
         Default is `"exact"`.
     """
@@ -33,25 +36,21 @@ class MatchMetric(NamedMetric):
         self,
         ignore_case=False,
         ignore_punct=False,
-        normalize_whitespace=False,
-        match: Literal["exact", "contains", "prefix"] = "exact",
+        strategy: Literal["exact", "contains", "prefix"] = "exact",
     ):
-        if match not in ("prefix", "contains", "exact"):
+        if strategy not in ("prefix", "contains", "exact"):
             raise ValueError(
                 f"Invalid value of match parameter. Expect one of ('exact', 'prefix', 'contains'), got '{match}'"
             )
-        name = f"match-{match}"
+        name = f"match-{strategy}"
         if ignore_case:
             name = name + "-ignore-case"
         if ignore_punct:
             name = name + "-ignore-punct"
-        if normalize_whitespace:
-            name = name + "-strip"
 
         self.ignore_case = ignore_case
         self.ignore_punct = ignore_punct
-        self.normalize_whitespace = normalize_whitespace
-        self.match = match
+        self.match = strategy
 
         super().__init__(name, self.__engine)
 
@@ -60,19 +59,29 @@ class MatchMetric(NamedMetric):
             expected,
             to_lower=self.ignore_case,
             strip_punct=self.ignore_punct,
-            normalize_whitespace=self.normalize_whitespace,
+            normalize_whitespace=True,
         )
         actual = normalize_string(
             actual,
             to_lower=self.ignore_case,
             strip_punct=self.ignore_punct,
-            normalize_whitespace=self.normalize_whitespace,
+            normalize_whitespace=True,
         )
+
+        guarded_expected = _to_string_with_word_guards(expected)
+        guarded_actual = _to_string_with_word_guards(actual)
         if self.match == "contains":
-            return 1.0 if expected in actual else 0.0
+            return 1.0 if guarded_expected in guarded_actual else 0.0
         elif self.match == "prefix":
-            return 1.0 if actual.startswith(expected) else 0.0
+            return 1.0 if guarded_actual.startswith(guarded_expected) else 0.0
         elif self.match == "exact":
-            return 1.0 if actual == expected else 0.0
+            return 1.0 if guarded_actual == guarded_expected else 0.0
         else:
             assert False  # not reached
+
+
+def _to_string_with_word_guards(string):
+    wg = "\x01"  # word guard (something that should never happen in the input string)
+    assert wg not in string
+
+    return wg + wg.join(string.split()) + wg
