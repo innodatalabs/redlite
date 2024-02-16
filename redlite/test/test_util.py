@@ -62,19 +62,19 @@ ITEM3 = {
 
 
 def test_order_independent_dataset_hashing():
-    dataset = DatasetRunningDigest(MockDataset(name='mock', data=[ITEM1, ITEM2]))
+    dataset = DatasetRunningDigest(MockDataset(name="mock", data=[ITEM1, ITEM2]))
     for x in dataset:
         pass
     digest1 = dataset.hexdigest
 
-    dataset = DatasetRunningDigest(MockDataset(name='mock', data=[ITEM2, ITEM1]))
+    dataset = DatasetRunningDigest(MockDataset(name="mock", data=[ITEM2, ITEM1]))
     for x in dataset:
         pass
     digest2 = dataset.hexdigest
 
     assert digest1 == digest2
 
-    dataset = DatasetRunningDigest(MockDataset(name='mock', data=[ITEM1, ITEM3]))
+    dataset = DatasetRunningDigest(MockDataset(name="mock", data=[ITEM1, ITEM3]))
     for x in dataset:
         pass
     digest3 = dataset.hexdigest
