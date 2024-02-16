@@ -33,6 +33,20 @@ model = OpenAIModel(...)
 
 Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
 
+## IgnoreSystemModel
+
+Wraps a model and removes system message (if any) from the input. Useful when dataset contains system messages, but
+model does not expect system.
+
+```python
+from redlite.model.hf_model import HFModel
+from redlite.model import IgnoreSystemModel
+
+model = IgnoreSystemModel(HFModel("mistralai/Mistral-Instruct-v0.2"))
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
 ## Custom models
 
 Custom models can be easily integrated, see the [Customization Guide](custom.md).

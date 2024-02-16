@@ -22,6 +22,10 @@ docs:
 	portray as_html --overwrite
 	# URL="site/index.html"; xdg-open $$URL || sensible-browser $$URL || x-www-browser $$URL || gnome-open $$URL || open $$URL
 
+.PHONY: docs-server
+docs-server: docs
+	python -m http.server -d site/ 9000
+
 .PHONE: wheel
 wheel:
 	rm -rf build/
