@@ -60,6 +60,7 @@ ITEM3 = {
     "expected": "MELT",
 }
 
+
 def test_order_independent_dataset_hashing():
     dataset = DatasetRunningDigest(MockDataset(name='mock', data=[ITEM1, ITEM2]))
     for x in dataset:
