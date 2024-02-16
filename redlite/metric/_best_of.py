@@ -15,9 +15,8 @@ class BestOfMetric(NamedMetric):
         if len(metrics) < 1:
             raise ValueError("Need at least one metric parameter")
 
-        metrics = sorted(metrics, key=lambda m: m.name)
-        self.metrics = metrics
-        name = "best-of-" + "-".join(m.name for m in metrics)
+        self.metrics = sorted(metrics, key=lambda m: m.name)
+        name = "best-of-" + "-".join(m.name for m in self.metrics)
         super().__init__(name, self.__engine)
 
     def __engine(self, expected, actual) -> float:
