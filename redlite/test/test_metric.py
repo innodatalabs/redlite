@@ -1,4 +1,5 @@
-from redlite.metric import MatchMetric
+from redlite import NamedMetric
+from redlite.metric import MatchMetric, BestOfMetric
 
 
 def test_prefix_smoke():
@@ -87,3 +88,37 @@ def test_contains_fullword():
 
     assert m("correct", "incorrect") == 0.0
     assert m("correct", "may be correct or incorrect") == 1.0
+
+
+def test_best_of_smoke():
+
+    m = BestOfMetric(
+        MatchMetric(strategy="prefix"),
+        MatchMetric(strategy="contains"),
+    )
+    m2 = BestOfMetric(
+        MatchMetric(strategy="prefix"),
+        MatchMetric(strategy="contains"),
+    )
+    assert m.name == m2.name  # order-independent!
+
+    assert m("a b c", "c d e") == 0.0
+    assert m("a b c", "x y z a b c") == 1.0
+    assert m("a b c", "a b") == 0.0
+
+
+def test_best_of_smoke2():
+    def engine1(expected, actual):
+        return float(expected)
+
+    def engine2(expected, actual):
+        return float(actual)
+
+    m1 = NamedMetric("m1", engine1)
+    m2 = NamedMetric("m2", engine2)
+
+    metric = BestOfMetric(m1, m2)
+    assert metric.name == "best-of-m1-m2"
+
+    assert metric("0.5", "1.5") == 1.5
+    assert metric("0.5", "0.25") == 0.5
