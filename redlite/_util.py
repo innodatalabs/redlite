@@ -21,7 +21,7 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
     """Helper object to compute data digest."""
 
     def __init__(self, dataset: NamedDataset, max_samples=0):
-        self._hash = hashlib.sha256(usedforsecurity=False)
+        self._digest = b"\x00" * 32
         self._dataset = dataset
         self._max_samples = max_samples
 
@@ -29,9 +29,11 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
         count = 0
         for item in self._dataset:
             yield item
-            self._hash.update(
-                _serialize({"id": item["id"], "messages": item["messages"], "expected": item["expected"]})
-            )
+            record_digest = hashlib.sha256(
+                _serialize({"id": item["id"], "messages": item["messages"], "expected": item["expected"]}),
+                usedforsecurity=False,
+            ).digest()
+            self._digest = bytes(a ^ b for a, b in zip(self._digest, record_digest))
             count += 1
             if self._max_samples > 0 and count >= self._max_samples:
                 break
@@ -41,7 +43,7 @@ class DatasetRunningDigest(Sized, Iterable[DatasetItem]):
 
     @property
     def hexdigest(self) -> str:
-        return self._hash.hexdigest()
+        return self._digest.hex()
 
 
 def object_digest(object: list | dict | str | int | float) -> str:
