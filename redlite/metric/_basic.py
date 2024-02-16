@@ -40,7 +40,7 @@ class MatchMetric(NamedMetric):
     ):
         if strategy not in ("prefix", "contains", "exact"):
             raise ValueError(
-                f"Invalid value of match parameter. Expect one of ('exact', 'prefix', 'contains'), got '{match}'"
+                f"Invalid value of strategy parameter. Expect one of ('exact', 'prefix', 'contains'), got '{strategy}'"
             )
         name = f"match-{strategy}"
         if ignore_case:
