@@ -1,28 +1,24 @@
 # Built-in Metrics
 
-## Exact metric
+## Match metric
 
-Credits LLM answer iff it is the same as the expected one.
+Credits LLM answer iff it matches the expected one.
 
-One can optionally choose to ignore casing, strip punctuation, and normalize whitespace.
+One can optionally choose to ignore casing and/or strip punctuation.
 
-```python
-from redlite.metric import ExactMetric
+Matching can be done using the following strategies:
 
-metric = ExactMetric(...)
-```
-
-## Prefix metric
-
-Credits LLM answer iff it starts with the expected string.
-
-One can optionally choose to ignore casing, strip punctuation, and normalize whitespace.
+- `exact` (default): strings must be the same
+- `prefix`: actual response should start with the expected sequence of words
+- `contains`: actual response must contain the expected sequence of words
 
 ```python
-from redlite.metric import PrefixMetric
+from redlite.metric import MatchMetric
 
-metric = PrefixMetric(...)
+metric = MatchMetric(...)
 ```
+
+Please see [Reference](../../reference/redlite/metric/) documentation for more detail and available parameters.
 
 ## BLEU metric
 
@@ -43,6 +39,8 @@ from redlite.metric.bleu import BleuCJKMetric
 metric = BleuCJKMetric(...)
 ```
 
+Please see [Reference](../../reference/redlite/metric/bleu/) documentation for more detail and available parameters.
+
 ## ROUGE metric
 
 A standard ROUGE metric. One can choose one of `rougeL`, `rouge1`, or `rouge2`.
@@ -62,6 +60,8 @@ from redlite.metric.rouge import RougeCJKMetric
 metric = RougeCJKMetric(...)
 ```
 
+Please see [Reference](../../reference/redlite/metric/rouge/) documentation for more detail and available parameters.
+
 ## F1 on word set metric
 
 Computes F1 metric on the tokenized sets of `expected` and `actual` strings.
@@ -71,6 +71,8 @@ from redlite.metric.f1 import F1Metric
 
 metric = F1Metric(...)
 ```
+
+Please see [Reference](../../reference/redlite/metric/f1/) documentation for more detail and available parameters.
 
 ## Custom metrics
 

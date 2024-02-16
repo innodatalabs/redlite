@@ -72,6 +72,7 @@ Make commands:
 * lint
 * wheel
 * docs
+* docs-server
 * black
 
 ## Zeno <zenoml.com> integration
