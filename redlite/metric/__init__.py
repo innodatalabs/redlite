@@ -1,5 +1,5 @@
-from ._basic import PrefixMetric, ExactMetric, SubstringMetric
+from ._basic import MatchMetric
 from ._random import RandomMetric
 from ._rejection import RejectionMetric
 
-__all__ = ["RandomMetric", "SubstringMetric", "PrefixMetric", "ExactMetric", "RejectionMetric"]
+__all__ = ["RandomMetric", "MatchMetric", "RejectionMetric"]

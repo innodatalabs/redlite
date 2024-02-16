@@ -1,3 +1,4 @@
+from typing import Literal
 from .. import NamedMetric
 from .util import normalize_string
 
@@ -10,29 +11,46 @@ class MatchMetric(NamedMetric):
     "Correct, because blah blah blah...". To give model full marks for longer and
     verbose answer, use this metric.
 
-    - **ignore_case** (`bool`) - when set to `True` will ignore text case. Deafult is `False`.
+    This metric matches words, not strings. This means that, for example, when `strategy="prefix"`
+    and `expected="correct"` and `actual="correctness is when things work right"`, this metric
+    will score `0.0`.
 
-    - **ignore_punct** (`bool`) - when set to `True` punctuation symbols will be ignored.
+    Yhis metric normalizes whitespace in both `expected` and `actual`, and strips any leading or trailing
+    space there.
+
+    - **ignore_case** (`bool`, optional) - when set to `True` will ignore text case. Deafult is `False`.
+
+    - **ignore_punct** (`bool`, optional) - when set to `True` punctuation symbols will be ignored.
             Default is `False`.
 
-    - **normalize_white_space** (`bool`) - when set to `True`, normalizes white space by
-            replacing tabs and newlines with spaces and replacing multiple spaces to one. Also
-            strips leading and trailing whitespace.
-            Default is `False`.
+    - **strategy** (`Literal["exact", "prefix", "contains"]`, optional) - determines how strings are matched.
+
+        * `"exact"`: matches if expected and actual responses are the same
+        * `"prefix"`: matches if actual response starts with the expected words
+        * `"contains"`: matches if expected sequence of words is found found anywhere in the actual response
+
+        Default is `"exact"`.
     """
 
-    def __init__(self, ignore_case=False, ignore_punct=False, normalize_whitespace=False):
-        name = "prefix"
+    def __init__(
+        self,
+        ignore_case=False,
+        ignore_punct=False,
+        strategy: Literal["exact", "contains", "prefix"] = "exact",
+    ):
+        if strategy not in ("prefix", "contains", "exact"):
+            raise ValueError(
+                f"Invalid value of strategy parameter. Expect one of ('exact', 'prefix', 'contains'), got '{strategy}'"
+            )
+        name = f"match-{strategy}"
         if ignore_case:
             name = name + "-ignore-case"
         if ignore_punct:
             name = name + "-ignore-punct"
-        if normalize_whitespace:
-            name = name + "-strip"
 
         self.ignore_case = ignore_case
         self.ignore_punct = ignore_punct
-        self.normalize_whitespace = normalize_whitespace
+        self.match = strategy
 
         super().__init__(name, self.__engine)
 
@@ -41,48 +59,29 @@ class MatchMetric(NamedMetric):
             expected,
             to_lower=self.ignore_case,
             strip_punct=self.ignore_punct,
-            normalize_whitespace=self.normalize_whitespace,
+            normalize_whitespace=True,
         )
         actual = normalize_string(
             actual,
             to_lower=self.ignore_case,
             strip_punct=self.ignore_punct,
-            normalize_whitespace=self.normalize_whitespace,
+            normalize_whitespace=True,
         )
-        return self.match(expected, actual)
 
-    def match(self, expected: str, actual: str) -> float:
-        raise NotImplementedError()
-
-
-class SubstringMetric(MatchMetric):
-    """
-    Metric that checks that the actual response contains the expected string.
-    """
-
-    def match(self, expected: str, actual: str) -> float:
-        if expected in actual:
-            return 1.0
-        return 0.0
+        guarded_expected = _to_string_with_word_guards(expected)
+        guarded_actual = _to_string_with_word_guards(actual)
+        if self.match == "contains":
+            return 1.0 if guarded_expected in guarded_actual else 0.0
+        elif self.match == "prefix":
+            return 1.0 if guarded_actual.startswith(guarded_expected) else 0.0
+        elif self.match == "exact":
+            return 1.0 if guarded_actual == guarded_expected else 0.0
+        else:
+            assert False  # not reached
 
 
-class PrefixMetric(MatchMetric):
-    """
-    Metric that checks that the actual response starts with the expected string.
-    """
+def _to_string_with_word_guards(string):
+    wg = "\x01"  # word guard (something that should never happen in the input string)
+    assert wg not in string
 
-    def match(self, expected: str, actual: str) -> float:
-        if actual.startswith(expected):
-            return 1.0
-        return 0.0
-
-
-class ExactMetric(MatchMetric):
-    """
-    Metric that checks that the actual response is exactly equal to the expected string.
-    """
-
-    def match(self, expected: str, actual: str) -> float:
-        if expected == actual:
-            return 1.0
-        return 0.0
+    return wg + wg.join(string.split()) + wg
