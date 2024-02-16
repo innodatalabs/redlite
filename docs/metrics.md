@@ -74,6 +74,22 @@ metric = F1Metric(...)
 
 Please see [Reference](../../reference/redlite/metric/f1/) documentation for more detail and available parameters.
 
+## Best of several metrics
+
+We may want to score LLM answer with several metrics and choose the best score. For example, when we score an item with
+the expected answer `"I refuse to tell you this"` one may want to use `MatchMetric(strategy="prefix")`. And for the data points that
+expect model to give a thoughtful answer, we want to use `RougeMetric(rouge_type="rouge2")`.
+The good dataset metric in this case is `BestOf`.
+
+```python
+prefix_metric = MatchMetric(strategy="prefix")
+rouge2_metric = RougeMetric(rouge_type="rouge2")
+
+metric = BestOfMetric(prefix_metric, rouge2_metric)
+```
+
+Please see [Reference](../../reference/redlite/metric/) documentation for more detail.
+
 ## Custom metrics
 
 Custom metrics can be easily integrated, see the [Customization Guide](custom.md).
