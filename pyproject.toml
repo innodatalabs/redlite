@@ -77,10 +77,10 @@ packages = [
     "resources/default/*",
     "resources/default/_app/*",
     "resources/default/_app/immutable/*/*",
-    "resources/wip/*",
-    "resources/wip/assets/*",
-    "resources/wip/assets/images/*",
-    "resources/wip/assets/config/*",
+    "resources/legacy/*",
+    "resources/legacy/assets/*",
+    "resources/legacy/assets/images/*",
+    "resources/legacy/assets/config/*",
 ]
 
 [tool.portray.mkdocs]
