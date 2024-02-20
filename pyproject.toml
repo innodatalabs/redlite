@@ -73,7 +73,15 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-"redlite.server" = ["resources/default/*", "resources/default/_app/*", "resources/default/_app/immutable/*/*"]
+"redlite.server" = [
+    "resources/default/*",
+    "resources/default/_app/*",
+    "resources/default/_app/immutable/*/*",
+    "resources/wip/*",
+    "resources/wip/assets/*",
+    "resources/wip/assets/images/*",
+    "resources/wip/assets/config/*",
+]
 
 [tool.portray.mkdocs]
 repo_name = "GitHub: innodatalabs/redlite"
