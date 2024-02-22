@@ -34,8 +34,8 @@ class HFModel(NamedModel):
                 token=token,
                 config=config,
                 torch_dtype=torch.bfloat16,
+                device_map='auto',
             )
-            .to(device)
             .eval()
         )
 
