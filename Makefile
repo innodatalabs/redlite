@@ -28,5 +28,5 @@ docs-server: docs
 
 .PHONE: wheel
 wheel:
-	rm -rf build/
+	rm -rf build/ redlite.egg-info/
 	pip wheel . --no-deps -w wheels/
