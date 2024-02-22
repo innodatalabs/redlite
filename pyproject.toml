@@ -74,13 +74,13 @@ packages = [
 
 [tool.setuptools.package-data]
 "redlite.server" = [
-    "resources/default/*",
-    "resources/default/assets/*",
-    "resources/default/assets/images/*",
-    "resources/default/assets/config/*",
     "resources/legacy/*",
-    "resources/legacy/_app/*",
-    "resources/legacy/_app/immutable/*",
+    "resources/legacy/*/*",
+    "resources/legacy/*/*/*",
+    "resources/legacy/*/*/*/*",
+    "resources/default/*",
+    "resources/default/*/*",
+    "resources/default/*/*/*",
 ]
 
 [tool.portray.mkdocs]
