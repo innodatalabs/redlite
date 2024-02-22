@@ -10,7 +10,7 @@ from ._core import (
 from ._run import run, rescore
 from .dataset._load import load_dataset
 
-__version__ = "0.0.42"
+__version__ = "0.0.43"
 __all__ = [
     "run",
     "rescore",
