@@ -28,16 +28,29 @@ class HFModel(NamedModel):
 
         config = AutoConfig.from_pretrained(hf_name, token=token)
 
-        self.__model = (
+        if device == "cpu":
+            self.__model = (
             AutoModelForCausalLM.from_pretrained(
                 hf_name,
                 token=token,
                 config=config,
                 torch_dtype=torch.bfloat16,
-                device_map='auto',
             )
+            .to(device)
             .eval()
         )
+
+        else:    
+            self.__model = (
+                AutoModelForCausalLM.from_pretrained(
+                    hf_name,
+                    token=token,
+                    config=config,
+                    torch_dtype=torch.bfloat16,
+                    device_map='auto'
+                )
+                .eval()
+            )
 
         self.__tokenizer = AutoTokenizer.from_pretrained(
             hf_name,
