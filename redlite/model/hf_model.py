@@ -39,7 +39,6 @@ class HFModel(NamedModel):
             .to(device)
             .eval()
         )
-
         else:    
             self.__model = (
                 AutoModelForCausalLM.from_pretrained(
