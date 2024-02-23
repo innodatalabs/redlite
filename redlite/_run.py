@@ -170,6 +170,7 @@ def rescore(
                 completed=datetime.utcfromtimestamp(completed).isoformat() + "Z",
                 duration=completed - started,
                 score_summary=score_accumulator.summary,
+                metric=metric.name,
             )
         )
 
