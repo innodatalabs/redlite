@@ -49,8 +49,8 @@ metric = MatchMetric(ignore_case=True, ignore_punct=True, strategy='prefix')
 run(model=model, dataset=dataset, metric=metric)
 ```
 
-Note: the code above uses OpenAI API.
-You will need to register with OpenAI and get an API access key, then set it in the environment as `OPENAI_API_KEY`.
+_Note: the code above uses OpenAI model via their API.
+You will need to register with OpenAI and get an API access key, then set it in the environment as `OPENAI_API_KEY`._
 
 ## Goals
 
