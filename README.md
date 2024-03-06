@@ -43,11 +43,14 @@ from redlite.metric import MatchMetric
 
 
 model = OpenAIModel(api_key=os.environ["OPENAI_API_KEY"])
-dataset = load_dataset("hf:innodatalabs/rt-gaia")
+dataset = load_dataset("hf:innodatalabs/rt-gsm8k-gaia")
 metric = MatchMetric(ignore_case=True, ignore_punct=True, strategy='prefix')
 
 run(model=model, dataset=dataset, metric=metric)
 ```
+
+Note: the code above uses OpenAI API.
+You will need to register with OpenAI and get an API access key, then set it in the environment as `OPENAI_API_KEY`.
 
 ## Goals
 
