@@ -15,7 +15,7 @@ class AnthropicModel(NamedModel):
     - **api_key** (`str | None`): Anthropic API key
     """
 
-    def __init__(self, model="claude-3-opus-20240229", max_tokens=1024, api_key : str | None = None):
+    def __init__(self, model="claude-3-opus-20240229", max_tokens=1024, api_key: str | None = None):
         self.model = model
         self.client = Anthropic(api_key=api_key)
         self.max_tokens = max_tokens
@@ -33,6 +33,6 @@ class AnthropicModel(NamedModel):
         assert response.role == "assistant"
 
         assert len(response.content) == 1
-        assert response.content[0].type == 'text'
+        assert response.content[0].type == "text"
 
         return response.content[0].text
