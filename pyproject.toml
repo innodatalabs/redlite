@@ -34,10 +34,11 @@ Issues        = "https://github.com/innodatalabs/redlite/issues"
 hf = ["datasets"]
 server = ["aiohttp", "aiohttp-cors"]
 openai = ["openai"]
+anthropic = ["anthropic"]
 zeno = ["zeno_client"]
 rouge = ["rouge-score"]
 bleu = ["nltk"]
-all = ["redlite[hf,server,openai,zeno,rouge,nltk]"]
+all = ["redlite[hf,server,openai,anthropic,zeno,rouge,nltk]"]
 dev = [
     "pytest",
     "twine",

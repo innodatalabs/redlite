@@ -26,12 +26,27 @@ OpenAI api key to do the prediction with these models.
 Here is how to use OpenAI models:
 
 ```python
-from redlite.openai import OpenAIModel
+from redlite.model.openai_model import OpenAIModel
 
 model = OpenAIModel(...)
 ```
 
 Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
+
+## Anthropic Chat Models
+
+Anthropic conversational models (e.g. Claude) are available. Note that one needs a valid
+Anthropic api key to do the prediction with these models.
+
+Here is how to use Anthropic models:
+
+```python
+from redlite.model.anthropic_model import AnthropicModel
+
+model = AnthropicModel(...)
+```
+
+Please see [Reference](../../reference/redlite/model/anthropic_model/) documentation for more detail and available parameters.
 
 ## IgnoreSystemModel
 
