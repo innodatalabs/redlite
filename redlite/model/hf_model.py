@@ -29,16 +29,16 @@ class HFModel(NamedModel):
         config = AutoConfig.from_pretrained(hf_name, token=token)
 
         
-	self.__model = (
-	    AutoModelForCausalLM.from_pretrained(
-	    hf_name,
-	    token=token,
-            config=config,
-            torch_dtype=torch.bfloat16,
-            device_map=device_map
-	    )
-	    .eval()
-	)
+        self.__model = (
+            AutoModelForCausalLM.from_pretrained(
+            hf_name,
+            token=token,
+                config=config,
+                torch_dtype=torch.bfloat16,
+                device_map=device_map
+            )
+            .eval()
+        )
        
 
         self.__tokenizer = AutoTokenizer.from_pretrained(
