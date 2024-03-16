@@ -22,9 +22,9 @@ class HFModel(NamedModel):
     - **chat_template** (`str | None`): Custom chat template.
     """
 
-    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, chat_template=None):
-        if device is None:
-            device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    def __init__(self, hf_name: str, device_map: str | None = None, token=None, max_length=8192, chat_template=None):
+        if device_map is None:
+            device_map = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         config = AutoConfig.from_pretrained(hf_name, token=token)
 
@@ -35,21 +35,11 @@ class HFModel(NamedModel):
                 token=token,
                 config=config,
                 torch_dtype=torch.bfloat16,
+                device_map=device_map
             )
-            .to(device)
             .eval()
         )
-        else:    
-            self.__model = (
-                AutoModelForCausalLM.from_pretrained(
-                    hf_name,
-                    token=token,
-                    config=config,
-                    torch_dtype=torch.bfloat16,
-                    device_map='auto'
-                )
-                .eval()
-            )
+       
 
         self.__tokenizer = AutoTokenizer.from_pretrained(
             hf_name,
