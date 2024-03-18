@@ -14,30 +14,48 @@ class HFModel(NamedModel):
 
     - **hf_name** (`str`): name of the model on HuggingFace hub.
     - **device** (`str | None`): which device to use for inference. If left
-            unset, will use CUDA if present, else CPU.
+            unset, will not attempt to move model to accelerator. See also `device_map` parameter.
+    - **device_map** (`str | None`): defines how to map model shards to devices. Use `"auto"`
+            to automatically place model shards (recommended). This option can not be used
+            together with the `device` option.
     - **token** (`str | None`): HuggingFace authorization token. May be needed
             for some models (e.g. Mistral).
     - **max_length** (`int`): Largest number of tokens that model can handle.
             If prompt is too big, model will output an empty string.
     - **chat_template** (`str | None`): Custom chat template.
+    - **model_params** (`dict[str,Any]`): Other model params, will be passed as-is to the
+            HF model constructor.
     """
 
-    def __init__(self, hf_name: str, device: str | None = None, token=None, max_length=8192, chat_template=None):
-        if device is None:
-            device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    def __init__(
+        self,
+        hf_name: str,
+        device: str | None = None,
+        device_map: str | None = None,
+        token: str | None = None,
+        max_length: int = 8192,
+        chat_template: str | None = None,
+        **model_params,
+    ):
+        if device is not None and device_map is not None:
+            raise ValueError("You can set 'device' or 'device_map', but not both!")
 
         config = AutoConfig.from_pretrained(hf_name, token=token)
 
-        self.__model = (
-            AutoModelForCausalLM.from_pretrained(
-                hf_name,
-                token=token,
-                config=config,
-                torch_dtype=torch.bfloat16,
-            )
-            .to(device)
-            .eval()
+        model_args = dict(model_params)
+        if device_map is not None:
+            model_args["device_map"] = device_map
+
+        model = AutoModelForCausalLM.from_pretrained(
+            hf_name,
+            token=token,
+            config=config,
+            **model_args,
         )
+        if device is not None:
+            model = model.to(device)
+
+        self.__model = model.eval()
 
         self.__tokenizer = AutoTokenizer.from_pretrained(
             hf_name,
@@ -48,10 +66,15 @@ class HFModel(NamedModel):
         )
         self.max_length = max_length
 
-        name = "hf:" + hf_name
         if chat_template is not None:
             self.__tokenizer.chat_template = chat_template
-            name += "@" + sha_digest(chat_template)[:6]
+
+        name = "hf:" + hf_name
+        if chat_template is not None or len(model_params) > 0:
+            obj = {x: str(model_params[x]) for x in model_params}
+            if chat_template is not None:
+                obj["chat_template"] = chat_template
+            name += "@" + sha_digest(obj)[:6]
 
         super().__init__(name, self.__predict)
 
