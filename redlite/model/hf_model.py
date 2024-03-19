@@ -77,6 +77,7 @@ class HFModel(NamedModel):
             name += "@" + sha_digest(obj)[:6]
 
         super().__init__(name, self.__predict)
+        print(f"HFModel {hf_name} placed on device {self.__model.device}")
 
     def __predict(self, messages: list[Message]) -> str:
         prompt = self.__tokenizer.apply_chat_template(messages, tokenize=False)
