@@ -38,7 +38,8 @@ anthropic = ["anthropic"]
 zeno = ["zeno_client"]
 rouge = ["rouge-score"]
 bleu = ["nltk"]
-all = ["redlite[hf,server,openai,anthropic,zeno,rouge,nltk]"]
+aws = ["boto3"]
+all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws]"]
 dev = [
     "pytest",
     "twine",

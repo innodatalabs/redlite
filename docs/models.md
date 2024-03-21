@@ -48,6 +48,20 @@ model = AnthropicModel(...)
 
 Please see [Reference](../../reference/redlite/model/anthropic_model/) documentation for more detail and available parameters.
 
+## AWS Bedrock Text Generation Models
+
+Use `AwsBedrockModel` to access models hosted on AWS Bedrock. Note that one needs a valid AWS key pair.
+
+Here is how to use AWS Bedrock models:
+
+```python
+from redlite.model.aws_bedrock_model import AwsBedrockModel
+
+model = AwsBedrockModel(...)
+```
+
+Please see [Reference](../../reference/redlite/model/aws_bedrock_model/) documentation for more detail and available parameters.
+
 ## IgnoreSystemModel
 
 Wraps a model and removes system message (if any) from the input. Useful when dataset contains system messages, but
