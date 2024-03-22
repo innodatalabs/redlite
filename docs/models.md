@@ -76,6 +76,34 @@ model = IgnoreSystemModel(HFModel("mistralai/Mistral-Instruct-v0.2"))
 
 Please see [Reference](../../reference/redlite/model/) documentation for more detail.
 
+## ParrotModel
+
+A model that parrots back the last user message. Useful to establish performance baselines.
+
+```python
+from redlite.model import ParrotModel
+
+model = ParrotModel()
+
+assert model([{"role": "user", "content": "Hello"}]) == "Hello"
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
+## CannedModel
+
+A model that returns the same (canned) response regardless of user input. Useful to establish performance baselines.
+
+```python
+from redlite.model import CannedModel
+
+model = CannedModel("Bye)
+
+assert model([{"role": "user", "content": "Hello"}]) == "Bye"
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
 ## Custom models
 
 Custom models can be easily integrated, see the [Customization Guide](custom.md).
