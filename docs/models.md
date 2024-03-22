@@ -97,7 +97,7 @@ A model that returns the same (canned) response regardless of user input. Useful
 ```python
 from redlite.model import CannedModel
 
-model = CannedModel("Bye)
+model = CannedModel("Bye")
 
 assert model([{"role": "user", "content": "Hello"}]) == "Bye"
 ```
