@@ -68,8 +68,9 @@ class ConvertSystemToUserModel(NamedModel):
 
     def __engine(self, messages: list[Message]) -> str:
         if messages[0]["role"] == "system":
-            messages = [
+            prefix: list[Message] = [
                 {"role": "user", "content": messages[0]["content"]},
                 {"role": "assistant", "content": self.assistant_confirmation},
-            ] + messages[1:]
+            ]
+            messages = prefix + messages[1:]
         return self.model(messages)
