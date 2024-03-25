@@ -76,6 +76,23 @@ model = IgnoreSystemModel(HFModel("mistralai/Mistral-Instruct-v0.2"))
 
 Please see [Reference](../../reference/redlite/model/) documentation for more detail.
 
+## ConvertSystemToUserModel
+
+Wraps a model and converts system message (if present) to the user one.
+Useful when dataset contains system messages, but model does not expect system.
+
+```python
+from redlite.model.hf_model import HFModel
+from redlite.model import ConvertSystemToUserModel
+
+model = ConvertSystemToUSerModel(
+    HFModel("mistralai/Mistral-Instruct-v0.2"),
+    assistant_confirmation="Sure thing!"
+)
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
 ## ParrotModel
 
 A model that parrots back the last user message. Useful to establish performance baselines.
