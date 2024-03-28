@@ -109,7 +109,8 @@ navigate data or create charts.
 - [ ] tests
 - [x] Integrate HF models
 - [x] Integrate OpenAI models
-- [ ] Integrate Anthropic models
+- [x] Integrate Anthropic models
+- [x] Integrate AWS Bedrock models
 - [ ] Integrate vLLM models
 - [x] Fix data format in HF datasets (innodatalabs/rt-* ones) to match standard
 - [ ] more robust backend API (future-proof)

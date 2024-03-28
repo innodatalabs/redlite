@@ -26,7 +26,7 @@ docs:
 docs-server: docs
 	python -m http.server -d site/ 9000
 
-.PHONE: wheel
+.PHONY: wheel
 wheel:
 	rm -rf build/ redlite.egg-info/
 	pip wheel . --no-deps -w wheels/
