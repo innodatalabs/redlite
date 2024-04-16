@@ -116,23 +116,23 @@ def main(port: int = 8000, skin: str = "default"):
 async def freeze(outdir: str, skin: str = "default"):
 
     def save(path, *, data):
-        fname = outdir + '/' + path
+        fname = outdir + "/" + path
         os.makedirs(os.path.dirname(fname), exist_ok=True)
-        with open(fname, 'wb') as f:
-            f.write(json.dumps(data).encode('utf-8'))
+        with open(fname, "wb") as f:
+            f.write(json.dumps(data).encode("utf-8"))
 
     base = redlite_data_dir()
 
     reader = RunReader(base)
 
     runs = await reader.runs()
-    save('/api/runs.json', data=runs)
+    save("/api/runs.json", data=runs)
     for run in runs:
-        name = quote(run['run'])
-        meta = await reader.meta(run['run'])
-        data = await reader.data(run['run'])
-        save(f'/api/runs/{name}/meta.json', data=meta)
-        save(f'/api/runs/{name}/data.json', data=data)
+        name = quote(run["run"])
+        meta = await reader.meta(run["run"])
+        data = await reader.data(run["run"])
+        save(f"/api/runs/{name}/meta.json", data=meta)
+        save(f"/api/runs/{name}/data.json", data=data)
 
     skin_root = res(skin)
     for root, _, files in os.walk(skin_root):

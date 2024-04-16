@@ -8,7 +8,9 @@ def main():
     parser_server.add_argument("--port", "-p", type=int, default=8000, help="Server port")
     parser_server.add_argument("--skin", "-s", type=str, default="default", help="UI skin")
 
-    parser_server_freeze = subparsers.add_parser("server-freeze", help="generates files for a static website serving data")
+    parser_server_freeze = subparsers.add_parser(
+        "server-freeze", help="generates files for a static website serving data"
+    )
     parser_server_freeze.add_argument("outdir", type=str, help="Output directory")
     parser_server_freeze.add_argument("--skin", "-s", type=str, default="default", help="UI skin")
 
