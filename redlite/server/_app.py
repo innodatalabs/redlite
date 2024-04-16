@@ -1,6 +1,9 @@
+import os
+import shutil
+import json
 from aiohttp import web
 import aiohttp_cors
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
 from redlite.server import res
 from redlite._util import redlite_data_dir
 from .._util import read_data, read_meta, read_runs
@@ -81,9 +84,9 @@ def get_app(reader: RunReader, *, skin="default"):
     service = Service(reader)
     app.add_routes(
         [
-            web.get("/api/runs", service.runs),
-            web.get("/api/runs/{name}/meta", service.meta),
-            web.get("/api/runs/{name}/data", service.data),
+            web.get("/api/runs.json", service.runs),
+            web.get("/api/runs/{name}/meta.json", service.meta),
+            web.get("/api/runs/{name}/data.json", service.data),
             web.get("/", index),
             web.static("/", res(skin)),
             web.get("", index),
@@ -108,6 +111,37 @@ def main(port: int = 8000, skin: str = "default"):
     app = get_app(RunReader(base), skin=skin)
 
     web.run_app(app, port=port)
+
+
+async def freeze(outdir: str, skin: str = "default"):
+
+    def save(path, *, data):
+        fname = outdir + '/' + path
+        os.makedirs(os.path.dirname(fname), exist_ok=True)
+        with open(fname, 'wb') as f:
+            f.write(json.dumps(data).encode('utf-8'))
+
+    base = redlite_data_dir()
+
+    reader = RunReader(base)
+
+    runs = await reader.runs()
+    save('/api/runs.json', data=runs)
+    for run in runs:
+        name = quote(run['run'])
+        meta = await reader.meta(run['run'])
+        data = await reader.data(run['run'])
+        save(f'/api/runs/{name}/meta.json', data=meta)
+        save(f'/api/runs/{name}/data.json', data=data)
+
+    skin_root = res(skin)
+    for root, _, files in os.walk(skin_root):
+        for fname in files:
+            fname = os.path.join(root, fname)
+            relname = os.path.relpath(fname, skin_root)
+            target = os.path.join(outdir, relname)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copyfile(fname, target)
 
 
 if __name__ == "__main__":

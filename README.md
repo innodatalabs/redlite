@@ -97,6 +97,20 @@ All models will be uploaded. If model was not tested on a specific task, a simul
 Use `task_id` (or `dataset` as appropriate) to create task slices. Slices can be used to
 navigate data or create charts.
 
+## Serving as a static website
+
+UI server data and code can be exported to a local directory that then can be served statically.
+
+This is useful for publishing as a static website on cloud storage (S3, Google Storage).
+
+```bash
+redlite server-freeze /tmp/my-server
+gsutil -m rsync -R /tmp/my-server gs://{your GS bucket}
+```
+
+Note that you have to configure cloud bucket in a special way, so that cloud provider serves it as a website. How to do this depends on
+the cloud provider.
+
 ## TODO
 
 - [x] deps cleanup (randomname!)

@@ -1,1 +1,0 @@
-import"../chunks/disclose-version.Bg9kRutz.js";import{p,a}from"../chunks/runtime.Qq3DoWX7.js";import{g as m}from"../chunks/entry.DoBATWGp.js";function n(r,o){a(o,!1),m("/model"),p()}export{n as component};
