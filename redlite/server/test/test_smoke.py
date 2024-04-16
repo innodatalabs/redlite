@@ -1,5 +1,5 @@
 async def test_runs(client):
-    res = await client.get("/api/runs")
+    res = await client.get("/api/runs.json")
     assert res.status == 200
     runs = await res.json()
 
@@ -10,7 +10,7 @@ async def test_runs(client):
 
 
 async def test_meta(client):
-    res = await client.get("/api/runs/beautiful-soup-1/meta")
+    res = await client.get("/api/runs/beautiful-soup-1/meta.json")
     assert res.status == 200
     data = await res.json()
 
@@ -19,7 +19,7 @@ async def test_meta(client):
 
 
 async def test_data(client):
-    res = await client.get("/api/runs/beautiful-soup-1/data")
+    res = await client.get("/api/runs/beautiful-soup-1/data.json")
     assert res.status == 200
     data = await res.json()
 
