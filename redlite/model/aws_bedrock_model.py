@@ -1,15 +1,13 @@
 import json
 import time
 
-import botocore.exceptions
-
 from .._core import NamedModel, Message, MissingDependencyError, log
 from .._util import sha_digest
 from typing import Any
 
 try:
     import boto3
-    import botocore
+    import botocore.exceptions
 except ImportError as err:
     raise MissingDependencyError("Please install boto3 library") from err
 
