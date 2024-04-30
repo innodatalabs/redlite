@@ -80,7 +80,7 @@ class HFModel(NamedModel):
         print(f"HFModel {hf_name} placed on device {self.__model.device}")
 
     def __predict(self, messages: list[Message]) -> str:
-        prompt = self.__tokenizer.apply_chat_template(messages, tokenize=False)
+        prompt = self.__tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = self.__tokenizer(prompt, return_tensors="pt").to(self.__model.device)
         prompt_tokens = inputs["input_ids"].shape[1]
         if prompt_tokens >= self.max_length:
