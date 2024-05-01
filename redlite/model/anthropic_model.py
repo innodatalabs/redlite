@@ -1,7 +1,7 @@
 from .. import NamedModel, MissingDependencyError
 
 try:
-    from anthropic import Anthropic
+    from anthropic import Anthropic, NOT_GIVEN
 except ImportError as err:
     raise MissingDependencyError("Please install anthropic library") from err
 
@@ -23,10 +23,16 @@ class AnthropicModel(NamedModel):
         super().__init__(f"anthropic-{model}", self.__chat)
 
     def __chat(self, messages: list) -> str:
+        system = NOT_GIVEN
+        if messages[0]["role"] == "system":
+            system = messages[0]["content"]
+            messages = messages[1:]
+
         response = self.client.messages.create(
             model=self.model,
             max_tokens=self.max_tokens,
             messages=messages,
+            system=system,
         )
 
         assert response.type == "message"
