@@ -1,4 +1,4 @@
-from .._core import NamedModel, Message, MissingDependencyError, log
+from .._core import NamedModel, Message, MissingDependencyError
 from .._util import sha_digest
 
 try:
@@ -33,5 +33,5 @@ class HFModelPipeline(NamedModel):
 
     def __predict(self, messages: list[Message]) -> str:
         out = self.__pipeline(messages)
-        assert out[-1]['role'] == 'assistant', out
-        return out[-1]['content']
+        assert out[-1]["role"] == "assistant", out
+        return out[-1]["content"]
