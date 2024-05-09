@@ -1,5 +1,3 @@
-from collections.abc import Iterable
-import copy
 from .._core import NamedModel, Message, MissingDependencyError
 from .._util import sha_digest
 
@@ -34,11 +32,6 @@ class HFModelPipeline(NamedModel):
         print(f"HFModelPipeline {hf_name} placed on device {self.__pipeline.device}")
 
     def __predict(self, messages: list[Message]) -> str:
-        out = self.__pipeline(copy.deepcopy(messages))  # deep copy messages as pipeline may mess with them
+        out = self.__pipeline([dict(x) for x in messages])  # deep copy messages as pipeline may mess with them
         assert out[-1]["role"] == "assistant", out
         return out[-1]["content"]
-
-    def map(self, iterable: Iterable[list[Message]]) -> Iterable[str]:
-        for out in self.__pipeline(copy.deepcopy(conversation) for conversation in iterable):
-            import pdb; pdb.set_trace()
-            yield out[0]
