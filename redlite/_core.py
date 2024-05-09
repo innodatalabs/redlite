@@ -135,6 +135,10 @@ class NamedModel:
     def __call__(self, conversation: list[Message]) -> str:
         return self._engine(conversation)
 
+    def map(self, iterable: Iterable[list[Message]]) -> Iterable[str]:
+        for conversation in iterable:
+            yield self._engine(conversation)
+
 
 class Storage(abc.ABC):
     def __init__(self, name: str):

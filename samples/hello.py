@@ -7,7 +7,7 @@ def parrot(messages: list[Message]) -> str:
 
 
 model = NamedModel("parrot", parrot)
-dataset = load_dataset("hf:innodatalabs/rt-cogensumm")
+dataset = load_dataset("hf:innodatalabs/rt-inod-jailbreaking")
 metric = BleuMetric()
 
-run(model=model, dataset=dataset, metric=metric)
+run(model=model, dataset=dataset, metric=metric, max_samples=250)

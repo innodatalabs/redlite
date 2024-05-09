@@ -1,6 +1,7 @@
 import contextlib
 import os
 import time
+import itertools
 from tqdm import tqdm
 import duoname
 from datetime import datetime
@@ -75,9 +76,11 @@ def run(
     print(f"\tmetric : {metric.name}")
 
     with _storage(runname) as storage:  # type: Storage
-        for item in tqdm(data_with_digest):
-            actual = model(item["messages"])
-            score = metric(item["expected"], actual)
+        dataset_copy1, dataset_copy2 = itertools.tee(data_with_digest, 2)
+        outputs = model.map(item["messages"] for item in dataset_copy1)
+        for item, actual in tqdm(zip(dataset_copy2, outputs)):
+            expected = item["expected"]
+            score = metric(expected, actual)
             storage.save(item, actual, score)
             score_accumulator(score)
 
