@@ -1,11 +1,10 @@
-from .._core import NamedModel, Message, MissingDependencyError, log
+from .._core import NamedModel, Message, MissingDependencyError
 from .._util import sha_digest
 
 try:
-    from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-    import torch
+    from transformers import pipeline
 except ImportError as err:
-    raise MissingDependencyError("Please install transformers and torch libraries") from err
+    raise MissingDependencyError("Please install transformers library") from err
 
 
 class HFModel(NamedModel):
@@ -13,89 +12,29 @@ class HFModel(NamedModel):
     Model loaded from HuggingFace hub.
 
     - **hf_name** (`str`): name of the model on HuggingFace hub.
-    - **device** (`str | None`): which device to use for inference. If left
-            unset, will not attempt to move model to accelerator. See also `device_map` parameter.
-    - **device_map** (`str | None`): defines how to map model shards to devices. Use `"auto"`
-            to automatically place model shards (recommended). This option can not be used
-            together with the `device` option.
-    - **token** (`str | None`): HuggingFace authorization token. May be needed
-            for some models (e.g. Mistral).
-    - **max_length** (`int`): Largest number of tokens that model can handle.
-            If prompt is too big, model will output an empty string.
-    - **chat_template** (`str | None`): Custom chat template.
-    - **model_params** (`dict[str,Any]`): Other model params, will be passed as-is to the
-            HF model constructor.
+    - **model_params** (`dict[str,Any]`): Other pipeline params, will be passed as-is to the
+            HF pipeline constructor.
     """
 
     def __init__(
         self,
         hf_name: str,
-        device: str | None = None,
-        device_map: str | None = None,
-        token: str | None = None,
-        max_length: int = 8192,
-        chat_template: str | None = None,
-        **model_params,
+        **pipeline_params,
     ):
-        if device is not None and device_map is not None:
-            raise ValueError("You can set 'device' or 'device_map', but not both!")
-
-        config = AutoConfig.from_pretrained(hf_name, token=token)
-
-        model_args = dict(model_params)
-        if device_map is not None:
-            model_args["device_map"] = device_map
-
-        model = AutoModelForCausalLM.from_pretrained(
-            hf_name,
-            token=token,
-            config=config,
-            **model_args,
-        )
-        if device is not None:
-            model = model.to(device)
-
-        self.__model = model.eval()
-
-        self.__tokenizer = AutoTokenizer.from_pretrained(
-            hf_name,
-            model_max_length=max_length,
-            use_fast=False,
-            token=token,
-            trust_remote_code=True,
-        )
-        self.max_length = max_length
-
-        if chat_template is not None:
-            self.__tokenizer.chat_template = chat_template
+        self.__pipeline = pipeline(task="conversational", model=hf_name, **pipeline_params, use_fast=False)
 
         name = "hf:" + hf_name
-        if chat_template is not None or len(model_params) > 0:
-            obj = {x: str(model_params[x]) for x in model_params}
-            if chat_template is not None:
-                obj["chat_template"] = chat_template
+        if len(pipeline_params) > 0:
+            obj = {x: str(pipeline_params[x]) for x in pipeline_params}
             name += "@" + sha_digest(obj)[:6]
 
         super().__init__(name, self.__predict)
-        print(f"HFModel {hf_name} placed on device {self.__model.device}")
+        print(f"HFModel {hf_name} placed on device {self.__pipeline.device}")
 
     def __predict(self, messages: list[Message]) -> str:
-        prompt = self.__tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        inputs = self.__tokenizer(prompt, return_tensors="pt").to(self.__model.device)
-        prompt_tokens = inputs["input_ids"].shape[1]
-        if prompt_tokens >= self.max_length:
-            log.warn(
-                f"Prompt of size {prompt_tokens} does not fit into "
-                + f"model max_length of {self.max_length}. Returning empty string!"
-            )
-            return ""
-
-        with torch.no_grad():
-            outputs = self.__model.generate(
-                **inputs,
-                max_new_tokens=self.max_length - prompt_tokens,
-                pad_token_id=self.__tokenizer.eos_token_id,
-            )
-
-        response = outputs[0][prompt_tokens:]
-        return self.__tokenizer.decode(response, skip_special_tokens=True)
+        pad_token_id = self.__pipeline.tokenizer.eos_token_id
+        out = self.__pipeline(
+            [dict(x) for x in messages], pad_token_id=pad_token_id
+        )  # deep copy messages as pipeline may mess with them
+        assert out[-1]["role"] == "assistant", out
+        return out[-1]["content"]

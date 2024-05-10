@@ -8,12 +8,12 @@ and hosted on [HuggingFace model hub](https://hf.co/models).
 Here is how to work with HuggingFace models:
 
 ```python
-from redlite.model.hf_model_pipeline import HFModelPipeline
+from redlite.model.hf_model_pipeline import HFModel
 
-model = HFModelPipeline('mistralai/Mistral-7B-Instruct-v0.2', device_map='auto')
+model = HFModel('mistralai/Mistral-7B-Instruct-v0.2', device_map='auto')
 ```
 
-Please see [Reference](../../reference/redlite/model/hf_model_pipeline) documentation for more detail and available parameters.
+Please see [Reference](../../reference/redlite/model/hf_model) documentation for more detail and available parameters.
 
 ## OpenAI Conversational Models
 
