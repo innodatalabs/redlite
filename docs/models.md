@@ -8,7 +8,7 @@ and hosted on [HuggingFace model hub](https://hf.co/models).
 Here is how to work with HuggingFace models:
 
 ```python
-from redlite.model.hf_model_pipeline import HFModel
+from redlite.model.hf_model import HFModel
 
 model = HFModel('mistralai/Mistral-7B-Instruct-v0.2', device_map='auto')
 ```
