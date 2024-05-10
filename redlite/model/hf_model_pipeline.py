@@ -33,6 +33,8 @@ class HFModelPipeline(NamedModel):
 
     def __predict(self, messages: list[Message]) -> str:
         pad_token_id = self.__pipeline.tokenizer.eos_token_id
-        out = self.__pipeline([dict(x) for x in messages], pad_token_id=pad_token_id)  # deep copy messages as pipeline may mess with them
+        out = self.__pipeline(
+            [dict(x) for x in messages], pad_token_id=pad_token_id
+        )  # deep copy messages as pipeline may mess with them
         assert out[-1]["role"] == "assistant", out
         return out[-1]["content"]
