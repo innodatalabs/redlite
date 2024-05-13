@@ -5,18 +5,15 @@
 Out-of the box we support models implemented with the [transformers](https://hf.co/transformers) framework
 and hosted on [HuggingFace model hub](https://hf.co/models).
 
-We presently only support models that use [PyTorch](https://pytorch.org) backend.
-Support for other backends is on the roadmap.
-
 Here is how to work with HuggingFace models:
 
 ```python
 from redlite.model.hf_model import HFModel
 
-model = HFModel(...)
+model = HFModel('mistralai/Mistral-7B-Instruct-v0.2', device_map='auto')
 ```
 
-Please see [Reference](../../reference/redlite/model/hf_model) documentation for more detail and availabel parameters.
+Please see [Reference](../../reference/redlite/model/hf_model) documentation for more detail and available parameters.
 
 ## OpenAI Conversational Models
 
