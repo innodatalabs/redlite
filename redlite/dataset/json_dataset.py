@@ -1,10 +1,10 @@
 import json
 from typing import Literal
 from collections.abc import Iterator
-from .._core import NamedDataset, DatasetItem
+from .memory_dataset import MemoryDataset, DatasetItem
 
 
-class JSONDataset(NamedDataset):
+class JSONDataset(MemoryDataset):
     """
     Dataset from a local JSONL file.
 
@@ -18,18 +18,15 @@ class JSONDataset(NamedDataset):
     """
 
     def __init__(self, *, path: str, name: str, split: Literal["test", "train"], labels: dict[str, str] | None = None):
-        self.name = name
-        self.split = split
-        self.labels = labels if labels is not None else {}
-        self._path = path
+        super().__init__(
+            data=_read_jsonl(path),
+            name=name,
+            split=split,
+            labels=labels,
+        )
 
-        self._data: list[DatasetItem] = []
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
-                self._data.append(json.loads(line))
 
-    def __len__(self) -> int:
-        return len(self._data)
-
-    def __iter__(self) -> Iterator[DatasetItem]:
-        yield from self._data
+def _read_jsonl(path) -> Iterator[DatasetItem]:
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            yield json.loads(line)
