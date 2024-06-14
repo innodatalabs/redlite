@@ -20,15 +20,16 @@ class OpenAIModel(NamedModel):
     - **max_retries** (`int`): How many times to retry a failed request. Default is `2`.
     """
 
-    def __init__(self,
-            *,
-            model="gpt-3.5-turbo",
-            base_url=None,
-            max_tokens=NOT_GIVEN,
-            temperature=NOT_GIVEN,
-            top_p=NOT_GIVEN,
-            api_key=None,
-            max_retries=2,
+    def __init__(
+        self,
+        *,
+        model="gpt-3.5-turbo",
+        base_url=None,
+        max_tokens=NOT_GIVEN,
+        temperature=NOT_GIVEN,
+        top_p=NOT_GIVEN,
+        api_key=None,
+        max_retries=2,
     ):
         self.base_url = base_url
         self.model = model
@@ -39,17 +40,17 @@ class OpenAIModel(NamedModel):
 
         signature = {}
         if base_url is not None:
-            signature['base_url'] = base_url
+            signature["base_url"] = base_url
         if max_tokens is not NOT_GIVEN:
-            signature['max_tokens'] = max_tokens
+            signature["max_tokens"] = max_tokens
         if temperature is not NOT_GIVEN:
-            signature['temperature'] = temperature
+            signature["temperature"] = temperature
         if top_p is not NOT_GIVEN:
-            signature['top_p'] = top_p
+            signature["top_p"] = top_p
 
-        name = 'openai'
+        name = "openai"
         if len(signature) > 0:
-            name = f'openai-{object_digest(signature)[:6]}'
+            name = f"openai-{object_digest(signature)[:6]}"
 
         super().__init__(f"{name}-{model}", self.__chat)
 
@@ -59,7 +60,7 @@ class OpenAIModel(NamedModel):
             messages=messages,
             max_tokens=self.max_tokens,
             temperature=self.temperature,
-            top_p = self.top_p,
+            top_p=self.top_p,
         )
 
         return chat_completion.choices[0].message.content
