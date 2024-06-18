@@ -6,7 +6,7 @@ from redlite.metric import MatchMetric
 
 model = OpenAIModel(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key=os.environ["NVIDIA_API_KEY"],
+    api_key=os.environ["NGC_API_KEY"],
     model="meta/llama3-8b-instruct",
     temperature=0.5,
     top_p=1,
