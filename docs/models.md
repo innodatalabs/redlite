@@ -30,6 +30,23 @@ model = OpenAIModel(...)
 
 Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
 
+## Model servers compatible with OpenAI API
+
+Use `OpenAIModel` to access third-party services that are compatible with OpenAI API (for example, NVIDIA research).
+Set the endpoint parameter `base_url` to point
+
+Here is how to use OpenAI API to access third-party servies:
+
+```python
+from redlite.model.openai_model import OpenAIModel
+
+base_uri = "https://integrate.api.nvidia.com/v1"
+
+model = OpenAIModel(base_uri=base_uri, model="meta/llama3-instruct", ...)
+```
+
+Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
+
 ## Anthropic Chat Models
 
 Anthropic conversational models (e.g. Claude) are available. Note that one needs a valid
