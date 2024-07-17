@@ -41,5 +41,5 @@ class HFModel(NamedModel):
         out = self.__pipeline(
             [dict(x) for x in messages], pad_token_id=pad_token_id
         )  # deep copy messages as pipeline may mess with them
-        assert out[0]['generated_text'][-1]["role"] == "assistant", out
-        return out[0]['generated_text'][-1]["content"]
+        assert out[0]["generated_text"][-1]["role"] == "assistant", out
+        return out[0]["generated_text"][-1]["content"]
