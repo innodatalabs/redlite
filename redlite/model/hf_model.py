@@ -21,7 +21,12 @@ class HFModel(NamedModel):
         hf_name: str,
         **pipeline_params,
     ):
-        self.__pipeline = pipeline(task="conversational", model=hf_name, **pipeline_params, use_fast=False)
+        args = {
+            "model": hf_name,
+            **pipeline_params,
+            "use_fast": False,
+        }  # allow overwriting "model" (hacky) -MK
+        self.__pipeline = pipeline(task="text-generation", **args)
 
         name = "hf:" + hf_name
         if len(pipeline_params) > 0:
@@ -36,5 +41,5 @@ class HFModel(NamedModel):
         out = self.__pipeline(
             [dict(x) for x in messages], pad_token_id=pad_token_id
         )  # deep copy messages as pipeline may mess with them
-        assert out[-1]["role"] == "assistant", out
-        return out[-1]["content"]
+        assert out[0]['generated_text'][-1]["role"] == "assistant", out
+        return out[0]['generated_text'][-1]["content"]
