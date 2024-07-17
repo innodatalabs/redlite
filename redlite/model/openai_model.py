@@ -11,7 +11,8 @@ class OpenAIModel(NamedModel):
     """
     Model that calls OpenAI Completion API.
 
-    - **base_url** (`str`): Alternative API endpoint. Can be used to access services that are compatible with OpenAI (e.g. NVIDIA research).
+    - **base_url** (`str`): Alternative API endpoint. Can be used to access services that
+                            are compatible with OpenAI (e.g. NVIDIA research).
     - **model** (`str`): Name of the OpenAI model. Default is `"gpt-3.5-turbo"`.
     - **max_tokens** (`int`): Maximum number of returned tokens.
     - **temperature** (`float`): Generation temperature, in the range 0-1.
