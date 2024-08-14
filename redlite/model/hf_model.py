@@ -23,9 +23,9 @@ class HFModel(NamedModel):
     ):
         args = {
             "model": hf_name,
-            **pipeline_params,
             "use_fast": False,
-        }  # allow overwriting "model" (hacky) -MK
+            **pipeline_params,
+        }  # allow overwriting "model" (hacky) -MK; allow overwriting "use_fast"
         self.__pipeline = pipeline(task="text-generation", **args)
 
         name = "hf:" + hf_name
