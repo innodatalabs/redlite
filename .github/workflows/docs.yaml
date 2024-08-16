@@ -35,7 +35,9 @@ jobs:
           python3 -m pip install --upgrade pip
 
       - name: Install dependencies
-        run: pip install -e .[all,dev] transformers torch
+        run: |
+          pip install -e .[all,dev] transformers torch
+          pip install "numpy<2.0"  # temp
 
       - run: make docs
 
