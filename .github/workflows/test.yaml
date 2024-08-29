@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: pip install -e .[all,dev]
 
+      - name: Download NLTK tokenizers
+        run: python3 -m nltk.downloader punkt_tab
+
       - run: make lint
 
       - run: make test
