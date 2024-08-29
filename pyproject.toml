@@ -32,7 +32,7 @@ Issues        = "https://github.com/innodatalabs/redlite/issues"
 
 [project.optional-dependencies]
 hf = ["datasets"]
-server = ["aiohttp", "aiohttp-cors"]
+server = ["aiohttp~=3.9.0", "aiohttp-cors"]
 openai = ["openai"]
 anthropic = ["anthropic"]
 zeno = ["zeno_client"]
