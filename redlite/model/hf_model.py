@@ -12,7 +12,7 @@ class HFModel(NamedModel):
     Model loaded from HuggingFace hub.
 
     - **hf_name** (`str`): name of the model on HuggingFace hub.
-    - **model_params** (`dict[str,Any]`): Other pipeline params, will be passed as-is to the
+    - **pipeline_params** (`dict[str,Any]`): Other pipeline params, will be passed as-is to the
             HF pipeline constructor.
     """
 
