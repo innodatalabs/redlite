@@ -39,7 +39,8 @@ zeno = ["zeno_client"]
 rouge = ["rouge-score"]
 bleu = ["nltk"]
 aws = ["boto3"]
-all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws]"]
+llama-cpp = ["llama-cpp-python"]
+all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws,llama-cpp]"]
 dev = [
     "pytest",
     "twine",
