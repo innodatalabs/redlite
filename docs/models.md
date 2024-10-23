@@ -76,6 +76,23 @@ model = AwsBedrockModel(...)
 
 Please see [Reference](../../reference/redlite/model/aws_bedrock_model/) documentation for more detail and available parameters.
 
+## LlamaCpp Models
+
+[https://github.com/ggerganov/llama.cpp]
+
+Use `LlamaCppModel` to access models runnable by 'llama-cpp' inference engine. For example, models in GGUF format. Due to highly optimized
+inference path, many smaller models can be evaluated on CPU with reasonable performance.
+
+Here is how to use `LlamaCppModel` class:
+
+```python
+from redlite.model.llamacpp_model import LlamaCppModel
+
+model = LlamaCppModel('models/mistral-instruct-7b-Q4-K-M.gguf', n_ctx=512, max_tokens=512)
+```
+
+Please see [Reference](../../reference/redlite/model/llamacpp_model/) documentation for more detail and available parameters.
+
 ## IgnoreSystemModel
 
 Wraps a model and removes system message (if any) from the input. Useful when dataset contains system messages, but
