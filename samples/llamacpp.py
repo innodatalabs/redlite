@@ -1,9 +1,9 @@
 from redlite import run
 from redlite.dataset.memory_dataset import MemoryDataset
-from redlite.model.llamacpp_model import LllamaCppModel
+from redlite.model.llamacpp_model import LlamaCppModel
 from redlite.metric import RandomMetric
 
-model = LllamaCppModel("./models/mistral-7b-instruct-v0.2.Q2_K.gguf", n_ctx=512, max_tokens=512)
+model = LlamaCppModel("./models/mistral-7b-instruct-v0.2.Q2_K.gguf", n_ctx=512, max_tokens=512)
 
 dataset = MemoryDataset(data=[
     {

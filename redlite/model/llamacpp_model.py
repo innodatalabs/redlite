@@ -10,7 +10,7 @@ except ImportError as err:
     raise MissingDependencyError("Please install llama-cpp-python library") from err
 
 
-class LllamaCppModel(NamedModel):
+class LlamaCppModel(NamedModel):
     """
     Chat model using Llama CPP engine.
 
