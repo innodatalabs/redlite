@@ -152,6 +152,18 @@ assert model([{"role": "user", "content": "Hello"}]) == "Bye"
 
 Please see [Reference](../../reference/redlite/model/) documentation for more detail.
 
+## ThrottleModel
+
+A model that wraps another model ant throttles the calls to the specified rate.
+
+```python
+from redlite.model import CannedModel
+
+model = ThrottleModel(OpenAIModel(), 5)
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
 ## Custom models
 
 Custom models can be easily integrated, see the [Customization Guide](custom.md).
