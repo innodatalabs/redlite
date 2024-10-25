@@ -154,7 +154,7 @@ Please see [Reference](../../reference/redlite/model/) documentation for more de
 
 ## ThrottleModel
 
-A model that wraps another model ant throttles the calls to the specified rate.
+A model that wraps another model and throttles it calls to the specified rate.
 
 ```python
 from redlite.model import CannedModel
