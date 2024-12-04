@@ -13,11 +13,13 @@ class AnthropicModel(NamedModel):
     - **model** (`str`): Name of the Anthropic model. Default is `"claude-3-opus-20240229"`
     - **max_tokens** (`int`): maximum number of tokens
     - **api_key** (`str | None`): Anthropic API key
+    - **args**: Keyword arguments to be passed as-is to the Anthropic client. \
+        See https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/_client.py#L68
     """
 
-    def __init__(self, model="claude-3-opus-20240229", max_tokens=1024, api_key: str | None = None):
+    def __init__(self, model="claude-3-opus-20240229", max_tokens=1024, api_key: str | None = None, **args):
         self.model = model
-        self.client = Anthropic(api_key=api_key)
+        self.client = Anthropic(api_key=api_key, **args)
         self.max_tokens = max_tokens
 
         super().__init__(f"anthropic-{model}", self.__chat)
