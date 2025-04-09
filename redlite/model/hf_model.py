@@ -14,11 +14,14 @@ class HFModel(NamedModel):
     - **hf_name** (`str`): name of the model on HuggingFace hub.
     - **pipeline_params** (`dict[str,Any]`): Other pipeline params, will be passed as-is to the
             HF pipeline constructor.
+    - **task** (`str`): Pipeline task. Default is `text-generation`. If using multimodal models,
+            you may need to change it to `image-text-to-text`. Refer to model documentation on HuggingFace.
     """
 
     def __init__(
         self,
         hf_name: str,
+        task="text-generation",
         **pipeline_params,
     ):
         args = {
@@ -26,7 +29,7 @@ class HFModel(NamedModel):
             "use_fast": False,
             **pipeline_params,
         }  # allow overwriting "model" (hacky) -MK; allow overwriting "use_fast"
-        self.__pipeline = pipeline(task="text-generation", **args)
+        self.__pipeline = pipeline(task=task, **args)
 
         name = "hf:" + hf_name
         if len(pipeline_params) > 0:
