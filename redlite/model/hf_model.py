@@ -21,7 +21,7 @@ class HFModel(NamedModel):
     def __init__(
         self,
         hf_name: str,
-        task='text-generation',
+        task="text-generation",
         **pipeline_params,
     ):
         args = {
