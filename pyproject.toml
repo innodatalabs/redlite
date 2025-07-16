@@ -48,7 +48,7 @@ dev = [
     "black",
     "flake8",
     "mypy",
-    "pytest-asyncio",
+    "pytest-asyncio==0.24.0",  # till this is fixed: https://github.com/pytest-dev/pytest-asyncio/issues/862
     "pytest-aiohttp"
 ]
 
