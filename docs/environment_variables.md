@@ -14,11 +14,11 @@ RedLite uses several environment variables for configuration. This document list
 
 ### PORT
 
-**Purpose**: Specifies the port number for the RedLite test server.
+**Purpose**: Specifies the port number for the RedLite Web UI.
 
 **Default**: `8000`
 
-**When needed**: Optional. Only needed when running the RedLite test server and you want to use a different port than the default.
+**When needed**: Optional. Only needed when running the RedLite Web UI and you want to use a different port than the default.
 
 
 ## API Keys for AI Models
