@@ -1,6 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Volumes/980Pro/Workspace/redlite'
-python -m pytest redlite/server/test
-python -m pytest redlite/test
-make: Leaving directory `/Volumes/980Pro/Workspace/redlite'
- 
