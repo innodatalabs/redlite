@@ -121,6 +121,9 @@ Metrics = "docs/metrics.md"
 [[tool.portray.mkdocs.nav]]
 Customize = "docs/custom.md"
 
+[[tool.portray.mkdocs.nav]]
+"Environment Variables" = "docs/environment_variables.md"
+
 [tool.mypy]
 enable_error_code = [
     "ignore-without-code"
