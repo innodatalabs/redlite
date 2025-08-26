@@ -40,7 +40,8 @@ rouge = ["rouge-score"]
 bleu = ["nltk"]
 aws = ["boto3"]
 llama-cpp = ["llama-cpp-python"]
-all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws,llama-cpp]"]
+google = ["google-genai"]
+all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws,llama-cpp,google]"]
 dev = [
     "pytest",
     "twine",

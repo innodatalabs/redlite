@@ -30,6 +30,21 @@ model = OpenAIModel(...)
 
 Please see [Reference](../../reference/redlite/model/openai_model/) documentation for more detail and available parameters.
 
+## Google Gemini models
+
+A family of Google Gemini models is available. Please make sure that you have enabled generative API access in
+Google Cloud console. You also need to create an API key, see https://aistudio.google.com/u/1/apikey.
+
+Here is how to use a Gemini model:
+
+```python
+from redlite.model.gemini_model import GeminiModel
+
+model = GeminiModel(...)
+```
+
+Please see [Reference](../../reference/redlite/model/gemini_model/) documentation for more detail and available parameters.
+
 ## Model servers compatible with OpenAI API
 
 Use `OpenAIModel` to access third-party services that are compatible with OpenAI API (for example, NVIDIA research).
