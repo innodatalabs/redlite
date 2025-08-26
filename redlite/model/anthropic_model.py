@@ -2,7 +2,7 @@ from .. import NamedModel, MissingDependencyError
 from .._util import object_digest
 
 try:
-    from anthropic import Anthropic, NOT_GIVEN
+    from anthropic import Anthropic, NOT_GIVEN, NotGiven
 except ImportError as err:
     raise MissingDependencyError("Please install anthropic library") from err
 
@@ -13,19 +13,32 @@ class AnthropicModel(NamedModel):
 
     - **model** (`str`): Name of the Anthropic model. Default is `"claude-3-opus-20240229"`
     - **max_tokens** (`int`): maximum number of tokens
+    - **thinking** (`dict`): optional config for thinking, for example `{'type': 'enabled', 'budget_tokens': 2048}`.
+        Not all Anthropic models support thinking.
     - **api_key** (`str | None`): Anthropic API key
     - **args**: Keyword arguments to be passed as-is to the Anthropic client. \
         See https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/_client.py#L68
     """
 
-    def __init__(self, model="claude-3-opus-20240229", max_tokens=1024, api_key: str | None = None, **args):
+    def __init__(
+        self,
+        model="claude-3-opus-20240229",
+        max_tokens: int = 1024,
+        thinking: dict | NotGiven = NOT_GIVEN,
+        api_key: str | None = None,
+        **args,
+    ):
         self.model = model
         self.client = Anthropic(api_key=api_key, **args)
         self.max_tokens = max_tokens
 
         name = "anthropic"
-        if len(args) > 0:
-            name = f"anthropic-{object_digest(args)[:6]}"
+        if len(args) > 0 or thinking is not NOT_GIVEN:
+            signature = {**args}
+            if thinking is not NOT_GIVEN:
+                signature["thinking"] = thinking
+            name = f"anthropic-{object_digest(signature)[:6]}"
+        self._thinking = thinking
 
         super().__init__(f"{name}-{model}", self.__chat)
 
@@ -35,17 +48,16 @@ class AnthropicModel(NamedModel):
             system = messages[0]["content"]
             messages = messages[1:]
 
-        response = self.client.messages.create(
+        with self.client.messages.stream(
             model=self.model,
             max_tokens=self.max_tokens,
             messages=messages,
             system=system,
-        )
+            thinking=self._thinking,  # type: ignore[arg-type]
+        ) as stream:
+            for event in stream:
+                if event.type == "message_stop":
+                    assert event.message.content[-1].type == "text"
+                    return event.message.content[-1].text
 
-        assert response.type == "message"
-        assert response.role == "assistant"
-
-        assert len(response.content) == 1
-        assert response.content[0].type == "text"
-
-        return response.content[0].text
+        return ""  # not reached
