@@ -2,7 +2,7 @@ from .. import NamedModel, MissingDependencyError
 from .._util import object_digest
 
 try:
-    from anthropic import Anthropic, NOT_GIVEN
+    from anthropic import Anthropic, NOT_GIVEN, NotGiven
 except ImportError as err:
     raise MissingDependencyError("Please install anthropic library") from err
 
@@ -24,7 +24,7 @@ class AnthropicModel(NamedModel):
         self,
         model="claude-3-opus-20240229",
         max_tokens: int = 1024,
-        thinking: dict | None = NOT_GIVEN,
+        thinking: dict | NotGiven = NOT_GIVEN,
         api_key: str | None = None,
         **args,
     ):
@@ -53,9 +53,11 @@ class AnthropicModel(NamedModel):
             max_tokens=self.max_tokens,
             messages=messages,
             system=system,
-            thinking=self._thinking,
+            thinking=self._thinking,  # type: ignore[arg-type]
         ) as stream:
             for event in stream:
                 if event.type == "message_stop":
                     assert event.message.content[-1].type == "text"
                     return event.message.content[-1].text
+
+        return ""  # not reached
