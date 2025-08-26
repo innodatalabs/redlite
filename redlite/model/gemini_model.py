@@ -22,7 +22,7 @@ class GeminiModel(NamedModel):
         Can alternatively be set as environment variable `GOOGLE_CLOUD_PROJECT`.
     - **location**: (`str`): Only required for Vertex AI. The location of the Vertex AI instance.
         Can alternatively be set as environment variable `GOOGLE_CLOUD_LOCATION`.
-    - **thinking_budget** (`int`): Optional thinking budget in tokens. Not every model supports thinking. 
+    - **thinking_budget** (`int`): Optional thinking budget in tokens. Not every model supports thinking.
         Set to 0 to disable thinking (if supported by the model).
         Set to -1 to enable dynamic thinking (if supported by the model).
         See https://ai.google.dev/gemini-api/docs/thinking for more details.
@@ -47,7 +47,7 @@ class GeminiModel(NamedModel):
             location=location,
         )
 
-        name = 'google'
+        name = "google"
         if thinking_budget is not None:
             name = f'google-{object_digest({"thinking_budget": thinking_budget})[:6]}'
         self._thinking_budget = thinking_budget
@@ -68,4 +68,4 @@ class GeminiModel(NamedModel):
             contents=contents,
             config=config,
         )
-        return response.text
+        return response.text or ''
