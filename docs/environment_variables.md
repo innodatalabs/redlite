@@ -20,7 +20,6 @@ RedLite uses several environment variables for configuration. This document list
 
 **When needed**: Optional. Only needed when running the RedLite Web UI and you want to use a different port than the default.
 
-
 ## API Keys for AI Models
 
 ### OPENAI_API_KEY
@@ -28,6 +27,12 @@ RedLite uses several environment variables for configuration. This document list
 **Purpose**: API key for accessing OpenAI models (GPT-3.5, GPT-4, etc.)
 
 **When needed**: Required when using `OpenAIModel` for text generation tasks.
+
+### GEMINI_API_KEY
+
+**Purpose**: API key for accessing Gogole Gemini models
+
+**When needed**: Required when using `GeminiModel` for text generation tasks.
 
 ### HF_TOKEN
 
