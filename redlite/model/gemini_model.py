@@ -68,4 +68,4 @@ class GeminiModel(NamedModel):
             contents=contents,
             config=config,
         )
-        return response.text or ''
+        return response.text or ""
