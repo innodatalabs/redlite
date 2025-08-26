@@ -1,4 +1,5 @@
 from .. import NamedModel, MissingDependencyError
+from .._util import object_digest
 from typing import Optional
 
 try:
@@ -21,6 +22,10 @@ class GeminiModel(NamedModel):
         Can alternatively be set as environment variable `GOOGLE_CLOUD_PROJECT`.
     - **location**: (`str`): Only required for Vertex AI. The location of the Vertex AI instance.
         Can alternatively be set as environment variable `GOOGLE_CLOUD_LOCATION`.
+    - **thinking_budget** (`int`): Optional thinking budget in tokens. Not every model supports thinking. 
+        Set to 0 to disable thinking (if supported by the model).
+        Set to -1 to enable dynamic thinking (if supported by the model).
+        See https://ai.google.dev/gemini-api/docs/thinking for more details.
     """
 
     def __init__(
@@ -31,6 +36,7 @@ class GeminiModel(NamedModel):
         vertexai: Optional[bool] = None,
         project: Optional[str] = None,
         location: Optional[str] = None,
+        thinking_budget: Optional[int] = None,
     ):
         self._model = model
 
@@ -41,14 +47,25 @@ class GeminiModel(NamedModel):
             location=location,
         )
 
-        super().__init__(f"google-{model}", self.__chat)
+        name = 'google'
+        if thinking_budget is not None:
+            name = f'google-{object_digest({"thinking_budget": thinking_budget})[:6]}'
+        self._thinking_budget = thinking_budget
+
+        super().__init__(f"{name}-{model}", self.__chat)
 
     def __chat(self, messages: list) -> str:
         contents = [
             genai.types.Content(role=x["role"], parts=[genai.types.Part.from_text(text=x["content"])]) for x in messages
         ]
+        config = None
+        if self._thinking_budget is not None:
+            config = genai.types.GenerateContentConfig(
+                thinking_config=genai.types.ThinkingConfig(thinking_budget=self._thinking_budget),
+            )
         response = self._client.models.generate_content(
             model=self._model,
             contents=contents,
+            config=config,
         )
         return response.text
