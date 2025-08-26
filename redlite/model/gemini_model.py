@@ -56,7 +56,8 @@ class GeminiModel(NamedModel):
 
     def __chat(self, messages: list) -> str:
         contents = [
-            genai.types.Content(role=x["role"], parts=[genai.types.Part.from_text(text=x["content"])]) for x in messages
+            genai.types.Content(role=_ROLE_MAP[x["role"]], parts=[genai.types.Part.from_text(text=x["content"])])
+            for x in messages
         ]
         config = None
         if self._thinking_budget is not None:
@@ -69,3 +70,10 @@ class GeminiModel(NamedModel):
             config=config,
         )
         return response.text or ""
+
+
+_ROLE_MAP = {
+    "user": "user",
+    "assistant": "model",
+    "system": "system",
+}
