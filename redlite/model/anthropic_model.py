@@ -1,4 +1,3 @@
-from anthropic import Anthropic, NOT_GIVEN
 from .. import NamedModel, MissingDependencyError
 from .._util import object_digest
 
@@ -49,7 +48,6 @@ class AnthropicModel(NamedModel):
             system = messages[0]["content"]
             messages = messages[1:]
 
-        response = []
         with self.client.messages.stream(
             model=self.model,
             max_tokens=self.max_tokens,
