@@ -33,7 +33,7 @@ Please see [Reference](../../reference/redlite/model/openai_model/) documentatio
 ## Google Gemini models
 
 A family of Google Gemini models is available. Please make sure that you have enabled generative API access in
-Gogle Cloud console. You also need to create an API key, see https://aistudio.google.com/u/1/apikey.
+Google Cloud console. You also need to create an API key, see https://aistudio.google.com/u/1/apikey.
 
 Here is how to use a Gemini model:
 
