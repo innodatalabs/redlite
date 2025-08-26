@@ -1,4 +1,5 @@
 from .. import NamedModel, MissingDependencyError
+from .._util import object_digest
 
 try:
     from anthropic import Anthropic, NOT_GIVEN
@@ -22,7 +23,11 @@ class AnthropicModel(NamedModel):
         self.client = Anthropic(api_key=api_key, **args)
         self.max_tokens = max_tokens
 
-        super().__init__(f"anthropic-{model}", self.__chat)
+        name = "anthropic"
+        if len(args) > 0:
+            name = f"anthropic-{object_digest(args)[:6]}"
+
+        super().__init__(f"{name}-{model}", self.__chat)
 
     def __chat(self, messages: list) -> str:
         system = NOT_GIVEN
