@@ -50,19 +50,26 @@ class GeminiModel(NamedModel):
         name = "google"
         if thinking_budget is not None:
             name = f'google-{object_digest({"thinking_budget": thinking_budget})[:6]}'
-        self._thinking_budget = thinking_budget
+        self._thinking_config = (
+            None if thinking_budget is None else genai.types.ThinkingConfig(thinking_budget=thinking_budget)
+        )
 
         super().__init__(f"{name}-{model}", self.__chat)
 
     def __chat(self, messages: list) -> str:
+        system_instruction = None
+        if messages[0]["role"] == "system":
+            system_instruction = messages[0]["content"]
+            messages = messages[1:]
         contents = [
             genai.types.Content(role=_ROLE_MAP[x["role"]], parts=[genai.types.Part.from_text(text=x["content"])])
             for x in messages
         ]
         config = None
-        if self._thinking_budget is not None:
+        if self._thinking_config is not None or system_instruction is not None:
             config = genai.types.GenerateContentConfig(
-                thinking_config=genai.types.ThinkingConfig(thinking_budget=self._thinking_budget),
+                thinking_config=self._thinking_config,
+                system_instruction=system_instruction,
             )
         response = self._client.models.generate_content(
             model=self._model,
