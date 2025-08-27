@@ -50,7 +50,9 @@ class GeminiModel(NamedModel):
         name = "google"
         if thinking_budget is not None:
             name = f'google-{object_digest({"thinking_budget": thinking_budget})[:6]}'
-        self._thinking_config = None if thinking_budget is None else genai.types.ThinkingConfig(thinking_budget=thinking_budget)
+        self._thinking_config = (
+            None if thinking_budget is None else genai.types.ThinkingConfig(thinking_budget=thinking_budget)
+        )
 
         super().__init__(f"{name}-{model}", self.__chat)
 

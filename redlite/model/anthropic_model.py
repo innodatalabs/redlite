@@ -28,7 +28,7 @@ class AnthropicModel(NamedModel):
         model="claude-3-opus-20240229",
         max_tokens: int = 1024,
         thinking: dict | NotGiven = NOT_GIVEN,
-        streaming = False,
+        streaming=False,
         api_key: str | None = None,
         **args,
     ):
