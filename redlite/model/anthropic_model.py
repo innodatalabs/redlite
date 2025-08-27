@@ -77,9 +77,9 @@ class AnthropicModel(NamedModel):
             assert response.type == "message"
             assert response.role == "assistant"
 
-            assert len(response.content) == 1
-            assert response.content[0].type == "text"
+            assert len(response.content) > 0
+            assert response.content[-1].type == "text"
 
-            return response.content[0].text
+            return response.content[-1].text
 
         return ""  # not reached
