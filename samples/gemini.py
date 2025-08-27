@@ -4,7 +4,7 @@ from redlite.model.gemini_model import GeminiModel
 from redlite.metric import MatchMetric
 
 
-model = GeminiModel(api_key=os.environ["GOOGLE_GEMINI_API_KEY"])
+model = GeminiModel(api_key=os.environ["GOOGLE_GEMINI_API_KEY"], thinking={"type": "enabled", "budget_tokens": 2048})
 dataset = load_dataset("hf:innodatalabs/rt-cogensumm")
 metric = MatchMetric(ignore_case=True, ignore_punct=True, strategy='prefix')
 
