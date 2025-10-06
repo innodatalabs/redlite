@@ -30,8 +30,7 @@ class HFDataset(NamedDataset):
         self.split = split
 
     def __iter__(self) -> Iterator[DatasetItem]:
-        for x in self._dataset[self.split]:
-            yield dict(**x)  # do shallow copy in case clients modify records
+        yield from self._dataset[self.split]
 
     def __len__(self):
         return self._dataset[self.split].info.splits[self.split].num_examples

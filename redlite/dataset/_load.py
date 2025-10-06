@@ -1,11 +1,13 @@
 from .._core import NamedDataset, DatasetItem
-from typing import Literal, Callable
+from typing import Literal, Callable, Optional
 from collections.abc import Iterator
 
 __all__: list[str] = []
 
 
-def load_dataset(name: str, split: Literal["test", "train"] = "test", transform = None, **extra) -> NamedDataset:
+def load_dataset(
+    name: str, split: Literal["test", "train"] = "test", transform: Optional[Callable] = None, **extra
+) -> NamedDataset:
     """Loads dataset. Downloads it to the local machine if necessary.
 
     - **name** (`str`): Dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
