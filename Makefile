@@ -10,7 +10,7 @@ test-server:
 lint: test
 	flake8 --max-line-length 120 redlite/
 	black -l 120 --check redlite/
-	mypy --ignore-missing-imports redlite/
+	mypy --ignore-missing-imports --no-warn-unused-ignores redlite/
 
 .PHONY: black
 black:
