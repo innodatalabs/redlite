@@ -5,12 +5,14 @@ from collections.abc import Iterator
 __all__: list[str] = []
 
 
-def load_dataset(name: str, split: Literal["test", "train"] = "test") -> NamedDataset:
+def load_dataset(name: str, split: Literal["test", "train"] = "test", transform = None, **extra) -> NamedDataset:
     """Loads dataset. Downloads it to the local machine if necessary.
 
     - **name** (`str`): Dataset name. Starts with hub prefix "hf:" (HuggingFace datasets hub),
             or "inno:" (Innodata datasets hub)
     - **split** (`str`): Split name (`"test"` or `"train"`)
+    - **transform** (callable): A function that takes a dataset item and returns a transformed item (optional).
+    - **extra** (dict[str,str]): Extra parameters passed to dataset loader.
 
     Returns: `NamedDataset` object.
 
@@ -27,7 +29,9 @@ def load_dataset(name: str, split: Literal["test", "train"] = "test") -> NamedDa
     ```
     """
     dataset_loader = _get_dataset_loader(name)
-    dataset = dataset_loader(name, split)
+    dataset = dataset_loader(name, split, **extra)
+    if transform is not None:
+        dataset = TransformingDataset(dataset, transform)
     return ValidatingDataset(dataset)
 
 
@@ -101,6 +105,31 @@ class ValidatingDataset(NamedDataset):
                 raise RuntimeError(f"Invalid dataset {self._dataset}: duplicate item id: {item}")
             yield item
             self._seen_ids.add(item["id"])
+
+
+class TransformingDataset(NamedDataset):
+    """
+    Wraps dataset and applies transformation function to every item.
+
+    - **dataset** (`NamedDAtaset`): A dataset to wrap.
+    - **transform** (callable): A function that takes a dataset item and returns a transformed item.
+    ```
+    """
+
+    def __init__(self, dataset: NamedDataset, transform: Callable[[DatasetItem], DatasetItem]):
+        self._dataset = dataset
+        self.name = dataset.name
+        self.split = dataset.split
+        self.labels = dict(dataset.labels)
+        self._length = len(self._dataset)
+        self._transform = transform
+
+    def __len__(self) -> int:
+        return self._length
+
+    def __iter__(self) -> Iterator[DatasetItem]:
+        for item in self._dataset:
+            yield self._transform(item)
 
 
 def _get_dataset_loader(name: str) -> Callable[[str, Literal["test", "train"]], NamedDataset]:
