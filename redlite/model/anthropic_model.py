@@ -58,7 +58,7 @@ class AnthropicModel(NamedModel):
                 model=self.model,
                 max_tokens=self.max_tokens,
                 messages=messages,
-                system=system,
+                system=system,  # type: ignore[arg-type]
                 thinking=self._thinking,  # type: ignore[arg-type]
             ) as stream:
                 for event in stream:
