@@ -122,6 +122,20 @@ model = IgnoreSystemModel(HFModel("mistralai/Mistral-Instruct-v0.2"))
 
 Please see [Reference](../../reference/redlite/model/) documentation for more detail.
 
+## MakeSystemModel
+
+Wraps a model and adds (or replaces) system message. Useful when dataset does not contains system messages, but
+you want to provide one.
+
+```python
+from redlite.model.hf_model import HFModel
+from redlite.model import MakeSystemModel
+
+model = MakeSystemModel(HFModel("nvidia/NVIDIA-Nemotron-Nano-9B-v2"), system_prompt="/think")
+```
+
+Please see [Reference](../../reference/redlite/model/) documentation for more detail.
+
 ## ConvertSystemToUserModel
 
 Wraps a model and converts system message (if present) to the user one.

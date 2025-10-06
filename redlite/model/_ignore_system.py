@@ -21,6 +21,27 @@ class IgnoreSystemModel(NamedModel):
             return self.model(messages)
 
 
+class MakeSystemModel(NamedModel):
+    """
+    Wraps a model and inserts (or replaces existing) system message.
+    Useful to set system message when underlying dataset has none.
+
+    - **model** (`NamedModel`): the model to wrap.
+    """
+
+    def __init__(self, model: NamedModel, system_prompt: str):
+        self.model = model
+        self.system_prompt = system_prompt
+        name = f"make-system-{model.name}@{sha_digest(system_prompt)[:6]}"
+        super().__init__(name, self.__engine)
+
+    def __engine(self, messages: list[Message]) -> str:
+        system_messages: list[Message] = [{"role": "system", "content": self.system_prompt}]
+        if messages[0]["role"] == "system":
+            messages = messages[1:]
+        return self.model(system_messages + messages)
+
+
 class ConvertSystemToUserModel(NamedModel):
     """
     Wraps a model and replaces system message with the user one.
