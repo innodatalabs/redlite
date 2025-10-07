@@ -39,4 +39,5 @@ class HFDataset(NamedDataset):
     def load(cls, name: str, split: Literal["test", "train"] = "test", **extra) -> "NamedDataset":
         if not name.startswith("hf:"):
             raise ValueError(f"This method can only load from HF dataset hub, but requested {name}")
+        extra = {k[2:] if k.startswith("__") else k: v for k, v in extra.items()}
         return cls(name[3:], split, **extra)
