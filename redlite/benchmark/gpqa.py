@@ -67,10 +67,10 @@ def get_dataset(config) -> NamedDataset:
     return GPQADataset(config)
 
 
-_RE = re.compile(r"\\boxed{([A-D])}", flags=re.IGNORECASE)
+_RE = re.compile(r"\\boxed\{([A-D])\}", flags=re.IGNORECASE)
 
 
-def score(actual: str, expected: str) -> float:
+def score(expected: str, actual: str) -> float:
     mtc = _RE.search(actual)
     if mtc and mtc.group(1) == expected:
         return 1.0
