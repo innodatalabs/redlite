@@ -74,6 +74,7 @@ packages = [
     "redlite.dataset",
     "redlite.model",
     "redlite.zeno",
+    "redlite.benchmark",
 ]
 
 [tool.setuptools.package-data]
