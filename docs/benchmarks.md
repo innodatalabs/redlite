@@ -4,7 +4,7 @@ Benchmark is a combination of dataset and metric. We provide several popular ben
 
 ## MMLU-Pro
 
-[MMLU Pro](https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro) benchmark contains 12036 difficult multiple-choice questions
+[MMLU Pro](https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro) benchmark contains 12032 difficult multiple-choice questions
 from the realm of math, chemistry, engineering, etc.
 
 Here is how to run it with `redlite`:
