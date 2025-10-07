@@ -123,6 +123,9 @@ Metrics = "docs/metrics.md"
 Customize = "docs/custom.md"
 
 [[tool.portray.mkdocs.nav]]
+Benchmarks = "docs/benchmarks.md"
+
+[[tool.portray.mkdocs.nav]]
 "Environment Variables" = "docs/environment_variables.md"
 
 [tool.mypy]
