@@ -8,7 +8,9 @@ __all__ = ["get_dataset", "metric"]
 OPTION_LABELS = "ABCD"  # at most 4 multiple-choice options in GPQA
 
 NEMO_PROMPT_TEMPLATE = """\
-Solve the following problem. Make sure to put the answer (and only answer) inside \\boxed{{}}.
+Answer the following multiple choice question. \
+The last line of your response should be in the following format: \
+'Answer: \boxed{{A/B/C/D}}' (e.g. 'Answer: \boxed{{A}}').
 
 {problem}"""
 
