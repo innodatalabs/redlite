@@ -32,7 +32,7 @@ def transform(datum: dict) -> DatasetItem | dict:
     random.shuffle(order)
 
     expected = OPTION_LABELS[order.index(0)]
-    options = "\n".join(f"{OPTION_LABELS[order[i]]}) {choices[order[i]]}" for i in range(4))
+    options = "\n".join(f"{OPTION_LABELS[i]}) {choices[order[i]]}" for i in range(4))
 
     problem = datum["Question"].strip("\n") + "\n\n" + options
 
