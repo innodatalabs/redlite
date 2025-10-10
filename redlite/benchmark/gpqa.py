@@ -10,7 +10,7 @@ OPTION_LABELS = "ABCD"  # at most 4 multiple-choice options in GPQA
 NEMO_PROMPT_TEMPLATE = """\
 Answer the following multiple choice question. \
 The last line of your response should be in the following format: \
-'Answer: \boxed{{A/B/C/D}}' (e.g. 'Answer: \boxed{{A}}').
+'Answer: \\boxed{{A/B/C/D}}' (e.g. 'Answer: \\boxed{{A}}').
 
 {problem}"""
 
