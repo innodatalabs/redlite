@@ -1,6 +1,7 @@
 import contextlib
 import os
 import json
+import time
 from ._util import redlite_data_dir
 from collections.abc import Iterator
 
@@ -10,14 +11,16 @@ __all__ = ["incr_run_count"]
 @contextlib.contextmanager
 def file_lock(fname: str) -> Iterator[None]:
     lockfile = fname + ".lock"
-    try:
-        fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+    while True:
         try:
+            fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+            with os.fdopen(fd, "a") as f:
+                f.write(f"Locked by {os.getpid()}\n")
             yield
-        finally:
-            os.close(fd)
-    finally:
-        os.unlink(lockfile)
+            os.unlink(lockfile)
+            break
+        except FileExistsError:
+            time.sleep(0.25)
 
 
 def incr_run_count() -> int:
@@ -33,4 +36,4 @@ def incr_run_count() -> int:
         count += 1
         with open(fname, "w", encoding="utf-8") as f:
             json.dump(count, f)
-    return count
+        return count
