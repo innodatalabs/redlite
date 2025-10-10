@@ -1,6 +1,9 @@
 import random
 import re
 from redlite import DatasetItem, NamedMetric, load_dataset, NamedDataset
+from redlite.dataset.json_dataset import JSONDataset
+import os
+import json
 
 
 __all__ = ["get_dataset", "metric"]
@@ -10,7 +13,7 @@ OPTION_LABELS = "ABCD"  # at most 4 multiple-choice options in GPQA
 NEMO_PROMPT_TEMPLATE = """\
 Answer the following multiple choice question. \
 The last line of your response should be in the following format: \
-'Answer: \boxed{{A/B/C/D}}' (e.g. 'Answer: \boxed{{A}}').
+'Answer: \\boxed{{A/B/C/D}}' (e.g. 'Answer: \\boxed{{A}}').
 
 {problem}"""
 
@@ -50,10 +53,29 @@ def transform(datum: dict) -> DatasetItem | dict:
     }
 
 
+DATASET_DIR = os.path.expanduser("~/.cache/redlite-datasets/gpqa")
+CONFIGS = ["diamond", "main", "extended"]
+
+
+def generate_local_data_if_not_there(config):
+    if os.path.isfile(f"{DATASET_DIR}/{config}.jsonl"):
+        return
+    os.makedirs(DATASET_DIR, exist_ok=True)
+    print(f"Generating local data for {config}...")
+    dataset = load_dataset("hf:Idavidrein/gpqa", __name=f"gpqa_{config}", split="train", transform=transform)
+    with open(f"{DATASET_DIR}/{config}.jsonl", "w", encoding="utf-8") as f:
+        for x in dataset:
+            f.write(json.dumps(x) + "\n")
+    print(f"Done generating local data for {config}.")
+
+
 class GPQADataset(NamedDataset):
 
     def __init__(self, config: str):
-        self._dataset = load_dataset("hf:Idavidrein/gpqa", __name=f"gpqa_{config}", split="train", transform=transform)
+        if config not in CONFIGS:
+            raise ValueError(f"Unknown config. Supported configs are: {CONFIGS}")
+        generate_local_data_if_not_there(config)
+        self._dataset = JSONDataset(path=f"{DATASET_DIR}/{config}.jsonl", name=f"gpqa_{config}", split="train")
         self.name = f"gpqa_{config}"
         self.labels = self._dataset.labels
         self.split = self._dataset.split

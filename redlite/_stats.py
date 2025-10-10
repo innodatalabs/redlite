@@ -36,7 +36,6 @@ def stats(model: str, dataset: str):
     run_averages = [sum(s) / len(s) for s in scores]
     mean_score = sum(run_averages) / N
     stddev_across_runs = (sum((x - mean_score) ** 2 for x in run_averages) / (N - 1)) ** 0.5
-    stderr_across_runs = stddev_across_runs / (N**0.5)
 
     # majority vote (assumes scores are 0/1)
     majority_votes = []
@@ -51,7 +50,7 @@ def stats(model: str, dataset: str):
     print(f"Model: {model}")
     print(f"Dataset: {dataset}")
     print(f"Num runs: {N}")
-    print(f"Score: {mean_score:.3f}±{stderr_across_runs:.3f}")
+    print(f"Score: {mean_score:.3f}±{stddev_across_runs:.3f}")
     print(f"Majority vote score: {mean_score_majority:.3f}")
     print(f"Pass@{N}: {pass_at_N:.3f}")
     return 0
