@@ -26,8 +26,6 @@ def normalize(text: str | None) -> str:
 
 
 def transform(datum: dict) -> DatasetItem | dict:
-    if 'Correct Answer' not in datum:
-        import pdb; pdb.set_trace()
     choices = [
         normalize(datum["Correct Answer"]),
         normalize(datum["Incorrect Answer 1"]),
@@ -54,8 +52,10 @@ def transform(datum: dict) -> DatasetItem | dict:
         "raw": datum,
     }
 
+
 DATASET_DIR = os.path.expanduser("~/.cache/redlite-datasets/gpqa")
 CONFIGS = ["diamond", "main", "extended"]
+
 
 def generate_local_data_if_not_there(config):
     if os.path.isfile(f"{DATASET_DIR}/{config}.jsonl"):
