@@ -125,7 +125,7 @@ def run(
 
 
 # used when num_workers > 1
-_global_model = None
+_global_model: NamedModel | None = None
 
 
 def runner(item):
