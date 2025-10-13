@@ -36,6 +36,7 @@ def run(
     metric: NamedMetric,
     name: str | None = None,
     max_samples=0,
+    num_workers: int = 0,
 ) -> Run:
     """Runs experiment, using the given `model`, `dataset`, and `metric`.
 
@@ -47,6 +48,8 @@ def run(
             If not provided, a unique name will be auto-generated.
     - **max_samples** (`int`, optional): Allows one to limit the number of samples
             in the run. Value of zero (the default) means "run the whole dataset".
+    - **num_workers** (`int`, optional): Number of workers that process dataset in parallel.
+            Default is `1` (no parallel processing).
 
     Returns the run metadata as a `dict` object. See Run docs for the structure.
 
@@ -75,11 +78,25 @@ def run(
     print(f"\tmetric : {metric.name}")
 
     with _storage(runname) as storage:  # type: Storage
-        for item in tqdm(data_with_digest):
-            actual = model(item["messages"])
-            score = metric(item["expected"], actual)
-            storage.save(item, actual, score)
-            score_accumulator(score)
+        if num_workers > 1:
+            import multiprocessing
+
+            # by using global variable we avoid passing model to pool, that would require pickling it
+            # and passing to the worker processes. Not all models are pickable (e.g.OpenAIMode is not!).
+            global _global_model
+            _global_model = model
+
+            with multiprocessing.Pool(num_workers) as pool:
+                for actual, item in tqdm(pool.imap(runner, data_with_digest), total=len(data_with_digest)):
+                    score = metric(item["expected"], actual)
+                    storage.save(item, actual, score)
+                    score_accumulator(score)
+        else:
+            for item in tqdm(data_with_digest):
+                actual = model(item["messages"])
+                score = metric(item["expected"], actual)
+                storage.save(item, actual, score)
+                score_accumulator(score)
 
         completed = time.time()
 
@@ -107,6 +124,14 @@ def run(
         return this_run
 
 
+# used when num_workers > 1
+_global_model = None
+
+
+def runner(item):
+    return _global_model(item["messages"]), item
+
+
 def rescore(
     *,
     run: str,
@@ -128,7 +153,7 @@ def rescore(
             Only displays the aggregated metric on the screen. Useful for developing and
             debugging metrics.
 
-    Returns the experimant metadata as `dict` object. See `Run` docs for the structure.
+    Returns the experiment metadata as `dict` object. See `Run` docs for the structure.
 
     Sample usage:
     ```python
