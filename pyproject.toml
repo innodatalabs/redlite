@@ -41,7 +41,8 @@ bleu = ["nltk"]
 aws = ["boto3"]
 llama-cpp = ["llama-cpp-python"]
 google = ["google-genai"]
-all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws,llama-cpp,google]"]
+math = ["pyparsing"]
+all = ["redlite[hf,server,openai,anthropic,zeno,rouge,bleu,aws,llama-cpp,google,math]"]
 dev = [
     "pytest",
     "twine",
@@ -71,6 +72,7 @@ packages = [
     "redlite.metric.rouge",
     "redlite.metric.bleu",
     "redlite.metric.f1",
+    "redlite.metric.math",
     "redlite.dataset",
     "redlite.model",
     "redlite.zeno",
