@@ -15,7 +15,7 @@ class MatchMetric(NamedMetric):
     and `expected="correct"` and `actual="correctness is when things work right"`, this metric
     will score `0.0`.
 
-    Yhis metric normalizes whitespace in both `expected` and `actual`, and strips any leading or trailing
+    This metric normalizes whitespace in both `expected` and `actual`, and strips any leading or trailing
     space there.
 
     - **ignore_case** (`bool`, optional) - when set to `True` will ignore text case. Deafult is `False`.
