@@ -54,6 +54,44 @@ model = ...  # configure the model to be benchmarked
 run(dataset=dataset, metric=metric, model=model)
 ```
 
+## Live Code Bench code generation
+
+[LiveCodeBench](https://huggingface.co/datasets/lighteval/code_generation_lite) benchmark contains Pyhton code generation tasks.
+Here is how to run this benchmark in `redlite`.
+
+First, you need to run grader service with docker. You may need to build the docker first, see
+GitHub project [redlite-livecodebench-grader](https://github.com/innodatalabs/redlite-livecodebench-grader) for details.
+Once you have Docker image, start grading service:
+
+```bash
+docker run -it -p 8000:80 ilabs/redlite-livecodebench-grader:latest
+```
+
+Now you can run benchmark like this:
+
+```python
+from redlite import run
+from redlite.benchmark.livecodebench import get_dataset, get_metric
+
+model = ...  # configure the model to be benchmarked
+
+dataset = get_dataset()  # use default partition
+metric = get_metric()  # use default grader endpoint http://localhost:8000
+
+run(dataset=dataset, metric=metric, model=model)
+```
+
+There are 4 available test configs (a.k.a. partitions):
+
+| Name              | Start Date | End Date | Revision | Records |
+|-------------------|------------|----------|----------|---------|
+| test_v5_2408_2502 | 2024-08    | 2025-02  | v5       | 279     |
+| test_v5_2407_2412 | 2024-07    | 2024-12  | v5       | 315     |
+| test_v5_2410_2502 | 2024-10    | 2025-02  | v5       | 166     |
+| test_v6_2408_2505 | 2024-08    | 2025-05  | v6       | 454     |
+
+Default config is `test_v5_2408_2502`. You may load other configs by passing config name to the `get_dataset` function.
+
 ## AIME 2024
 
 [AIME 2024](https://huggingface.co/datasets/HuggingFaceH4/aime_2024) benchmark contains 30 math problems from

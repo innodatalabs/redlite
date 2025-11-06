@@ -74,6 +74,41 @@ metric = F1Metric(...)
 
 Please see [Reference](../../reference/redlite/metric/f1/) documentation for more detail and available parameters.
 
+## Boxed Math metrics
+
+This metric is specific to [Math500 benchmark](../benchmarks). It scores answers to math tests, that are expected to be within a
+LaTeX `\boxed{...}` function.
+
+```python
+from redlite.metric.math import BoxedMathMetric
+
+metric = BoxedMathMetric()
+```
+
+Please see [Reference](../../reference/redlite/metric/math/) documentation for more detail and available parameters.
+
+## Live Code Bench metric
+
+This metric is specific to the [LiveCodeBench](../benchmarks). It scores python code generation. It requires that
+a server application `redlite-livecodebench-grader` is running as a docker container:
+
+```bash
+docker run -it -p 8000:80 ilabs/redlite-livecodebench-grader
+```
+
+If you use a different endpoint for hosting the grader, change `endpoint` parameter to the
+`LiveCodeBench` constructor accordingly (default endpoint is `http://localhost:8000`)
+
+Example:
+
+```python
+from redlite.metric.livecodebench import LiveCodeBenchMetric
+
+metric = LiveCodeBenchMetric(endpoint="http://grader.example.com:9999")
+```
+
+Please see [Reference](../../reference/redlite/metric/livecodebench/) documentation for more detail and available parameters.
+
 ## Best of several metrics
 
 We may want to score LLM answer with several metrics and choose the best score. For example, when we score an item with
