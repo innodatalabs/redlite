@@ -36,8 +36,7 @@ parallel_run(dataset=dataset, model_producer=model_producer, metric_producer=met
 ```
 
 Generally, the higher the parrallelism, the faster run finishes. However, you may experience throttling or rejections from
-cloud LLM provider. Also, a very large number of workers may strain the computer running it. Be careful and know what you are doing.
+cloud LLM provider. Also, a very large number of workers may strain your local computer. Be careful and know what you are doing.
 
 Another common pitfall is that errors from parallel workers may be less clear as trace stack and the original exception are not preserved (as they may not be serializable). To troubleshoot one may want temporarily convert script to using `run` instead. Then switch back to the `parallel_run`
 after problem is addressed.
-
