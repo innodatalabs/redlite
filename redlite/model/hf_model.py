@@ -34,12 +34,12 @@ class HFModel(NamedModel):
             **pipeline_params,
         }  # allow overwriting "model" (hacky) -MK; allow overwriting "use_fast"
         if remove_thinking_trace:
-            pipeline_params['skip_special_tokens'] = False
+            args['skip_special_tokens'] = False
         self.__pipeline = pipeline(task=task, **args)
         self.__remove_thinking_trace = remove_thinking_trace
 
         name = "hf:" + hf_name
-        if len(pipeline_params) > 0:
+        if len(pipeline_params) > 0 or remove_thinking_trace:
             obj = {x: str(pipeline_params[x]) for x in pipeline_params}
             if remove_thinking_trace:
                 obj['remove_thinking_trace'] = 'True'
