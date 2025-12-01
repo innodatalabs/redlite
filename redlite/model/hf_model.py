@@ -34,7 +34,7 @@ class HFModel(NamedModel):
             **pipeline_params,
         }  # allow overwriting "model" (hacky) -MK; allow overwriting "use_fast"
         if remove_thinking_trace:
-            args['skip_special_tokens'] = False
+            args["skip_special_tokens"] = False
         self.__pipeline = pipeline(task=task, **args)
         self.__remove_thinking_trace = remove_thinking_trace
 
@@ -42,14 +42,14 @@ class HFModel(NamedModel):
         if len(pipeline_params) > 0 or remove_thinking_trace:
             obj = {x: str(pipeline_params[x]) for x in pipeline_params}
             if remove_thinking_trace:
-                obj['remove_thinking_trace'] = 'True'
+                obj["remove_thinking_trace"] = "True"
             name += "@" + sha_digest(obj)[:6]
 
         super().__init__(name, self.__predict)
         print(f"HFModel {hf_name} placed on device {self.__pipeline.device}")
 
     def __predict(self, messages: list[Message]) -> str:
-        pad_token_id = getattr(self.__pipeline.generation_config, 'pad_token_id', None)
+        pad_token_id = getattr(self.__pipeline.generation_config, "pad_token_id", None)
         if pad_token_id is None:
             pad_token_id = self.__pipeline.generation_config.eos_token_id
         if self.__pipeline.task == "image-text-to-text":
@@ -75,8 +75,9 @@ def _convert_for_image_text_to_text(message):
 
 
 _RE_THINKING_TRACE = {
-    'openai-oss': r'<\|start\|>assistant<\|channel\|>final<\|message\|>(.*)<\|return\|>$',
+    "openai-oss": r"<\|start\|>assistant<\|channel\|>final<\|message\|>(.*)<\|return\|>$",
 }
+
 
 def _remove_thinking_trace(content: str) -> str:
     for pattern in _RE_THINKING_TRACE.values():
