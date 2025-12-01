@@ -49,7 +49,7 @@ class HFModel(NamedModel):
         print(f"HFModel {hf_name} placed on device {self.__pipeline.device}")
 
     def __predict(self, messages: list[Message]) -> str:
-        pad_token_id = self.__pipeline.generation_config.pad_token_id
+        pad_token_id = getattr(self.__pipeline.generation_config, 'pad_token_id', None)
         if pad_token_id is None:
             pad_token_id = self.__pipeline.generation_config.eos_token_id
         if self.__pipeline.task == "image-text-to-text":
