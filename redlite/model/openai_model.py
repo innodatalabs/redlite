@@ -16,9 +16,6 @@ class OpenAIModel(NamedModel):
     - **model** (`str`): Name of the OpenAI model. Default is `"gpt-3.5-turbo"`.
     - **api_key** (`str`): OpenAI API key
     - **max_retries** (`int`): How many times to retry a failed request. Default is `2`.
-    - **safety_identifier** (`str | None`): Safety identifier to help OpenAI monitor
-                                            and detect abuse. Should be a unique string per user
-                                            (e.g., hashed username or email). Optional, defaults to None.
     - **params**: (`dict[str,Any]`): Other parameters that will be passed on to the `OpenAI` as-is.
     """
 
@@ -29,21 +26,16 @@ class OpenAIModel(NamedModel):
         base_url=None,
         api_key=None,
         max_retries=2,
-        safety_identifier=None,
         **params,
     ):
         self.base_url = base_url
         self.model = model
         self.params = params
-        if safety_identifier is not None:
-            self.params["safety_identifier"] = safety_identifier
         self.client = OpenAI(api_key=api_key, max_retries=max_retries, base_url=base_url)
 
         signature = {**params}
         if base_url is not None:
             signature["base_url"] = base_url
-        if safety_identifier is not None:
-            signature["safety_identifier"] = safety_identifier
 
         name = "openai"
         if len(signature) > 0:

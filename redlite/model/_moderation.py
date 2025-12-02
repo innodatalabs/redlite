@@ -33,8 +33,8 @@ class ModerationModel(NamedModel):
     from redlite.model import ModerationModel
     from redlite.model.openai_model import OpenAIModel
 
-    # Create base model with safety identifier
-    base_model = OpenAIModel(model="gpt-4", safety_identifier="user_123456")
+    # Create base model 
+    base_model = OpenAIModel(model="gpt-4")
 
     # Wrap with moderation
     safe_model = ModerationModel(base_model)
