@@ -34,7 +34,6 @@ class HFModel(NamedModel):
         if remove_thinking_trace:
             args["skip_special_tokens"] = False
         self.__pipeline = pipeline(task=task, **args)
-        self.__remove_thinking_trace = remove_thinking_trace
 
         name = "hf:" + hf_name
         if len(pipeline_params) > 0 or remove_thinking_trace:
@@ -59,9 +58,6 @@ class HFModel(NamedModel):
         out = self.__pipeline(conversation, pad_token_id=pad_token_id)
         assert out[0]["generated_text"][-1]["role"] == "assistant", out
         content = out[0]["generated_text"][-1]["content"]
-        if self.__remove_thinking_trace:
-            content = _remove_thinking_trace(content)
-            content = content.split("\n")[0]
         return content
 
 
@@ -70,17 +66,3 @@ def _convert_for_image_text_to_text(message):
     if type(message["content"]) is str:
         out["content"] = [{"type": "text", "text": message["content"]}]
     return out
-
-
-_RE_THINKING_TRACE = {
-    "openai-oss": r"<\|start\|>assistant<\|channel\|>final<\|message\|>(.*)<\|return\|>$",
-}
-
-
-def _remove_thinking_trace(content: str) -> str:
-    for pattern in _RE_THINKING_TRACE.values():
-        mtc = re.search(pattern, content, flags=re.DOTALL | re.IGNORECASE)
-        if mtc is not None:
-            return mtc.group(1).strip()
-    print("Warning: could not remove thinking trace from content")
-    return content
