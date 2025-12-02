@@ -5,7 +5,7 @@ from .._core import NamedModel, Message
 class RemoveThinking(NamedModel):
     """
     Wraps a model and removes thinking text block from the model output (if any).
-    Useful if underlying model was uses "reasoning" and includes "thinking trace"
+    Useful if underlying model uses "reasoning" and includes "thinking trace"
     into its answer.
 
     - **model** (`NamedModel`): the model to wrap.
