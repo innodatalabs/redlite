@@ -27,20 +27,17 @@ class ModerationModel(NamedModel):
         Default is `"omni-moderation-latest"`.
     - **refusal_message** (`str`): Message to return when content is flagged.
         Default is `"I refuse to answer this question."`.
-    - **safety_identifier** (`str | None`): Safety identifier to help OpenAI monitor
-        and detect abuse. Should be a unique string per user (e.g., hashed username).
-        Optional, defaults to None.
 
     Example:
     ```python
     from redlite.model import ModerationModel
     from redlite.model.openai_model import OpenAIModel
 
-    # Create base model
-    base_model = OpenAIModel(model="gpt-4")
+    # Create base model with safety identifier
+    base_model = OpenAIModel(model="gpt-4", safety_identifier="user_123456")
 
-    # Wrap with moderation and safety identifier
-    safe_model = ModerationModel(base_model, safety_identifier="user_123456")
+    # Wrap with moderation
+    safe_model = ModerationModel(base_model)
 
     # Safe content passes through
     response = safe_model([{"role": "user", "content": "What is Python?"}])
@@ -61,13 +58,11 @@ class ModerationModel(NamedModel):
         api_key: str | None = None,
         moderation_model: str = "omni-moderation-latest",
         refusal_message: str = "I refuse to answer this question.",
-        safety_identifier: str | None = None,
     ):
         self.model = model
         self.client = OpenAI(api_key=api_key)
         self.moderation_model = moderation_model
         self.refusal_message = refusal_message
-        self.safety_identifier = safety_identifier
         super().__init__(f"moderated-{model.name}", self.__engine)
 
     def __engine(self, messages: list[Message]) -> str:
@@ -86,17 +81,7 @@ class ModerationModel(NamedModel):
                 return self.refusal_message
 
             # Content is safe, delegate to inner model
-            # If safety_identifier is set and inner model supports it, inject it
-            if self.safety_identifier and hasattr(self.model, 'params') and isinstance(self.model.params, dict):
-                original_params = self.model.params.copy()
-                self.model.params['safety_identifier'] = self.safety_identifier
-                try:
-                    result = self.model(messages)
-                finally:
-                    self.model.params = original_params
-                return result
-            else:
-                return self.model(messages)
+            return self.model(messages)
 
         except Exception as e:
             # Fail closed: if moderation API fails, refuse to answer
