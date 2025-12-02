@@ -1,4 +1,3 @@
-import re
 from .._core import NamedModel, Message, MissingDependencyError
 from .._util import sha_digest
 
