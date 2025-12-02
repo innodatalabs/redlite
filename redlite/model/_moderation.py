@@ -33,7 +33,7 @@ class ModerationModel(NamedModel):
     from redlite.model import ModerationModel
     from redlite.model.openai_model import OpenAIModel
 
-    # Create base model 
+    # Create base model
     base_model = OpenAIModel(model="gpt-4")
 
     # Wrap with moderation

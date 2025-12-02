@@ -31,8 +31,7 @@ def test_moderation_passes_safe_content():
     assert result == "Safe response"
     inner_model.assert_called_once_with(messages)
     model.client.moderations.create.assert_called_once_with(
-        model="omni-moderation-latest",
-        input=["What is the weather?"]
+        model="omni-moderation-latest", input=["What is the weather?"]
     )
 
 
@@ -61,11 +60,7 @@ def test_moderation_custom_refusal_message():
     inner_model.name = "gpt-4"
     custom_message = "Content violates policy"
 
-    model = ModerationModel(
-        inner_model,
-        api_key="test-key",
-        refusal_message=custom_message
-    )
+    model = ModerationModel(inner_model, api_key="test-key", refusal_message=custom_message)
 
     # Mock flagged content
     mock_result = Mock(flagged=True)
@@ -92,15 +87,14 @@ def test_moderation_multiple_messages():
     messages = [
         {"role": "system", "content": "You are helpful"},
         {"role": "user", "content": "Hello"},
-        {"role": "assistant", "content": "Hi there"}
+        {"role": "assistant", "content": "Hi there"},
     ]
 
     model(messages)
 
     # Should extract all contents
     model.client.moderations.create.assert_called_once_with(
-        model="omni-moderation-latest",
-        input=["You are helpful", "Hello", "Hi there"]
+        model="omni-moderation-latest", input=["You are helpful", "Hello", "Hi there"]
     )
 
 
