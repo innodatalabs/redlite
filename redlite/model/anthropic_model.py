@@ -77,6 +77,9 @@ class AnthropicModel(NamedModel):
             assert response.type == "message"
             assert response.role == "assistant"
 
+            if response.stop_reason == "refusal":
+                return "I refuse to answer this question."
+
             assert len(response.content) > 0
             assert response.content[-1].type == "text"
 
