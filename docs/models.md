@@ -108,91 +108,10 @@ model = LlamaCppModel('models/mistral-instruct-7b-Q4-K-M.gguf', n_ctx=512, max_t
 
 Please see [Reference](../../reference/redlite/model/llamacpp_model/) documentation for more detail and available parameters.
 
-## IgnoreSystemModel
+# Model Wrappers
 
-Wraps a model and removes system message (if any) from the input. Useful when dataset contains system messages, but
-model does not expect system.
+See the [Model Wrappers](wrappers.md) documentation for utility classes that wrap models to modify their behavior.
 
-```python
-from redlite.model.hf_model import HFModel
-from redlite.model import IgnoreSystemModel
-
-model = IgnoreSystemModel(HFModel("mistralai/Mistral-Instruct-v0.2"))
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## MakeSystemModel
-
-Wraps a model and adds (or replaces) system message. Useful when dataset does not contains system messages, but
-you want to provide one.
-
-```python
-from redlite.model.hf_model import HFModel
-from redlite.model import MakeSystemModel
-
-model = MakeSystemModel(HFModel("nvidia/NVIDIA-Nemotron-Nano-9B-v2"), system_prompt="/think")
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## ConvertSystemToUserModel
-
-Wraps a model and converts system message (if present) to the user one.
-Useful when dataset contains system messages, but model does not expect system.
-
-```python
-from redlite.model.hf_model import HFModel
-from redlite.model import ConvertSystemToUserModel
-
-model = ConvertSystemToUSerModel(
-    HFModel("mistralai/Mistral-Instruct-v0.2"),
-    assistant_confirmation="Sure thing!"
-)
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## ParrotModel
-
-A model that parrots back the last user message. Useful to establish performance baselines.
-
-```python
-from redlite.model import ParrotModel
-
-model = ParrotModel()
-
-assert model([{"role": "user", "content": "Hello"}]) == "Hello"
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## CannedModel
-
-A model that returns the same (canned) response regardless of user input. Useful to establish performance baselines.
-
-```python
-from redlite.model import CannedModel
-
-model = CannedModel("Bye")
-
-assert model([{"role": "user", "content": "Hello"}]) == "Bye"
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## ThrottleModel
-
-A model that wraps another model and throttles it calls to the specified rate.
-
-```python
-from redlite.model import CannedModel
-
-model = ThrottleModel(OpenAIModel(), 5)
-```
-
-Please see [Reference](../../reference/redlite/model/) documentation for more detail.
-
-## Custom models
+# Custom models
 
 Custom models can be easily integrated, see the [Customization Guide](custom.md).
