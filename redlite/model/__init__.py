@@ -2,6 +2,7 @@ from ._ignore_system import IgnoreSystemModel, MakeSystemModel, ConvertSystemToU
 from ._remove_thinking import RemoveThinking
 from ._dummy import ParrotModel, CannedModel
 from ._throttle import ThrottleModel
+from ._moderation import ModerationModel
 
 __all__ = [
     "IgnoreSystemModel",
@@ -11,4 +12,5 @@ __all__ = [
     "ParrotModel",
     "CannedModel",
     "ThrottleModel",
+    "ModerationModel",
 ]
