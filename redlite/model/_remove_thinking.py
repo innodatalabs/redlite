@@ -1,5 +1,5 @@
 import re
-from .._core import NamedModel, Message
+from .._core import NamedModel, Message, log
 
 
 class RemoveThinking(NamedModel):
@@ -30,5 +30,5 @@ def _remove_thinking_trace(content: str) -> str:
         mtc = re.search(pattern, content, flags=re.DOTALL | re.IGNORECASE)
         if mtc is not None:
             return mtc.group(1).strip()
-    print(f"Warning: could not remove thinking trace from content: {content}")
+    log.warning(f"Warning: could not remove thinking trace from content: {content}")
     return content
