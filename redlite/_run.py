@@ -1,9 +1,8 @@
 import contextlib
 import os
-import time
 from tqdm import tqdm
 import duoname
-from datetime import datetime
+from datetime import datetime, timezone
 from ._core import (
     NamedModel,
     NamedDataset,
@@ -62,7 +61,7 @@ def run(
     run(model=model, dataset=dataset, metric=metric)
     ```
     """
-    started = time.time()
+    started = datetime.now(tz=timezone.utc)
 
     data_with_digest = DatasetRunningDigest(dataset, max_samples=max_samples)
     score_accumulator = ScoreAccumulator()
@@ -98,7 +97,7 @@ def run(
                 storage.save(item, actual, score)
                 score_accumulator(score)
 
-        completed = time.time()
+        completed = datetime.now(tz=timezone.utc)
 
         this_run: Run = dict(
             run=storage.name,
@@ -109,9 +108,9 @@ def run(
             metric=metric.name,
             model=model.name,
             max_samples=max_samples,
-            started=datetime.utcfromtimestamp(started).isoformat() + "Z",
-            completed=datetime.utcfromtimestamp(completed).isoformat() + "Z",
-            duration=completed - started,
+            started=started.isoformat(),
+            completed=completed.isoformat(),
+            duration=(completed - started).total_seconds(),
             score_summary=score_accumulator.summary,
         )
 
@@ -162,7 +161,7 @@ def rescore(
     rescore(run="tired-tiger-32", metric=metric)
     ```
     """
-    started = time.time()
+    started = datetime.now(tz=timezone.utc)
 
     score_accumulator = ScoreAccumulator()
 
@@ -186,14 +185,14 @@ def rescore(
             storage.save(item, actual, score)
             score_accumulator(score)
 
-        completed = time.time()
+        completed = datetime.now(tz=timezone.utc)
 
         this_run.update(
             dict(
                 run=storage.name,
-                started=datetime.utcfromtimestamp(started).isoformat() + "Z",
-                completed=datetime.utcfromtimestamp(completed).isoformat() + "Z",
-                duration=completed - started,
+                started=started.isoformat(),
+                completed=completed.isoformat(),
+                duration=(completed - started).total_seconds(),
                 score_summary=score_accumulator.summary,
                 metric=metric.name,
             )
