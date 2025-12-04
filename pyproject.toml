@@ -120,10 +120,16 @@ Quickstart = "docs/quickstart.md"
 Models = "docs/models.md"
 
 [[tool.portray.mkdocs.nav]]
+"Model Wrappers" = "docs/wrappers.md"
+
+[[tool.portray.mkdocs.nav]]
 Metrics = "docs/metrics.md"
 
 [[tool.portray.mkdocs.nav]]
 Customize = "docs/custom.md"
+
+[[tool.portray.mkdocs.nav]]
+"Reasoning models" = "docs/reasoning.md"
 
 [[tool.portray.mkdocs.nav]]
 Benchmarks = "docs/benchmarks.md"
