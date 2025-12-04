@@ -223,15 +223,15 @@ def _worker_init(model_producer: NamedModelProducer, metric_producer: NamedMetri
 
 
 def _worker_task(item) -> tuple[dict, str, float]:
-    global _worker_model
-    global _worker_metric
-
     try:
+        assert _worker_model is not None
+        assert _worker_metric is not None
         actual = _worker_model(item["messages"])
         score = _worker_metric(item["expected"], actual)
         return item, actual, score
     except Exception as e:
         raise RuntimeError(f"Worker task failed: {str(e)}")
+
 
 def parallel_run(
     *,
@@ -243,6 +243,7 @@ def parallel_run(
     num_workers: int = 64,
 ) -> Run:
     from multiprocessing import Pool
+
     """Runs experiment using parallel workers, using the given `model`, `dataset`, and `metric`.
 
     This function is similar to `run()`, but uses multiple parallel workers
@@ -290,7 +291,9 @@ def parallel_run(
 
     with _storage(runname) as storage:  # type: Storage
         with Pool(num_workers, initializer=_worker_init, initargs=(model_producer, metric_producer)) as pool:
-            for (item, actual, score) in tqdm(pool.imap_unordered(_worker_task, data_with_digest), total=len(data_with_digest)):
+            for item, actual, score in tqdm(
+                pool.imap_unordered(_worker_task, data_with_digest), total=len(data_with_digest)
+            ):
                 storage.save(item, actual, score)
                 score_accumulator(score)
 
