@@ -1,4 +1,4 @@
-from redlite._core import MissingDependencyError
+from redlite._core import MissingDependencyError, log
 
 try:
     from pyparsing import (
@@ -172,6 +172,8 @@ frac = Or([Literal("\\frac"), Literal("\\dfrac")]) + arg + arg
 frac.set_parse_action(lambda t: Function2(name="frac", op1=t[1], op2=t[2]))
 func1 = Or(map(Literal, ["\\sin", "\\cos", "\\cot", "\\arcsin", "\\arccos", "\\sqrt"])) + arg
 func1.set_parse_action(lambda t: Function1(name=t[0], op1=t[1]))
+sqrt2 = Literal("\\sqrt") + Suppress("[") + single_digit + Suppress("]") + arg
+sqrt2.set_parse_action(lambda t: Function2(name="\\sqrt", op1=t[2], op2=t[1]))
 
 
 def text_parse_action(t):
@@ -183,11 +185,14 @@ def text_parse_action(t):
 
 
 text_func = (
-    Suppress(Or([Literal("\\text"), Literal("\\mathbf"), Literal("\\mbox")])) + Suppress("{") + ... + Suppress("}")
+    Suppress(Or([Literal("\\text"), Literal("\\mathbf"), Literal("\\mbox"), Literal("\\textbf")]))
+    + Suppress("{")
+    + ...
+    + Suppress("}")
 )
 
 text_func.set_parse_action(text_parse_action)
-func <<= frac | func1 | text_func
+func <<= frac | sqrt2 | func1 | text_func
 
 
 # --- lets allow several brace types
@@ -215,6 +220,9 @@ atom = func | number | var | braced_expr
 
 negation = Suppress(Literal("-")) + expr
 negation.set_parse_action(lambda t: Negation(op=t[0]))
+
+explicit_plus = Suppress(Literal("+")) + expr
+explicit_plus.set_parse_action(lambda t: t[0])
 
 
 def binary_action(t):
@@ -256,6 +264,7 @@ expr <<= (
         ],
     )
     | negation
+    | explicit_plus
 )
 
 row = delimited_list(expr, delim="&").set_parse_action(lambda t: tuple(t))
@@ -356,7 +365,7 @@ def parse(x: str) -> Node | None:
         result = everything.parse_string(x, parse_all=True)
         return result[0]
     except Exception:
-        print(f"Failed to parse expression {x}")
+        log.warning(f"Failed to parse expression {x}")
         return None
 
 

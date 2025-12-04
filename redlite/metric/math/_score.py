@@ -55,7 +55,8 @@ def boxed(string: str) -> str | None:
 
 
 def norma(s: str) -> str:
-    s = re.sub(r"\^\\circ\s*$", "", s)  # 5^\circ => \circ
+    s = re.sub(r"\^\\circ\s*$", "", s)  # 5^\circ =>5
+    s = re.sub(r"°\s*$", "", s)  # 55° => 55
     s = re.sub(r"\\(mbox|text)\{\s*inches\}\^2$", "", s)
     s = re.sub(r"\\(mbox|text)\{\s*cents\}$", "", s)
     s = re.sub(r"\\(mbox|text)\{\s*cm\}\^2$", "", s)
@@ -68,6 +69,7 @@ def norma(s: str) -> str:
     s = re.sub(r"(\d)_\d", r"\1", s)  # ignore integer base: 1010_2 => 1010
     s = re.sub(r"(\d)_\{\d+\}", r"\1", s)  # ignore integer base: 1010_{16} => 1010
     s = re.sub(r"^([A-Z][a-z]+)$", r"\\text{\1}", s)  # wrap naked text into \\text{}
+    s = re.sub(r"\\,", " ", s)  # remove LaTeX thin spaces
     return s
 
 
@@ -120,18 +122,31 @@ def simplify(node: Node) -> Node:
             return Number(value=-op.value)
     if node.type == "function2":
         node = cast(Function2, node)
-        if node.name == "frac" and node.op1.type == "number" and node.op2.type == "number":
-            op1 = cast(Number, node.op1)
-            op2 = cast(Number, node.op2)
-            # replace with computed Number
-            return Number(value=op1.value / op2.value)
+        if node.name == "frac":
+            node.op1 = simplify(node.op1)
+            node.op2 = simplify(node.op2)
+            if node.op1.type == "number" and node.op2.type == "number":
+                op1 = cast(Number, node.op1)
+                op2 = cast(Number, node.op2)
+                # replace with computed Number
+                return Number(value=op1.value / op2.value)
+        elif node.name == "\\sqrt":
+            node.op1 = simplify(node.op1)
+            node.op2 = simplify(node.op2)
+            if node.op2.type == "number" and node.op1.type == "number":
+                op1 = cast(Number, node.op1)
+                op2 = cast(Number, node.op2)
+                return Number(value=op1.value ** (1 / op2.value))
     if node.type == "binary":
         node = cast(Binary, node)
-        if node.name == "/" and node.op1.type == "number" and node.op2.type == "number":
-            # replace with computed Number
-            op1 = cast(Number, node.op1)
-            op2 = cast(Number, node.op2)
-            return Number(value=op1.value / op2.value)
+        if node.name == "/":
+            node.op1 = simplify(node.op1)
+            node.op2 = simplify(node.op2)
+            if node.op1.type == "number" and node.op2.type == "number":
+                # replace with computed Number
+                op1 = cast(Number, node.op1)
+                op2 = cast(Number, node.op2)
+                return Number(value=op1.value / op2.value)
     if node.type == "matrix":
         node = cast(Matrix, node)
         simplified_rows = []

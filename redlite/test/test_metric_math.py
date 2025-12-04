@@ -787,3 +787,27 @@ _EVALUATIONS = [
     ("\\frac{7}{2}", "4", 0.0),
     ("-1", "1", 0.0),
 ]
+
+
+def test_score15():
+    s = score("\\textbf{(B)}", "\\text{B}")
+    assert s == 1.0
+
+    s = score("[2, +\\infty)", "[2, \\infty)")
+    assert s == 1.0
+
+    s = score("55°", "55")
+    assert s == 1.0
+
+
+def test_score16():
+    s = score("-1, \\, 3", "-1, 3")
+    assert s == 1.0
+
+
+def test_score17():
+    s = score("\\sqrt[2]{9}", "3")
+    assert s == 1.0
+
+    s = score("\\frac{\\sqrt[4]{2}}{8}", "0.148650889")
+    assert s == 1.0
