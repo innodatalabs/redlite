@@ -7,12 +7,13 @@ from ._core import (
     Run,
     MissingDependencyError,
 )
-from ._run import run, rescore
+from ._run import run, parallel_run, rescore
 from .dataset._load import load_dataset
 
-__version__ = "0.3.58"
+__version__ = "0.4.0"
 __all__ = [
     "run",
+    "parallel_run",
     "rescore",
     "load_dataset",
     "NamedModel",
