@@ -39,7 +39,7 @@ Specifically, models utilizing [OpenAI Harmony Standard](https://cookbook.openai
 use special tokens like `<|analysis|>`, `<|final|>`, etc.
 You need to make sure that implementation does not strip these special tokens off.
 
-For models deployed on [HuggingFace](https://hf.com) one may need to pass `strip_special_tokens=False`, otherwise
+For models deployed on [HuggingFace](https://hf.com) one may need to pass `skip_special_tokens=False`, otherwise
 model tokenizer will internally remove the delimiting tokens (but not thinking text), and wrapper will not
 be able to recognize and remove the thinking block.
 
@@ -50,7 +50,7 @@ from redlite.model.hf_model import HFModel
 from redlite.model import RemoveThinking
 
 
-base_model = HFModel("openai/gpt-oss-20b", token=os.environ["HF_TOKEN"], strip_special_tokens=False);
+base_model = HFModel("openai/gpt-oss-20b", token=os.environ["HF_TOKEN"], skip_special_tokens=False);
 
 model = RemoveThinking(base_model)
 ```
