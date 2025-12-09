@@ -109,6 +109,27 @@ def test_remove_thinking_model_2():
     assert response == "This is the answer."
 
 
+def test_remove_thinking_model_3():
+    engine_model = Mock()
+    engine_model.name = "engine"
+    engine_model.return_value = "<think>Here I think hard</think>This is the answer."
+
+    model = RemoveThinking(engine_model)
+    response = model(
+        [
+            {"role": "user", "content": "What is 2+2?"},
+        ]
+    )
+
+    assert model.name == "remove-thinking-engine"
+    engine_model.assert_called_once_with(
+        [
+            {"role": "user", "content": "What is 2+2?"},
+        ]
+    )
+    assert response == "This is the answer."
+
+
 def test_remove_thinking_model_no_trace():
     engine_model = Mock()
     engine_model.name = "engine"
