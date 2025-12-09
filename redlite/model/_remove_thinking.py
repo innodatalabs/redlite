@@ -20,6 +20,7 @@ class RemoveThinking(NamedModel):
 
 
 _RE_THINKING_TRACE = {
+    "<answer>": r"<answer>(.*)</answer>",
     "openai-oss": r"<\|start\|>assistant<\|channel\|>final<\|message\|>(.*)<\|return\|>$",
     "<thinking>": r"</thinking>(.*)$",
     "<think>": r"</think>(.*)$",
