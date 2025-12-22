@@ -10,6 +10,7 @@ _DEFAULT_MODERATION_MODEL = "omni-moderation-latest"
 
 _DEFAULT_REFUSAL_MESSAGE = "I refuse to answer this question."
 
+
 class ModerationModel(NamedModel):
     """
     Wraps a model and filters conversation content using OpenAI Moderation API.
@@ -88,16 +89,22 @@ class ModerationModel(NamedModel):
         self.refusal_message = refusal_message
 
         if type(threshold) is float:
-            self.threshold = { cat: threshold for cat in _MODERATION_CATEGORIES }
+            self.threshold = {cat: threshold for cat in _MODERATION_CATEGORIES}
         elif type(threshold) is dict:
             categories = set(threshold.keys())
             if categories - _MODERATION_CATEGORIES:
-                raise ValueError(f"Threshold dict contains unknown moderation categories: {categories - _MODERATION_CATEGORIES}")
+                raise ValueError(
+                    f"Threshold dict contains unknown moderation categories: {categories - _MODERATION_CATEGORIES}"
+                )
             if not all(type(val) is float for val in threshold.values()):
                 raise ValueError("All threshold values must be floats.")
             self.threshold = threshold
 
-        if self.threshold == 0.8 and moderation_model == _DEFAULT_MODERATION_MODEL and refusal_message ==_DEFAULT_REFUSAL_MESSAGE:
+        if (
+            self.threshold == 0.8
+            and moderation_model == _DEFAULT_MODERATION_MODEL
+            and refusal_message == _DEFAULT_REFUSAL_MESSAGE
+        ):
             name = f"moderated-{model.name}"
         else:
             signature = {
