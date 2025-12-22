@@ -39,6 +39,9 @@ class ModerationModel(NamedModel):
         Default is `0.8`. For list of valid category names see
         [OpenAI Moderation API docs](https://platform.openai.com/docs/guides/moderation#content-classifications).
 
+    Note: If the moderation API fails (network error, rate limit, etc.),
+    the wrapper will fail closed (return refusal) to maintain safety guarantees.
+
     Example:
     ```python
     from redlite.model import ModerationModel
@@ -57,9 +60,6 @@ class ModerationModel(NamedModel):
     response = safe_model([{"role": "user", "content": "harmful request"}])
     # Returns: "I refuse to answer this question."
     ```
-
-    Note: If moderation API fails (network error, rate limit, etc.), the model
-    will refuse to answer (fail-closed behavior) to maintain safety guarantees.
 
     Example of using custom thresholds:
     ```python
@@ -101,7 +101,7 @@ class ModerationModel(NamedModel):
             self.threshold = threshold
 
         if (
-            self.threshold == 0.8
+            threshold == 0.8
             and moderation_model == _DEFAULT_MODERATION_MODEL
             and refusal_message == _DEFAULT_REFUSAL_MESSAGE
         ):
@@ -112,7 +112,7 @@ class ModerationModel(NamedModel):
                 "refusal_message": refusal_message,
                 "threshold": self.threshold,
             }
-            name = f"moderated-{model.name}-{object_digest(signature)}"
+            name = f"moderated-{model.name}-{object_digest(signature)[:6]}"
         super().__init__(name, self.__engine)
 
     def __engine(self, messages: list[Message]) -> str:
@@ -127,7 +127,10 @@ class ModerationModel(NamedModel):
             )
 
             # Check if any content was flagged
-            if any(_threshold_exceeded(result.category_scores, self.threshold) for result in moderation.results):
+            if any(
+                _threshold_exceeded(result.category_scores.model_dump(), self.threshold)
+                for result in moderation.results
+            ):
                 return self.refusal_message
 
             # Content is safe, delegate to inner model
@@ -135,7 +138,7 @@ class ModerationModel(NamedModel):
 
         except Exception as e:
             # Fail closed: if moderation API fails, refuse to answer
-            log.warning(f"Moderation API error: {e}")
+            log.error(f"Moderation API error: {e}")
             return self.refusal_message
 
 
@@ -156,8 +159,8 @@ _MODERATION_CATEGORIES = {
 }
 
 
-def _threshold_exceeded(category_scores: dict[str, float], thresholds: dict[str, float]) -> bool:
-    for category, score in category_scores.items():
+def _threshold_exceeded(scores: dict[str, float], thresholds: dict[str, float]) -> bool:
+    for category, score in scores.items():
         if score >= thresholds.get(category, 1.0):
             return True
     return False

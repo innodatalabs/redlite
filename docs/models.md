@@ -108,10 +108,36 @@ model = LlamaCppModel('models/mistral-instruct-7b-Q4-K-M.gguf', n_ctx=512, max_t
 
 Please see [Reference](../../reference/redlite/model/llamacpp_model/) documentation for more detail and available parameters.
 
-# Model Wrappers
+## Dumb models for testing
+
+### ParrotModel
+
+A model that parrots back the last user message. Useful to establish performance baselines.
+
+```python
+from redlite.model import ParrotModel
+
+model = ParrotModel()
+
+assert model([{"role": "user", "content": "Hello"}]) == "Hello"
+```
+
+### CannedModel
+
+A model that returns the same (canned) response regardless of user input. Useful to establish performance baselines.
+
+```python
+from redlite.model import CannedModel
+
+model = CannedModel("Bye")
+
+assert model([{"role": "user", "content": "Hello"}]) == "Bye"
+```
+
+## Model Wrappers
 
 See the [Model Wrappers](wrappers.md) documentation for utility classes that wrap models to modify their behavior.
 
-# Custom models
+## Custom models
 
 Custom models can be easily integrated, see the [Customization Guide](custom.md).

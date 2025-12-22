@@ -41,30 +41,6 @@ model = ConvertSystemToUSerModel(
 )
 ```
 
-## ParrotModel
-
-A model that parrots back the last user message. Useful to establish performance baselines.
-
-```python
-from redlite.model import ParrotModel
-
-model = ParrotModel()
-
-assert model([{"role": "user", "content": "Hello"}]) == "Hello"
-```
-
-## CannedModel
-
-A model that returns the same (canned) response regardless of user input. Useful to establish performance baselines.
-
-```python
-from redlite.model import CannedModel
-
-model = CannedModel("Bye")
-
-assert model([{"role": "user", "content": "Hello"}]) == "Bye"
-```
-
 ## ThrottleModel
 
 A model that wraps another model and throttles it calls to the specified rate.
@@ -82,6 +58,10 @@ Wraps a model and filters conversation content using OpenAI's Moderation API. Be
 This helps avoid having your OpenAI account flagged for Usage Policy Violations. See [OpenAI Safety Best Practices](https://platform.openai.com/docs/guides/safety-best-practices#use-our-free-moderation-api).
 
 Requires an OpenAI API key (via `api_key` parameter or `OPENAI_API_KEY` environment variable).
+
+For detail API and parameters, see [Reference](../../reference/redlite/model/#moderationmodel).
+
+Example:
 
 ```python
 from redlite.model.openai_model import OpenAIModel
@@ -101,10 +81,12 @@ response = safe_model([{"role": "user", "content": "harmful request"}])
 # Returns: "I refuse to answer this question."
 ```
 
-Parameters:
-- `model` - The model to wrap (any NamedModel)
-- `api_key` - OpenAI API key (optional, uses OPENAI_API_KEY env var if not provided)
-- `moderation_model` - Which moderation model to use (default: "omni-moderation-latest")
-- `refusal_message` - Custom message to return when content is flagged (default: "I refuse to answer this question.")
+To filter out weapons-related questions, do this:
 
-Note: If the moderation API fails (network error, rate limit, etc.), the wrapper will fail closed (return refusal) to maintain safety guarantees.
+```python
+from redlite.model import ModerationModel
+
+base_model = ...  # your base model, i.e. OpenAIModel
+
+safe_model = ModerationModel(base_model, threshold={"illicit/violent": 0.8})
+```

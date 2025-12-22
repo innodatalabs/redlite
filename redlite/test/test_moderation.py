@@ -12,6 +12,16 @@ def test_moderation_model_name():
     assert model.name == "moderated-gpt-4"
 
 
+def test_moderation_model_name2():
+    """Verify name composition follows pattern"""
+    inner_model = Mock()
+    inner_model.name = "gpt-4"
+
+    model = ModerationModel(inner_model, threshold=0.95, api_key="test-key")
+
+    assert model.name == "moderated-gpt-4-85208e"
+
+
 def test_moderation_passes_safe_content():
     """When content is safe, delegate to inner model"""
     inner_model = Mock()
@@ -21,9 +31,9 @@ def test_moderation_passes_safe_content():
     model = ModerationModel(inner_model, api_key="test-key")
 
     # Mock OpenAI client
-    mock_result = Mock(flagged=False)
-    mock_moderation = Mock(results=[mock_result])
-    model.client.moderations.create = Mock(return_value=mock_moderation)
+    model.client.moderations.create = Mock(
+        return_value=Mock(results=[Mock(category_scores=Mock(model_dump=lambda: {"banana": 0.1}), flagged=False)])
+    )
 
     messages = [{"role": "user", "content": "What is the weather?"}]
     result = model(messages)
